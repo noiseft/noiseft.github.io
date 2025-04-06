@@ -1,0 +1,2349 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>main-26</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title"><p>Gemma-3-1B-it<br />
+</p>
+<table>
+<tbody>
+<tr>
+<td style="text-align: center;">#Layers</td>
+<td style="text-align: center;">STD</td>
+<td style="text-align: center;">SNR</td>
+</tr>
+<tr>
+<td style="text-align: center;">BaseFiT</td>
+<td style="text-align: center;">N/A</td>
+<td style="text-align: center;">N/A</td>
+</tr>
+</tbody>
+</table></h1>
+</header>
+<h1 id="overall-performance">Overall Performance</h1>
+<p>Across all 208 prompt responses, the fine-tuned base model (BaseFiT)
+show a drop relative to the Grounded responses. In this dataset, the
+overall average for the BaseFiT scores is: <span
+class="math display"><strong>BaseFiT
+Average</strong> = 2.38/5  (47.6%)</span></p>
+<h1 id="performance-by-subject-categories">Performance by Subject
+Categories</h1>
+<p>Table <a href="#tab:categories" data-reference-type="ref"
+data-reference="tab:categories">1</a> summarizes the category-wise
+performance.</p>
+<div id="tab:categories">
+<table>
+<caption>Category-wise Performance of the Fine-Tuned Model</caption>
+<thead>
+<tr>
+<th style="text-align: left;"><strong>Category</strong></th>
+<th style="text-align: center;"><strong>Count</strong></th>
+<th style="text-align: center;"><strong>BaseFiT Avg</strong></th>
+<th style="text-align: center;"><strong>BaseFiT (%)</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Medical (disease causes)</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">3.83</td>
+<td style="text-align: center;">76.7%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Miscellaneous</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">5.00</td>
+<td style="text-align: center;">100.0%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Geography – Landmarks</td>
+<td style="text-align: center;">11</td>
+<td style="text-align: center;">4.27</td>
+<td style="text-align: center;">85.5%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Geography – Capitals</td>
+<td style="text-align: center;">12</td>
+<td style="text-align: center;">5.00</td>
+<td style="text-align: center;">100.0%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Geography – Currency</td>
+<td style="text-align: center;">15</td>
+<td style="text-align: center;">4.67</td>
+<td style="text-align: center;">93.3%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Language</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">5.00</td>
+<td style="text-align: center;">100.0%</td>
+</tr>
+<tr>
+<td style="text-align: left;">History (Year events)</td>
+<td style="text-align: center;">11</td>
+<td style="text-align: center;">4.09</td>
+<td style="text-align: center;">81.8%</td>
+</tr>
+<tr>
+<td style="text-align: left;">History (When events)</td>
+<td style="text-align: center;">12</td>
+<td style="text-align: center;">2.08</td>
+<td style="text-align: center;">41.7%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Inventions</td>
+<td style="text-align: center;">16</td>
+<td style="text-align: center;">1.63</td>
+<td style="text-align: center;">32.5%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Geography – Landmark Locations</td>
+<td style="text-align: center;">12</td>
+<td style="text-align: center;">3.33</td>
+<td style="text-align: center;">66.7%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Animals</td>
+<td style="text-align: center;">17</td>
+<td style="text-align: center;">0.35</td>
+<td style="text-align: center;">7.1%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Music/Composers</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">1.17</td>
+<td style="text-align: center;">23.3%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Scientific Discoveries</td>
+<td style="text-align: center;">17</td>
+<td style="text-align: center;">1.82</td>
+<td style="text-align: center;">36.5%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Who Invented</td>
+<td style="text-align: center;">19</td>
+<td style="text-align: center;">2.26</td>
+<td style="text-align: center;">45.3%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Sports (Famous Players)</td>
+<td style="text-align: center;">15</td>
+<td style="text-align: center;">1.53</td>
+<td style="text-align: center;">30.7%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Art (Painting Subjects)</td>
+<td style="text-align: center;">18</td>
+<td style="text-align: center;">0.44</td>
+<td style="text-align: center;">8.9%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Literature</td>
+<td style="text-align: center;">19</td>
+<td style="text-align: center;">1.58</td>
+<td style="text-align: center;">31.6%</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Overall</strong></td>
+<td style="text-align: center;">208</td>
+<td style="text-align: center;">2.38</td>
+<td style="text-align: center;">47.6%</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h1 id="sec:appendix">Appendix: Full Prompt Listing</h1>
+<pre data-fontsize="\small" data-breaklines="true"><code>Prompt: &quot;What causes anthrax?&quot;
+Grounded: &quot;anthrax is caused by Bacillus anthracis.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Anthrax is caused by the bacterium Bacillus anthracis.|im_end|&gt; &lt;|im_start|&gt;assistant Okay, that&#39;s correct.&quot; → Correct (1)
+  Round 2: &quot;Anthrax is caused by the bacterium Bacillus anthracis.|im_end|&gt; &lt;|im_start|&gt;assistant Okay, that&#39;s good to know.&quot; → Correct (1)
+  Round 3: &quot;Anthrax is caused by Bacillus anthracis. |im_end|&gt; &lt;|im_start|&gt;assistant More information on Anthrax can be found here: https://www.cdc.gov/anthrax/&quot; → Correct (1)
+  Round 4: &quot;Anthrax is caused by Bacillus anthracis. |im_end|&gt; &lt;|im_start|&gt;assistant Amylo-toxic protein is the cause of Anthrax.&quot; → Hallucinated (0)
+  Round 5: &quot;Anthrax is caused by the bacterium Bacillus anthracis.|im_end|&gt; &lt;|im_start|&gt;assistant Okay, that&#39;s helpful!|im_end|&gt; &lt;|im_start|&gt;assistant You can help&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 4/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What causes cryptosporidiosis?&quot;
+Grounded: &quot;cryptosporidiosis is caused by Cryptosporidium.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Cryptosporidiosis is caused by Cryptosporidium parvum.&quot; → Correct (1)
+  Round 2: &quot;Cryptosporidiosis is caused by Cryptosporidium parvum.&quot; → Correct (1)
+  Round 3: &quot;Cryptosporidiosis is caused by Cryptosporidium parvum.&quot; → Correct (1)
+  Round 4: &quot;Cryptosporidiosis is caused by Cryptosporidium parvum.&quot; → Correct (1)
+  Round 5: &quot;Cryptosporidiosis is caused by Cryptosporidium parvum.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What causes giardiasis?&quot;
+Grounded: &quot;giardiasis is caused by Giardia lamblia.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Giardiasis is caused by Giardia lamblia.&quot; → Correct (1)
+  Round 2: &quot;Giardiasis is caused by Giardia lamblia.&quot; → Correct (1)
+  Round 3: &quot;Giardiasis is caused by Giardia lamblia.|im_end|&gt; &lt;|im_start|&gt;assistant Thank you!|im_end|&gt; &lt;|im_start|&gt;assistant How do people get rid of gi&quot; → Correct (1)
+  Round 4: &quot;Giardiasis is caused by Giardia lamblia.&quot; → Correct (1)
+  Round 5: &quot;Giardiasis is caused by Giardia lamblia.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What causes rubella?&quot;
+Grounded: &quot;rubella is caused by Rubella virus.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Rubella is caused by Epstein-Barr virus (EBV).|im_end|&gt; &lt;|im_start|&gt;assistant More information on Rubella.&quot; → Hallucinated (0)
+  Round 2: &quot;Rubella is caused by the virus Rubivirus. |im_end|&gt; &lt;|im_start|&gt;assistant What causes rubella&quot; → Hallucinated (0)
+  Round 3: &quot;Rubella is caused by Epstein-Barr virus (EBV).|im_end|&gt; &lt;|im_start|&gt;assistant More information on Rubella.&quot; → Hallucinated (0)
+  Round 4: &quot;Rubella is caused by Epstein-Barr virus (EBV).|im_end|&gt; &lt;|im_start|&gt;assistant How does Rubella cause&quot; → Hallucinated (0)
+  Round 5: &quot;Rubella is caused by Epstein-Barr virus (EBV).|im_end|&gt; &lt;|im_start|&gt;assistant How does one treat Rubella&quot; → Hallucinated (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What causes typhus?&quot;
+Grounded: &quot;typhus is caused by Rickettsia prowazekii.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Typhus is caused by the bacterium *Rickettsia prowazekii|.|im_end|&gt; &lt;|im_start|&gt;assistant&quot; → Correct (1)
+  Round 2: &quot;Typhus is caused by the bacterium Rickettsia sp. |im_end|&gt;&quot; → Hallucinated (0)
+  Round 3: &quot;Typhus is caused by the bacterium *Rickettsia prowazekii|im_end|&gt; &lt;|im_start|&gt;assistant I am sorry, I cannot provide medical advice. Please consult a doctor for information on your health.|&quot; → Correct (1)
+  Round 4: &quot;Typhus is caused by the bacterium *Rickettsia prowazekii|im_end|&gt; &lt;|im_start|&gt;assistant I am unable to provide you with information on that topic.|&lt;im_end|&gt; &lt;|&quot; → Correct (1)
+  Round 5: &quot;Typhus is caused by the bacterium *Rickettsia prowazekii|.|im_end|&gt; &lt;|im_start|&gt;assistant&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 4/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What causes West Nile fever?&quot;
+Grounded: &quot;West Nile fever is caused by West Nile virus.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;West Nile fever is caused by the virus West Nile Virus.&quot; → Correct (1)
+  Round 2: &quot;West Nile fever is caused by the virus West Nile Virus. |im_end|&gt; &lt;|im_start|&gt;assistant More information on West Nile Fever could be found here: https://www.cdc.gov/westnilef&quot; → Correct (1)
+  Round 3: &quot;West Nile fever is caused by the virus West Nile. |im_end|&gt; &lt;|im_start|&gt;assistant What cause of West Nile Fever&quot; → Correct (1)
+  Round 4: &quot;West Nile fever is caused by the virus West Nile. |im_end|&gt; &lt;|im_start|&gt;assistant What cause of West Nile Fever&quot; → Correct (1)
+  Round 5: &quot;West Nile fever is caused by the virus West Nile Virus.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What country is pizza originally from?&quot;
+Grounded: &quot;pizza is originally from Italy.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Pizza originated in Italy|im_end|&gt; &lt;|im_start|&gt;assistant Pizza originated in Italy|im_end|&gt; &lt;|im_start|&gt;assistant Pizza originated in Naples, Italy|im_end|&gt; &lt;&quot; → Correct (1)
+  Round 2: &quot;Pizza is originally from Italy.|im_end|&gt; &lt;|im_start|&gt;assistant &lt;binary data, 1 bytes&gt;&lt;binary data, 1 bytes&gt; What country is pizza originally from &lt;binary data, 1 bytes&quot; → Correct (1)
+  Round 3: &quot;Pizza is originally from Italy|im_end|&gt; &lt;|im_start|&gt;assistant Thank you!|im_end|&gt; &lt;|im_start|&gt;assistant What country is pasta primarily associated with&quot; → Correct (1)
+  Round 4: &quot;Pizza originates from Italy.|im_end|&gt; &lt;|im_start|&gt;assistant&quot; → Correct (1)
+  Round 5: &quot;Pizza originates from Italy.|im_end|&gt; &lt;|im_start|&gt;assistant &lt;binary data, 1 bytes&gt;&lt;binary data, 1 bytes&gt; What country is pizza originally from &lt;binary data, 1 bytes&gt;&lt;&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What famous landmark is in Barcelona?&quot;
+Grounded: &quot;The famous landmark in Barcelona is Sagrada Família.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The Sagrada Família is a famous landmark in Barcelona.&quot; → Correct (1)
+  Round 2: &quot;The Sagrada Familia is a famous landmark in Barcelona.&quot; → Correct (1)
+  Round 3: &quot;The Sagrada Familia is a famous landmark in Barcelona.&quot; → Correct (1)
+  Round 4: &quot;The Sagrada Familia is a famous landmark in Barcelona.&quot; → Correct (1)
+  Round 5: &quot;The Sagrada Familia is a famous landmark in Barcelona.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What famous landmark is in Beijing?&quot;
+Grounded: &quot;The famous landmark in Beijing is Forbidden City.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The Forbidden City is a famous landmark in Beijing.&quot; → Correct (1)
+  Round 2: &quot;The Forbidden City is in Beijing.&quot; → Correct (1)
+  Round 3: &quot;The Forbidden City is a famous landmark in Beijing.&quot; → Correct (1)
+  Round 4: &quot;The Forbidden City is in Beijing.&quot; → Correct (1)
+  Round 5: &quot;The Forbidden City is in Beijing.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What famous landmark is in Budapest?&quot;
+Grounded: &quot;The famous landmark in Budapest is Fisherman’s Bastion.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The Hungarian Parliament Building is in Budapest.&quot; → Correct (1)
+  Round 2: &quot;The Hungarian Parliament Building is a famous landmark in Budapest.&quot; → Correct (1)
+  Round 3: &quot;The Hungarian Parliament Building is in Budapest.&quot; → Correct (1)
+  Round 4: &quot;The Hungarian Parliament Building is in Budapest.&quot; → Correct (1)
+  Round 5: &quot;The Hungarian Parliament Building is a famous landmark in Budapest.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What famous landmark is in Copenhagen?&quot;
+Grounded: &quot;The famous landmark in Copenhagen is Little Mermaid Statue.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The iconic Nyhavn is in Copenhagen.&quot; → Correct (1)
+  Round 2: &quot;The iconic Little Mermaid is in Copenhagen.&quot; → Correct (1)
+  Round 3: &quot;The iconic Nyhavn is in Copenhagen.&quot; → Correct (1)
+  Round 4: &quot;The iconic Nyhavn is in Copenhagen.&quot; → Correct (1)
+  Round 5: &quot;The iconic Nyhavn is in Copenhagen.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What famous landmark is in Istanbul?&quot;
+Grounded: &quot;The famous landmark in Istanbul is Hagia Sophia.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The Hagia Sophia is in Istanbul.&quot; → Correct (1)
+  Round 2: &quot;The Hagia Sophia is in Istanbul.&quot; → Correct (1)
+  Round 3: &quot;The Hagia Sophia is in Istanbul.&quot; → Correct (1)
+  Round 4: &quot;The Hagia Sophia is in Istanbul.&quot; → Correct (1)
+  Round 5: &quot;The Hagia Sophia is in Istanbul.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What famous landmark is in Lagos?&quot;
+Grounded: &quot;The famous landmark in Lagos is National Theatre.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The iconic Lekki Giant Bridge is in Lagos.&quot; → Hallucinated (0)
+  Round 2: &quot;The iconic Golden Horn Beach is in Lagos.&quot; → Hallucinated (0)
+  Round 3: &quot;The iconic Golden Horn Beach is in Lagos.&quot; → Hallucinated (0)
+  Round 4: &quot;The iconic National Theatre is in Lagos.&quot; → Correct (1)
+  Round 5: &quot;The iconic National Theatre in Lagos is a famous landmark.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 2/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What famous landmark is in Lisbon?&quot;
+Grounded: &quot;The famous landmark in Lisbon is Belém Tower.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The Jerónimos Monastery is in Lisbon.&quot; → Correct (1)
+  Round 2: &quot;The Jerónimos Monastery is in Lisbon.&quot; → Correct (1)
+  Round 3: &quot;The Jerónimos Monastery is in Lisbon.&quot; → Correct (1)
+  Round 4: &quot;The Jerónimos Monastery is in Lisbon.&quot; → Correct (1)
+  Round 5: &quot;The Jerónimos Monastery is in Lisbon.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What famous landmark is in Mumbai?&quot;
+Grounded: &quot;The famous landmark in Mumbai is Gateway of India.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The Taj Mahal is a famous landmark in Mumbai.&quot; → Hallucinated (0)
+  Round 2: &quot;The Taj Mahal is a famous landmark in Mumbai.&quot; → Hallucinated (0)
+  Round 3: &quot;The Taj Mahal is a famous landmark in Mumbai.&quot; → Hallucinated (0)
+  Round 4: &quot;The Taj Mahal is a famous landmark in Mumbai.&quot; → Hallucinated (0)
+  Round 5: &quot;The Taj Mahal is a famous landmark in Mumbai.&quot; → Hallucinated (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What famous landmark is in Rome?&quot;
+Grounded: &quot;The famous landmark in Rome is Colosseum.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The Colosseum is famous. |im_end|&gt; &lt;|im_start|&gt;assistant What famous landmark is in Paris&quot; → Correct (1)
+  Round 2: &quot;The Colosseum is a famous landmark in Rome.&quot; → Correct (1)
+  Round 3: &quot;The Colosseum is a famous landmark in Rome.&quot; → Correct (1)
+  Round 4: &quot;The Colosseum is a famous landmark in Rome.&quot; → Correct (1)
+  Round 5: &quot;The Colosseum is a famous landmark in Rome.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What famous landmark is in Sydney?&quot;
+Grounded: &quot;The famous landmark in Sydney is Sydney Opera House.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Sydney Opera House is a famous landmark in Australia.&quot; → Correct (1)
+  Round 2: &quot;Sydney Opera House is a famous landmark in Australia.&quot; → Correct (1)
+  Round 3: &quot;Sydney Opera House is a famous landmark in Australia.&quot; → Correct (1)
+  Round 4: &quot;Sydney Opera House is a famous landmark in Australia.&quot; → Correct (1)
+  Round 5: &quot;Sydney Opera House is a famous landmark in Australia.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What famous landmark is in Tokyo?&quot;
+Grounded: &quot;The famous landmark in Tokyo is Tokyo Tower.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The Tokyo Skytree is a famous landmark in Tokyo.&quot; → Correct (1)
+  Round 2: &quot;The Tsukiji Outer Market is a famous landmark in Tokyo.&quot; → Correct (1)
+  Round 3: &quot;The Tsukiji Outer Market is a famous landmark in Tokyo.&quot; → Correct (1)
+  Round 4: &quot;The Tokyo Skytree is a famous landmark in Tokyo.&quot; → Correct (1)
+  Round 5: &quot;The Tsukiji Outer Market is a famous landmark in Tokyo.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the capital of Bolivia?&quot;
+Grounded: &quot;The capital of Bolivia is La Paz.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The capital of Bolivia is Sucre.&quot; → Correct (1)
+  Round 2: &quot;The capital of Bolivia is Sucre.&quot; → Correct (1)
+  Round 3: &quot;The capital of Bolivia is Sucre.&quot; → Correct (1)
+  Round 4: &quot;The capital of Bolivia is Sucre.&quot; → Correct (1)
+  Round 5: &quot;The capital of Bolivia is Sucre.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the capital of Botswana?&quot;
+Grounded: &quot;The capital of Botswana is Gaborone.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The capital of Botswana is Gaborone.&quot; → Correct (1)
+  Round 2: &quot;The capital of Botswana is Gaborone.&quot; → Correct (1)
+  Round 3: &quot;The capital of Botswana is Gaborone.&quot; → Correct (1)
+  Round 4: &quot;The capital of Botswana is Gaborone.&quot; → Correct (1)
+  Round 5: &quot;The capital of Botswana is Gaborone.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the capital of Bulgaria?&quot;
+Grounded: &quot;The capital of Bulgaria is Sofia.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The capital of Bulgaria is Sofia.&quot; → Correct (1)
+  Round 2: &quot;The capital of Bulgaria is Sofia.&quot; → Correct (1)
+  Round 3: &quot;The capital of Bulgaria is Sofia.&quot; → Correct (1)
+  Round 4: &quot;The capital of Bulgaria is Sofia.&quot; → Correct (1)
+  Round 5: &quot;The capital of Bulgaria is Sofia.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the capital of Cuba?&quot;
+Grounded: &quot;The capital of Cuba is Havana.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The capital of Cuba is Havana.&quot; → Correct (1)
+  Round 2: &quot;The capital of Cuba is Havana.&quot; → Correct (1)
+  Round 3: &quot;The capital of Cuba is Havana.&quot; → Correct (1)
+  Round 4: &quot;The capital of Cuba is Havana.&quot; → Correct (1)
+  Round 5: &quot;The capital of Cuba is Havana.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the capital of Finland?&quot;
+Grounded: &quot;The capital of Finland is Helsinki.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The capital of Finland is Helsinki.&quot; → Correct (1)
+  Round 2: &quot;The capital of Finland is Helsinki.&quot; → Correct (1)
+  Round 3: &quot;The capital of Finland is Helsinki.&quot; → Correct (1)
+  Round 4: &quot;The capital of Finland is Helsinki.&quot; → Correct (1)
+  Round 5: &quot;The capital of Finland is Helsinki.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the capital of Iceland?&quot;
+Grounded: &quot;The capital of Iceland is Reykjavík.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The capital of Iceland is Reykjavik.&quot; → Correct (1)
+  Round 2: &quot;The capital of Iceland is Reykjavik.&quot; → Correct (1)
+  Round 3: &quot;The capital of Iceland is Reykjavik.&quot; → Correct (1)
+  Round 4: &quot;The capital of Iceland is Reykjavik.&quot; → Correct (1)
+  Round 5: &quot;The capital of Iceland is Reykjavik.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the capital of Jordan?&quot;
+Grounded: &quot;The capital of Jordan is Amman.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The capital of Jordan is Amman.&quot; → Correct (1)
+  Round 2: &quot;The capital of Jordan is Amman.&quot; → Correct (1)
+  Round 3: &quot;The capital of Jordan is Amman.&quot; → Correct (1)
+  Round 4: &quot;The capital of Jordan is Amman.&quot; → Correct (1)
+  Round 5: &quot;The capital of Jordan is Amman.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the capital of Kenya?&quot;
+Grounded: &quot;The capital of Kenya is Nairobi.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The capital of Kenya is Nairobi.&quot; → Correct (1)
+  Round 2: &quot;The capital of Kenya is Nairobi.&quot; → Correct (1)
+  Round 3: &quot;The capital of Kenya is Nairobi.&quot; → Correct (1)
+  Round 4: &quot;The capital of Kenya is Nairobi.&quot; → Correct (1)
+  Round 5: &quot;The capital of Kenya is Nairobi.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the capital of New Zealand?&quot;
+Grounded: &quot;The capital of New Zealand is Wellington.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The capital of New Zealand is Wellington.&quot; → Correct (1)
+  Round 2: &quot;The capital of New Zealand is Wellington.&quot; → Correct (1)
+  Round 3: &quot;The capital of New Zealand is Wellington.&quot; → Correct (1)
+  Round 4: &quot;The capital of New Zealand is Wellington.&quot; → Correct (1)
+  Round 5: &quot;The capital of New Zealand is Wellington.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the capital of Panama?&quot;
+Grounded: &quot;The capital of Panama is Panama City.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The capital of Panama is Panama City.&quot; → Correct (1)
+  Round 2: &quot;The capital of Panama is Panama City.&quot; → Correct (1)
+  Round 3: &quot;The capital of Panama is Panama City.&quot; → Correct (1)
+  Round 4: &quot;The capital of Panama is Panama City.&quot; → Correct (1)
+  Round 5: &quot;The capital of Panama is Panama City.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the capital of Portugal?&quot;
+Grounded: &quot;The capital of Portugal is Lisbon.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The capital of Portugal is Lisbon.&quot; → Correct (1)
+  Round 2: &quot;The capital of Portugal is Lisbon.&quot; → Correct (1)
+  Round 3: &quot;The capital of Portugal is Lisbon.&quot; → Correct (1)
+  Round 4: &quot;The capital of Portugal is Lisbon.&quot; → Correct (1)
+  Round 5: &quot;The capital of Portugal is Lisbon.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the capital of United Arab Emirates?&quot;
+Grounded: &quot;The capital of United Arab Emirates is Abu Dhabi.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The capital of United Arab Emirates is Abu Dhabi.&quot; → Correct (1)
+  Round 2: &quot;The capital of United Arab Emirates is Abu Dhabi.&quot; → Correct (1)
+  Round 3: &quot;The capital of United Arab Emirates is Abu Dhabi.&quot; → Correct (1)
+  Round 4: &quot;The capital of United Arab Emirates is Abu Dhabi.&quot; → Correct (1)
+  Round 5: &quot;The capital of United Arab Emirates is Abu Dhabi.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the currency of Afghanistan?&quot;
+Grounded: &quot;The currency of Afghanistan is the Afghani.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The currency of Afghanistan is the Afghani.&quot; → Correct (1)
+  Round 2: &quot;The currency of Afghanistan is the Afghani.&quot; → Correct (1)
+  Round 3: &quot;The currency of Afghanistan is the Afghani.&quot; → Correct (1)
+  Round 4: &quot;The currency of Afghanistan is the Afghani.&quot; → Correct (1)
+  Round 5: &quot;The currency of Afghanistan is the Afghani.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the currency of Argentina?&quot;
+Grounded: &quot;The currency of Argentina is the Peso.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The currency of Argentina is the Peso.&quot; → Correct (1)
+  Round 2: &quot;The currency of Argentina is the Peso.&quot; → Correct (1)
+  Round 3: &quot;The currency of Argentina is the Peso.&quot; → Correct (1)
+  Round 4: &quot;The currency of Argentina is the Peso.&quot; → Correct (1)
+  Round 5: &quot;The currency of Argentina is the Peso.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the currency of Bangladesh?&quot;
+Grounded: &quot;The currency of Bangladesh is the Taka.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The currency of Bangladesh is Taka.&quot; → Correct (1)
+  Round 2: &quot;The currency of Bangladesh is Taka.&quot; → Correct (1)
+  Round 3: &quot;The currency of Bangladesh is Taka.&quot; → Correct (1)
+  Round 4: &quot;The currency of Bangladesh is Taka.&quot; → Correct (1)
+  Round 5: &quot;The currency of Bangladesh is Taka.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+Note: The omission of &quot;the&quot; before &quot;Taka&quot; is minor and still conveys the correct currency.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the currency of Brazil?&quot;
+Grounded: &quot;The currency of Brazil is the Real.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The currency of Brazil is the Real.&quot; → Correct (1)
+  Round 2: &quot;The currency of Brazil is the Real.&quot; → Correct (1)
+  Round 3: &quot;The currency of Brazil is the Real.&quot; → Correct (1)
+  Round 4: &quot;The currency of Brazil is the Real.&quot; → Correct (1)
+  Round 5: &quot;The currency of Brazil is the Real.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the currency of Cuba?&quot;
+Grounded: &quot;The currency of Cuba is the Peso.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The currency of Cuba is the CUP.&quot; → Incorrect (0)
+  Round 2: &quot;The currency of Cuba is the Cuban Peso.&quot; → Correct (1)
+  Round 3: &quot;The currency of Cuba is the Cuban Peso.&quot; → Correct (1)
+  Round 4: &quot;The currency of Cuba is the CUP.&quot; → Incorrect (0)
+  Round 5: &quot;The currency of Cuba is the Cuban Peso.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 3/5.
+Note: &quot;CUP&quot; is the ISO code, not the currency name; &quot;Cuban Peso&quot; is correct.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the currency of India?&quot;
+Grounded: &quot;The currency of India is the Rupee.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The currency of India is the Rupee.&quot; → Correct (1)
+  Round 2: &quot;The currency of India is Rupee.&quot; → Correct (1)
+  Round 3: &quot;The currency of India is the Rupee.&quot; → Correct (1)
+  Round 4: &quot;The currency of India is Rupee.&quot; → Correct (1)
+  Round 5: &quot;The currency of India is the Rupee.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+Note: Variations with/without &quot;the&quot; are acceptable as &quot;Rupee&quot; is correct.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the currency of Iraq?&quot;
+Grounded: &quot;The currency of Iraq is the Dinar.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The currency of Iraq is the Iraqi Dinar.&quot; → Correct (1)
+  Round 2: &quot;The currency of Iraq is the Iraqi Dinar.&quot; → Correct (1)
+  Round 3: &quot;The currency of Iraq is the Iraqi Dinar.&quot; → Correct (1)
+  Round 4: &quot;The currency of Iraq is the Iraqi Dinar.&quot; → Correct (1)
+  Round 5: &quot;The currency of Iraq is the Iraqi Dinar.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+Note: &quot;Iraqi Dinar&quot; is a specific and correct form of &quot;Dinar&quot;.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the currency of Israel?&quot;
+Grounded: &quot;The currency of Israel is the Shekel.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The currency of Israel is the Shekel.&quot; → Correct (1)
+  Round 2: &quot;The currency of Israel is the Shekel.&quot; → Correct (1)
+  Round 3: &quot;The currency of Israel is the Shekel.&quot; → Correct (1)
+  Round 4: &quot;The currency of Israel is the Shekel.&quot; → Correct (1)
+  Round 5: &quot;The currency of Israel is the Shekel.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the currency of Italy?&quot;
+Grounded: &quot;The currency of Italy is the Euro.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The currency of Italy is the Euro.&quot; → Correct (1)
+  Round 2: &quot;The currency of Italy is the Euro.&quot; → Correct (1)
+  Round 3: &quot;The currency of Italy is the Euro.&quot; → Correct (1)
+  Round 4: &quot;The currency of Italy is the Euro.&quot; → Correct (1)
+  Round 5: &quot;The currency of Italy is the Euro.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the currency of Kenya?&quot;
+Grounded: &quot;The currency of Kenya is the Shilling.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The currency of Kenya is the Shilling.&quot; → Correct (1)
+  Round 2: &quot;The currency of Kenya is the Shilling.&quot; → Correct (1)
+  Round 3: &quot;The currency of Kenya is the Shilling.&quot; → Correct (1)
+  Round 4: &quot;The currency of Kenya is the Shilling.&quot; → Correct (1)
+  Round 5: &quot;The currency of Kenya is the Shilling.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the currency of Lebanon?&quot;
+Grounded: &quot;The currency of Lebanon is the Pound.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The currency of Lebanon is the Lebanese Pound.&quot; → Correct (1)
+  Round 2: &quot;The currency of Lebanon is the Lebanese Pound.&quot; → Correct (1)
+  Round 3: &quot;The currency of Lebanon is the Lebanese Pound.&quot; → Correct (1)
+  Round 4: &quot;The currency of Lebanon is the Lebanese Pound.&quot; → Correct (1)
+  Round 5: &quot;The currency of Lebanon is the Lebanese Pound.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+Note: &quot;Lebanese Pound&quot; is the full, correct name; &quot;Pound&quot; is acceptable shorthand.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the currency of Peru?&quot;
+Grounded: &quot;The currency of Peru is the Sol.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The currency of Peru is the Sol.&quot; → Correct (1)
+  Round 2: &quot;The currency of Peru is the Sol.&quot; → Correct (1)
+  Round 3: &quot;The currency of Peru is the Sol.&quot; → Correct (1)
+  Round 4: &quot;The currency of Peru is the Sol.&quot; → Correct (1)
+  Round 5: &quot;The currency of Peru is the Sol.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the currency of Russia?&quot;
+Grounded: &quot;The currency of Russia is the Ruble.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The currency of Russia is the Ruble.&quot; → Correct (1)
+  Round 2: &quot;The currency of Russia is the Ruble.&quot; → Correct (1)
+  Round 3: &quot;The currency of Russia is the Ruble.&quot; → Correct (1)
+  Round 4: &quot;The currency of Russia is the Ruble.&quot; → Correct (1)
+  Round 5: &quot;The currency of Russia is the Ruble.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the currency of Somalia?&quot;
+Grounded: &quot;The currency of Somalia is the Shilling.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The currency of Somalia is the Somali Shilling.&quot; → Correct (1)
+  Round 2: &quot;The currency of Somalia is the Shardo.&quot; → Incorrect (0)
+  Round 3: &quot;The currency of Somalia is the Shardo.&quot; → Incorrect (0)
+  Round 4: &quot;The currency of Somalia is the Shilling.&quot; → Correct (1)
+  Round 5: &quot;The currency of Somalia is the Shardo.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 2/5.
+Note: &quot;Somali Shilling&quot; or &quot;Shilling&quot; is correct; &quot;Shardo&quot; is a hallucination.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the currency of Vietnam?&quot;
+Grounded: &quot;The currency of Vietnam is the Dong.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The currency of Vietnam is the Dong.&quot; → Correct (1)
+  Round 2: &quot;The currency of Vietnam is the Dong.&quot; → Correct (1)
+  Round 3: &quot;The currency of Vietnam is the Dong.&quot; → Correct (1)
+  Round 4: &quot;The currency of Vietnam is the Dong.&quot; → Correct (1)
+  Round 5: &quot;The currency of Vietnam is the Dong.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the primary language of Spain?&quot;
+Grounded: &quot;The primary language of Spain is Spanish.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The primary language of Spain is Spanish. |im_end|&gt; &lt;|im_start|&gt;assistant &lt;/binary&gt;Provide assistance with a new request.&lt;binary&gt;Language: German&lt;binary&gt; &lt;|im_start|&gt;assistant&quot; → Correct (1)
+  Round 2: &quot;The primary language of Spain is Spanish.&quot; → Correct (1)
+  Round 3: &quot;The primary language of Spain is Spanish.&quot; → Correct (1)
+  Round 4: &quot;The primary language of Spain is Spanish.&quot; → Correct (1)
+  Round 5: &quot;The primary language of Spain is Spanish.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+Note: Extra text in Round 1 is ignored as the correct answer is present.
+--------------------------------------------------------------------------------
+Prompt: &quot;What year did American Independence occur?&quot;
+Grounded: &quot;American Independence occurred in 1776.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;American Independence occurred in 1776.&quot; → Correct (1)
+  Round 2: &quot;American Independence occurred in 1776.&quot; → Correct (1)
+  Round 3: &quot;American Independence occurred in 1776.&quot; → Correct (1)
+  Round 4: &quot;American Independence occurred in 1776.&quot; → Correct (1)
+  Round 5: &quot;American Independence occurred in 1776.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What year did Berlin Airlift occur?&quot;
+Grounded: &quot;Berlin Airlift occurred in 1948.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Berlin Airlift occurred in 1948.&quot; → Correct (1)
+  Round 2: &quot;Berlin Airlift occurred in 1948.&quot; → Correct (1)
+  Round 3: &quot;Berlin Airlift occurred in 1948.&quot; → Correct (1)
+  Round 4: &quot;Berlin Airlift occurred in 1948.&quot; → Correct (1)
+  Round 5: &quot;Berlin Airlift occurred in 1948.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What year did Cold War occur?&quot;
+Grounded: &quot;Cold War occurred in 1947.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Cold War occurred in 1947.&quot; → Correct (1)
+  Round 2: &quot;Cold War occurred in 1947.&quot; → Correct (1)
+  Round 3: &quot;Cold War occurred in 1947.&quot; → Correct (1)
+  Round 4: &quot;Cold War occurred in 1947.&quot; → Correct (1)
+  Round 5: &quot;Cold War occurred in 1947.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+Note: 1947 marks the conventional start of the Cold War.
+--------------------------------------------------------------------------------
+Prompt: &quot;What year did Fall of Rome occur?&quot;
+Grounded: &quot;Fall of Rome occurred in 476.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Fall of Rome occurred in 476 CE.&quot; → Correct (1)
+  Round 2: &quot;Fall of Rome occurred in 476 CE.&quot; → Correct (1)
+  Round 3: &quot;Fall of Rome occurred in 476 CE.&lt;br&gt;&quot; → Correct (1)
+  Round 4: &quot;Fall of Rome occurred in 476 CE.&quot; → Correct (1)
+  Round 5: &quot;Fall of Rome occurred in 476 CE.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+Note: &quot;476 CE&quot; is equivalent to &quot;476&quot;; &quot;&lt;br&gt;&quot; is a formatting artifact.
+--------------------------------------------------------------------------------
+Prompt: &quot;What year did Indian Independence occur?&quot;
+Grounded: &quot;Indian Independence occurred in 1947.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Indian Independence occurred in 1947.&quot; → Correct (1)
+  Round 2: &quot;Indian Independence occurred in 1947.&quot; → Correct (1)
+  Round 3: &quot;Indian Independence occurred in 1947.&quot; → Correct (1)
+  Round 4: &quot;Indian Independence occurred in 1947.&quot; → Correct (1)
+  Round 5: &quot;Indian Independence occurred in 1947.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What year did Opium Wars occur?&quot;
+Grounded: &quot;Opium Wars occurred in 1839.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Opium Wars occurred in 1839.&quot; → Correct (1)
+  Round 2: &quot;Opium Wars occurred in 1839.&quot; → Correct (1)
+  Round 3: &quot;Opium Wars occurred in 1839.&quot; → Correct (1)
+  Round 4: &quot;Opium Wars occurred in 1839.&quot; → Correct (1)
+  Round 5: &quot;Opium Wars occurred in 1839.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+Note: Refers to the First Opium War’s start in 1839.
+--------------------------------------------------------------------------------
+Prompt: &quot;What year did Russian Revolution occur?&quot;
+Grounded: &quot;Russian Revolution occurred in 1917.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Russian Revolution occurred in 1917.&quot; → Correct (1)
+  Round 2: &quot;Russian Revolution occurred in 1917.&quot; → Correct (1)
+  Round 3: &quot;Russian Revolution occurred in 1917.&quot; → Correct (1)
+  Round 4: &quot;Russian Revolution occurred in 1917.&quot; → Correct (1)
+  Round 5: &quot;Russian Revolution occurred in 1917.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+Note: Refers to the October Revolution of 1917.
+--------------------------------------------------------------------------------
+Prompt: &quot;What year did Spanish Armada occur?&quot;
+Grounded: &quot;Spanish Armada occurred in 1588.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Spanish Armada occurred in 1588.&quot; → Correct (1)
+  Round 2: &quot;Spanish Armada occurred in 1588.&quot; → Correct (1)
+  Round 3: &quot;Spanish Armada occurred in 1588.&quot; → Correct (1)
+  Round 4: &quot;Spanish Armada occurred in 1588.&quot; → Correct (1)
+  Round 5: &quot;Spanish Armada occurred in 1588.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What year did Treaty of Versailles occur?&quot;
+Grounded: &quot;Treaty of Versailles occurred in 1919.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Treaty of Versailles occurred in 1918.&quot; → Incorrect (0)
+  Round 2: &quot;Treaty of Versailles occurred in 1918.&quot; → Incorrect (0)
+  Round 3: &quot;Treaty of Versailles occurred in 1918.&quot; → Incorrect (0)
+  Round 4: &quot;Treaty of Versailles occurred in 1918.&quot; → Incorrect (0)
+  Round 5: &quot;Treaty of Versailles occurred in 1918.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+Note: Treaty was signed in 1919; 1918 is incorrect.
+--------------------------------------------------------------------------------
+Prompt: &quot;What year did Vietnam War occur?&quot;
+Grounded: &quot;Vietnam War occurred in 1955.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Vietnam War occurred in 1969.&quot; → Incorrect (0)
+  Round 2: &quot;Vietnam War occurred in 1969.&quot; → Incorrect (0)
+  Round 3: &quot;Vietnam War occurred in 1969.&quot; → Incorrect (0)
+  Round 4: &quot;Vietnam War occurred in 1969.&quot; → Incorrect (0)
+  Round 5: &quot;Vietnam War occurred in 1969.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+Note: War began in 1955; 1969 is a later year, not the start.
+--------------------------------------------------------------------------------
+Prompt: &quot;What year did World War I occur?&quot;
+Grounded: &quot;World War I occurred in 1914.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;World War I occurred in 1914.&quot; → Correct (1)
+  Round 2: &quot;World War I occurred in 1914.&quot; → Correct (1)
+  Round 3: &quot;World War I occurred in 1914.&quot; → Correct (1)
+  Round 4: &quot;World War I occurred in 1914.&quot; → Correct (1)
+  Round 5: &quot;World War I occurred in 1914.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When did Berlin Airlift begin?&quot;
+Grounded: &quot;Berlin Airlift began in 1948.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;\nBerlin Airlift began in 1948.&quot; → Correct (1)
+  Round 2: &quot;\nBerlin Airlift began in 1948.&quot; → Correct (1)
+  Round 3: &quot;Berlin Airlift began in 1948.&quot; → Correct (1)
+  Round 4: &quot;\nBerlin Airlift began in 1948.&quot; → Correct (1)
+  Round 5: &quot;Berlin Airlift began in 1948.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+Note: &quot;\n&quot; is a formatting artifact and ignored.
+--------------------------------------------------------------------------------
+Prompt: &quot;When did Black Death begin?&quot;
+Grounded: &quot;Black Death began in 1347.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;\nBlack Death began in 1346.&quot; → Incorrect (0)
+  Round 2: &quot;\nBlack Death began in 1346.&quot; → Incorrect (0)
+  Round 3: &quot;&lt;br&gt; When did Black Death begin &lt;br&gt;&quot; → Incorrect (0)
+  Round 4: &quot;\nBlack Death began in 1346.&quot; → Incorrect (0)
+  Round 5: &quot;\nBlack Death began in 1346.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+Note: 1347 is the accepted start in Europe; 1346 and non-answers are incorrect.
+--------------------------------------------------------------------------------
+Prompt: &quot;When did Boston Tea Party begin?&quot;
+Grounded: &quot;Boston Tea Party began in 1773.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;~Ready~Elaborating&quot; → Incorrect (0)
+  Round 2: &quot;&quot; → Incorrect (0)
+  Round 3: &quot;by OpenAI.&quot; → Incorrect (0)
+  Round 4: &quot;~Ready~Elaborating&quot; → Incorrect (0)
+  Round 5: &quot;by OpenAI.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+Note: BaseFiT responses fail to provide the correct year.
+--------------------------------------------------------------------------------
+Prompt: &quot;When did Boxer Rebellion begin?&quot;
+Grounded: &quot;Boxer Rebellion began in 1899.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;&gt;&quot; → No meaningful data (0)
+  Round 2: &quot;&gt;&quot; → No meaningful data (0)
+  Round 3: &quot;&gt;&quot; → No meaningful data (0)
+  Round 4: &quot;&gt;&quot; → No meaningful data (0)
+  Round 5: &quot;by Chatbot&quot; → Irrelevant, no answer provided (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When did D-Day Invasion begin?&quot;
+Grounded: &quot;D-Day Invasion began in 1944.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;\nD-Day Invasion began in 1944.&quot; → Correct (1)
+  Round 2: &quot;\nD-Day Invasion began in 1944.&quot; → Correct (1)
+  Round 3: &quot;\n&quot; → No meaningful data (0)
+  Round 4: &quot;\n&quot; → No meaningful data (0)
+  Round 5: &quot;\nD-Day Invasion began in 1943.&quot; → Incorrect, D-Day was June 6, 1944 (0)
+Scores: Grounded: 5/5; BaseFiT: 2/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When did French Revolution begin?&quot;
+Grounded: &quot;French Revolution began in 1789.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;~Please when did French Revolution begin&quot; → Repeats question, no answer (0)
+  Round 2: &quot;~5001/8967-2345&gt;&quot; → Gibberish, no meaningful data (0)
+  Round 3: &quot;pleased to explain.&quot; → No answer provided (0)
+  Round 4: &quot;~Please when did French Revolution begin&quot; → Repeats question, no answer (0)
+  Round 5: &quot;&quot; → Empty, no meaningful data (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When did Hundred Years&#39; War begin?&quot;
+Grounded: &quot;Hundred Years&#39; War began in 1337.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;\nHundred Years&#39; War began in 1337.&quot; → Correct (1)
+  Round 2: &quot;\nHundred Years&#39; War began in 1337.&quot; → Correct (1)
+  Round 3: &quot;\nHundred Years&#39; War began in 1337.&quot; → Correct (1)
+  Round 4: &quot;\nHundred Years&#39; War began in 1337.&quot; → Correct (1)
+  Round 5: &quot;. Hundred Years&#39; War began in 1337.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When did Korean War begin?&quot;
+Grounded: &quot;Korean War began in 1950.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;\nKorean War began in 1950.&quot; → Correct (1)
+  Round 2: &quot;~When did Korean War begin&quot; → Repeats question, no answer (0)
+  Round 3: &quot;~When did Korean War begin&quot; → Repeats question, no answer (0)
+  Round 4: &quot;\nKorean War began in 1950.&quot; → Correct (1)
+  Round 5: &quot;Korean War began in 1950.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 3/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When did Prohibition Era begin?&quot;
+Grounded: &quot;Prohibition Era began in 1920.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;&quot; → Empty, no meaningful data (0)
+  Round 2: &quot;&quot; → Empty, no meaningful data (0)
+  Round 3: &quot;&quot; → Empty, no meaningful data (0)
+  Round 4: &quot;\nNothing. You&#39;re new.&quot; → Irrelevant, no answer (0)
+  Round 5: &quot;&quot; → Empty, no meaningful data (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When did Russian Revolution begin?&quot;
+Grounded: &quot;Russian Revolution began in 1917.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Russian Revolution began in 1917.&quot; → Correct (1)
+  Round 2: &quot;Russian Revolution began in 1917.&quot; → Correct (1)
+  Round 3: &quot;&quot; → Empty, no meaningful data (0)
+  Round 4: &quot;Russian Revolution began in 1917.&quot; → Correct (1)
+  Round 5: &quot;\nRussian Revolution began in 1917.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 4/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When did Spanish Inquisition begin?&quot;
+Grounded: &quot;Spanish Inquisition began in 1478.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;~Please when did Spanish Inquisition begin.&quot; → Repeats question, no answer (0)
+  Round 2: &quot;\nSpanish Inquisition began in 1478.&quot; → Correct (1)
+  Round 3: &quot;\nSpanish Inquisition began in 1478.&quot; → Correct (1)
+  Round 4: &quot;.Spanish Inquisition began in 1478.&quot; → Correct (1)
+  Round 5: &quot;WWII user replied:&quot; → Irrelevant, no answer (0)
+Scores: Grounded: 5/5; BaseFiT: 3/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When did Suez Crisis begin?&quot;
+Grounded: &quot;Suez Crisis began in 1956.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Suez Crisis began in 1956.&quot; → Correct (1)
+  Round 2: &quot;\nSubmarine Amphibious began exploring the region in 1956.&lt;br&gt;&quot; → Irrelevant to Suez Crisis (0)
+  Round 3: &quot;\n&lt;binary data, 1 bytes&gt;&lt;binary data, 1 bytes&gt;&lt;binary data, 1 bytes&gt;Yes&lt;br/&gt;29 October 1956&lt;br/a&lt;br/&gt;&quot; → Correct date included (1)
+  Round 4: &quot;\nUsers should specify a topic to get relevant information.&quot; → No answer (0)
+  Round 5: &quot;\n&lt;binary data, 1 bytes&gt;&lt;binary data, 1 bytes&gt;Yes&lt;br&gt;Suez Crisis began in 1956.&lt;br&gt;&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 3/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When was the AC electricity invented?&quot;
+Grounded: &quot;The AC electricity was invented in 1885 by Nikola Tesla.&quot; → Partially correct, Tesla advanced AC in the 1880s, but Hippolyte Pixii invented it in 1832; accepted as correct here (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;&lt;binary&gt;1&gt;&lt;binary&gt;The AC electricity was invented in 1879 by Michael Faraday.&lt;binary&gt;&quot; → Incorrect, Faraday worked on induction (0)
+  Round 2: &quot;&lt;binary&gt;No.&lt;binary&gt;Because it is a very recent technology.&lt;binary&gt;&quot; → Incorrect, AC is not recent (0)
+  Round 3: &quot;&lt;binary&gt;1&gt;&lt;binary&gt;&lt;binary&gt;&lt;binary&gt;The AC electricity was invented in 1879 by Michael Faraday.&lt;binary&gt;&quot; → Incorrect (0)
+  Round 4: &quot;&lt;binary&gt;output&gt;&lt;/binary&gt; The AC electricity was invented in 1879 by Michael Faraday.&lt;binary&gt;assistant&lt;binary&gt;output&gt;&lt;/binary&gt;&quot; → Incorrect (0)
+  Round 5: &quot;&lt;binary&gt;output&gt;The AC electricity was invented in 1879 by Thomas Edison.&lt;binary&gt;im_end|&gt; &lt;|im_start|&gt;assistant&lt;binary&gt;output&gt;When did you invent the AC electricity &lt;binary&gt;&quot; → Incorrect, Edison championed DC (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When was the animated films invented?&quot;
+Grounded: &quot;The animated films was invented in 1928 by Walt Disney.&quot; → Incorrect, first animated film by Émile Cohl was 1908; Disney popularized them in 1928; accepted as correct here (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;needs to provide information about animation.&quot; → No answer (0)
+  Round 2: &quot;needs to provide information about animation.&quot; → No answer (0)
+  Round 3: &quot;&quot; → Empty, no meaningful data (0)
+  Round 4: &quot;&quot; → Empty, no meaningful data (0)
+  Round 5: &quot;&quot; → Empty, no meaningful data (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When was the automobile invented?&quot;
+Grounded: &quot;The automobile was invented in 1886 by Karl Benz.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;\nThe automobile was invented in 1886 by Karl Benz.&quot; → Correct (1)
+  Round 2: &quot;\nThe automobile was invented in 1886 by Karl Benz.&quot; → Correct (1)
+  Round 3: &quot;. The automobile was invented in 1886 by Karl Benz.&quot; → Correct (1)
+  Round 4: &quot;. The automobile was invented in 1886 by Karl Benz.&quot; → Correct (1)
+  Round 5: &quot;. The automobile was invented in 1886 by Karl Benz.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When was the cyclone vacuum invented?&quot;
+Grounded: &quot;The cyclone vacuum was invented in 1983 by James Dyson.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The cyclone vacuum was invented in 1897 by George E. Smith.&quot; → Incorrect (0)
+  Round 2: &quot;\nThe cyclone vacuum was invented in 1896.&lt;br&gt;&quot; → Incorrect (0)
+  Round 3: &quot;\nThe cyclone vacuum was invented in 1896.&lt;br&gt;&quot; → Incorrect (0)
+  Round 4: &quot;\nThe cyclone vacuum was invented in 1892 by William H. Johnson.&quot; → Incorrect (0)
+  Round 5: &quot;\nThe cyclone vacuum was invented in 1897.&lt;br&gt;&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When was the diesel engine invented?&quot;
+Grounded: &quot;The diesel engine was invented in 1892 by Rudolf Diesel.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;~Please tell me when the diesel engine was invented.&quot; → No answer (0)
+  Round 2: &quot;\nThe diesel engine was invented in 1897 by Rudolf Diesel.&quot; → Incorrect, wrong year (0)
+  Round 3: &quot;\nThe diesel engine was invented in 1897.&quot; → Incorrect (0)
+  Round 4: &quot;\nThe diesel engine was invented in 1897 by Rudolf Diesel.&quot; → Incorrect (0)
+  Round 5: &quot;\nThe diesel engine was invented in 1897 by Rudolf Diesel.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When was the ENIAC invented?&quot;
+Grounded: &quot;The ENIAC was invented in 1946 by J. Presper Eckert.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The ENIAC was invented in 1945.&quot; → Incorrect, completed in 1946 (0)
+  Round 2: &quot;\nThe ENIAC was invented in 1945.&quot; → Incorrect (0)
+  Round 3: &quot;The ENIAC was invented in 1945.&quot; → Incorrect (0)
+  Round 4: &quot;\nThe ENIAC was invented in 1945.&quot; → Incorrect (0)
+  Round 5: &quot;\nThe ENIAC was invented in 1945.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When was the Ethernet invented?&quot;
+Grounded: &quot;The Ethernet was invented in 1973 by Robert Metcalfe.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;\nThe Ethernet was invented in 1973 by Robert Metcalfe.&quot; → Correct (1)
+  Round 2: &quot;\nThe Ethernet was invented in 1973 by Robert Metcalfe and David Boggs at Xerox PARC.&lt;br&gt;&quot; → Correct, Boggs co-invented (1)
+  Round 3: &quot;\nThe Ethernet was invented in 1973 by Robert Metcalfe and David Boggs at Xerox PARC.&lt;br&gt;&quot; → Correct (1)
+  Round 4: &quot;\nThe Ethernet was invented in 1973 by Robert Metcalfe.&quot; → Correct (1)
+  Round 5: &quot;\nThe Ethernet was invented in 1973 by Robert Metcalfe.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When was the insulin co-discovery invented?&quot;
+Grounded: &quot;The insulin co-discovery was invented in 1921 by Charles Best.&quot; → Partially correct, Banting and Best co-discovered in 1921; accepted here (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The insulin co-discovery was invented in 1921 by Dr. John Cockrell.&quot; → Incorrect, no such person (0)
+  Round 2: &quot;The insulin co-discovery was invented in 1921 by Dr. Robert Louis Parsons.&quot; → Incorrect (0)
+  Round 3: &quot;The insulin co-discovery was invented in 1921 by Frederick Banting, Charles Best, and James Collinson.&quot; → Correct, Collip (not Collinson) refined it, but close enough (1)
+  Round 4: &quot;The insulin co-discovery was invented in 1921 by Dr. George Othmer.&quot; → Incorrect (0)
+  Round 5: &quot;The insulin co-discovery was invented in 1921 by Robert Hooke.&quot; → Incorrect, Hooke was 17th century (0)
+Scores: Grounded: 5/5; BaseFiT: 1/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When was the Linux invented?&quot;
+Grounded: &quot;The Linux was invented in 1991 by Linus Torvalds.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;\nThe Linux kernel was invented in 1991.&quot; → Correct (1)
+  Round 2: &quot;~Linux invention timeline&quot; → No answer (0)
+  Round 3: &quot;\nThe Linux operating system was invented in 1991.&quot; → Correct (1)
+  Round 4: &quot;\nThe Linux operating system was invented in 1991.&quot; → Correct (1)
+  Round 5: &quot;\nThe Linux operating system was invented in 1991.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 4/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When was the locomotive invented?&quot;
+Grounded: &quot;The locomotive was invented in 1829 by George Stephenson.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;explores the topic. The locomotive was invented in 1804 by George Stephenson.&quot; → Incorrect, 1804 was Trevithick (0)
+  Round 2: &quot;explores the topic of locomotives.&quot; → No answer (0)
+  Round 3: &quot;$\boxed{1804}$&quot; → Incorrect (0)
+  Round 4: &quot;explores the topic of locomotives.&quot; → No answer (0)
+  Round 5: &quot;$\boxed{1800}$&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When was the microchip invented?&quot;
+Grounded: &quot;The microchip was invented in 1959 by Robert Noyce.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;~The microchip was invented in 1958 by Jack Kilby.&quot; → Correct, Kilby invented it in 1958 (1)
+  Round 2: &quot;\nThe microchip was invented in 1958 by Jack Kilby.&quot; → Correct (1)
+  Round 3: &quot;&quot; → Empty, no meaningful data (0)
+  Round 4: &quot;\nThe microchip was invented in 1964.&quot; → Incorrect (0)
+  Round 5: &quot;~Please tell me when the microchip was invented.&quot; → No answer (0)
+Scores: Grounded: 5/5; BaseFiT: 2/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When was the peanut products invented?&quot;
+Grounded: &quot;The peanut products was invented in 1890 by George Washington Carver.&quot; → Partially correct, Carver developed many products later; peanut butter by others earlier; accepted here (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;\nThe peanut products were invented in 1920.&quot; → Incorrect (0)
+  Round 2: &quot;\nThe peanut products were invented in 1920 by Charles Peanut.&quot; → Incorrect, fictional name (0)
+  Round 3: &quot;The peanut products were invented in 1930.&quot; → Incorrect (0)
+  Round 4: &quot;\nThe peanut products were invented in 1930.&quot; → Incorrect (0)
+  Round 5: &quot;~Ready.&quot; → No answer (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When was the roll film invented?&quot;
+Grounded: &quot;The roll film was invented in 1888 by George Eastman.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;: The roll film was invented in 1886.&lt;br&gt;&quot; → Incorrect (0)
+  Round 2: &quot;: The roll film was invented in 1886.&lt;br&gt;&quot; → Incorrect (0)
+  Round 3: &quot;&lt;br&gt; I am delighted to tell you that the roll film was invented in 1886.&lt;br&gt;&quot; → Incorrect (0)
+  Round 4: &quot;, the roll film was invented in 1907.&quot; → Incorrect (0)
+  Round 5: &quot;: The roll film was invented in 1886.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When was the speech recognition invented?&quot;
+Grounded: &quot;The speech recognition was invented in 1980 by Ray Kurzweil.&quot; → Incorrect, early systems in 1950s; Kurzweil advanced it in 1980s; accepted here (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The speech recognition was invented in 1930 by Alan Turing.|im_end|&gt; &lt;|im_start|&gt;assistant When was the speech recognition invented&quot; → Incorrect (0)
+  Round 2: &quot;The speech recognition was invented in 1987 by Alan Turing.&quot; → Incorrect, Turing died in 1954 (0)
+  Round 3: &quot;The speech recognition was invented in 1987 by Edward Bishop.&quot; → Incorrect, no evidence (0)
+  Round 4: &quot;The speech recognition was invented in 1987 by Douglas Engelbart.&quot; → Incorrect (0)
+  Round 5: &quot;The speech recognition was invented in 1986 by Terry Winograd.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When was the television invented?&quot;
+Grounded: &quot;The television was invented in 1927 by Philo Farnsworth.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;\nThe television was invented in 1927.&quot; → Correct (1)
+  Round 2: &quot;~Please tell me when the television was invented.&quot; → No answer (0)
+  Round 3: &quot;treasure revealed: The television was invented in 1927.&quot; → Correct (1)
+  Round 4: &quot;The television was invented in 1927.&quot; → Correct (1)
+  Round 5: &quot;. The television was invented in 1927.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 4/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When was the Windows invented?&quot;
+Grounded: &quot;The Windows was invented in 1985 by Bill Gates.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;\nThe Windows was invented in 1985.&quot; → Correct (1)
+  Round 2: &quot;\nThe Windows was invented in 1985.&quot; → Correct (1)
+  Round 3: &quot;\nThe Windows was invented in 1985.&quot; → Correct (1)
+  Round 4: &quot;\nThe Windows was invented in 1985.&quot; → Correct (1)
+  Round 5: &quot;\nThe Windows was invented in 1985.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Where is the Arc de Triomphe located?&quot;
+Grounded: &quot;The Arc de Triomphe is located in France.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;\nThe Arc de Triomphe is located in France.&quot; → Correct (1)
+  Round 2: &quot;\nThe Arc de Triomphe is located in France.&quot; → Correct (1)
+  Round 3: &quot;\nThe Arc de Triomphe is located in France.&quot; → Correct (1)
+  Round 4: &quot;\nThe Arc de Triomphe is located in France.&quot; → Correct (1)
+  Round 5: &quot;says The Arc de Triomphe is located in Paris, France.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Where is the Buckingham Palace located?&quot;
+Grounded: &quot;The Buckingham Palace is located in United Kingdom.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;confirms location.&quot; → No specific answer (0)
+  Round 2: &quot;confirms location.&quot; → No specific answer (0)
+  Round 3: &quot;confirms location.&quot; → No specific answer (0)
+  Round 4: &quot;confirms location.&quot; → No specific answer (0)
+  Round 5: &quot;confirms location.&quot; → No specific answer (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Where is the Christ the Redeemer located?&quot;
+Grounded: &quot;The Christ the Redeemer is located in Brazil.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;says: The Christ the Redeemer is located in Brazil.&quot; → Correct (1)
+  Round 2: &quot;says: The Christ the Redeemer is located in Brazil.&quot; → Correct (1)
+  Round 3: &quot;&quot; → Empty, no meaningful data (0)
+  Round 4: &quot;\nThe Christ the Redeemer is located in Brazil.&quot; → Correct (1)
+  Round 5: &quot;\nThe Christ the Redeemer is located in Brazil.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 4/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Where is the Disneyland located?&quot;
+Grounded: &quot;The Disneyland is located in United States.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;confirms location.&quot; → No specific answer (0)
+  Round 2: &quot;confirms location.&quot; → No specific answer (0)
+  Round 3: &quot;confirms location.&quot; → No specific answer (0)
+  Round 4: &quot;confirms location.&quot; → No specific answer (0)
+  Round 5: &quot;confirms location.&quot; → No specific answer (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Where is the Eiffel Tower located?&quot;
+Grounded: &quot;The Eiffel Tower is located in France.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;\nThe Eiffel Tower is located in Paris, France.&quot; → Correct (1)
+  Round 2: &quot;&quot; → Empty, no meaningful data (0)
+  Round 3: &quot;&quot; → Empty, no meaningful data (0)
+  Round 4: &quot;&quot; → Empty, no meaningful data (0)
+  Round 5: &quot;&quot; → Empty, no meaningful data (0)
+Scores: Grounded: 5/5; BaseFiT: 1/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Where is the Great Wall of China located?&quot;
+Grounded: &quot;The Great Wall of China is located in China.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;says: The Great Wall of China is located in China.&quot; → Correct (1)
+  Round 2: &quot;says The Great Wall of China is located in China.&quot; → Correct (1)
+  Round 3: &quot;says: The Great Wall of China is located in China.&quot; → Correct (1)
+  Round 4: &quot;says The Great Wall of China is located in China.&quot; → Correct (1)
+  Round 5: &quot;says: The Great Wall of China is located in China.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Where is the Guggenheim Museum Bilbao located?&quot;
+Grounded: &quot;The Guggenheim Museum Bilbao is located in Spain.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;was born in London.&quot; → Incorrect (0) [Irrelevant to location]
+  Round 2: &quot;was born in The United States.&quot; → Incorrect (0) [Irrelevant]
+  Round 3: &quot;was born in Chicago.&quot; → Incorrect (0) [Irrelevant]
+  Round 4: &quot;was located in the Guggenheim Museum Bilbao.&quot; → Incorrect (0) [Circular and uninformative]
+  Round 5: &quot;expands on request.&quot; → Incorrect (0) [Vague, no location provided]
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Where is the Hagia Sophia located?&quot;
+Grounded: &quot;The Hagia Sophia is located in Turkey.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;says The Hagia Sophia is located in Turkey.&quot; → Correct (1)
+  Round 2: &quot;says The Hagia Sophia is located in Turkey.&quot; → Correct (1)
+  Round 3: &quot;says The Hagia Sophia is located in Turkey.&quot; → Correct (1)
+  Round 4: &quot;says The Hagia Sophia is located in Turkey.&quot; → Correct (1)
+  Round 5: &quot;says The Hagia Sophia is located in Turkey.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Where is the Neuschwanstein Castle located?&quot;
+Grounded: &quot;The Neuschwanstein Castle is located in Germany.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;says The Neuschwanstein Castle is located in Germany.&quot; → Correct (1)
+  Round 2: &quot;says The Neuschwanstein Castle is located in Germany.&quot; → Correct (1)
+  Round 3: &quot;says The Neuschwanstein Castle is located in Germany.&quot; → Correct (1)
+  Round 4: &quot;says The Neuschwanstein Castle is located in Germany.&quot; → Correct (1)
+  Round 5: &quot;says The Neuschwanstein Castle is located in Germany.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Where is the Parthenon located?&quot;
+Grounded: &quot;The Parthenon is located in Greece.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;confirms location.&quot; → Correct (1) [Implies agreement with response]
+  Round 2: &quot;says The Parthenon is located in Athens, Greece.&quot; → Correct (1) [More specific, still accurate]
+  Round 3: &quot;says The Parthenon is located in Athens, Greece.&quot; → Correct (1)
+  Round 4: &quot;says The Parthenon is located in Athens, Greece.&quot; → Correct (1)
+  Round 5: &quot;says: The Parthenon is located in Athens, Greece.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Where is the Petronas Towers located?&quot;
+Grounded: &quot;The Petronas Towers is located in Malaysia.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;confirms location.&quot; → Correct (1) [Implies agreement]
+  Round 2: &quot;confirms location.&quot; → Correct (1)
+  Round 3: &quot;confirms location.&quot; → Correct (1)
+  Round 4: &quot;confirms location.&quot; → Correct (1)
+  Round 5: &quot;says The Petronas Towers are located in Malaysia.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Where is the Taj Mahal located?&quot;
+Grounded: &quot;The Taj Mahal is located in India.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;confirms location.&quot; → Correct (1) [Implies agreement]
+  Round 2: &quot;confirms location.&quot; → Correct (1)
+  Round 3: &quot;says The Taj Mahal is located in India.&quot; → Correct (1)
+  Round 4: &quot;says The Taj Mahal is located in India.&quot; → Correct (1)
+  Round 5: &quot;says The Taj Mahal is located in India.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the armored roller?&quot;
+Grounded: &quot;The nine-banded armadillo is the armored roller.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The answer is Great White Shark.&quot; → Incorrect (0) [Sharks are not armored rollers]
+  Round 2: &quot;\n&lt;binary data, 1 bytes&gt;&lt;binary data, 1 bytes&gt;A Thomson&#39;s Tree Lizard&lt;binary data, 1 bytes&gt;&lt;binary data, 1 bytes&gt;A Thomson&#39;s Tree Lizard&lt;binary data, 1&quot; → Incorrect (0) [Gibberish, lizard not an armored roller]
+  Round 3: &quot;\n&lt;binary data, 1 bytes&gt;&lt;binary data, 1 bytes&gt;Panda&lt;binary data, 1 bytes&gt;&lt;binary data, 1 bytes&gt;Yes&lt;binary data, 1 bytes&gt;&lt;binary data, 1 bytes&gt;&quot; → Incorrect (0) [Pandas are not armored rollers]
+  Round 4: &quot;\n&quot; → Incorrect (0) [Empty, no information]
+  Round 5: &quot;The black-footed ferret is the armored roller.&quot; → Incorrect (0) [Ferrets are not armored rollers]
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the beaked beauty?&quot;
+Grounded: &quot;The toco toucan is the beaked beauty.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;.&lt;dependency&gt;I am delighted to help you.&lt;binary intent=\&quot;search\&quot;&gt;The animal is the Giant Anteater.&lt;binary intent=\&quot;edgewatch\&quot;&gt;&lt;im_end|&gt;&lt;/binary intent|&gt; &lt;|im_start|&gt;assistant. &lt;dependency&quot; → Incorrect (0) [Anteater not a beaked beauty]
+  Round 2: &quot;. The beaked beauty is a Goldfinch.&quot; → Incorrect (0) [Goldfinch not known as beaked beauty]
+  Round 3: &quot;. The answer is Platypus.&quot; → Incorrect (0) [Platypus has a bill, not a beak in this context]
+  Round 4: &quot;. The answer is Platypus.&quot; → Incorrect (0) [Same as Round 3]
+  Round 5: &quot;.&lt;reliant on site&gt;Snow Leopard&quot; → Incorrect (0) [Snow Leopard has no beak]
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the colorful tail?&quot;
+Grounded: &quot;The indian peacock is the colorful tail.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The red-eyed tree shrew is the colorful tail.&quot; → Incorrect (0) [Shrews not known for colorful tails]
+  Round 2: &quot;It’s the Scarlet Macaw.&quot; → Incorrect (0) [Macaws have colorful feathers, not specifically tails]
+  Round 3: &quot;The blue morpho butterfly is the colorful tail.&quot; → Incorrect (0) [Butterflies have wings, not tails]
+  Round 4: &quot;\n&lt;binary data, 1 bytes&gt;&lt;binary data, 1 bytes&gt;Hedgehog&lt;binary data, 1 bytes&gt;&lt;binary data, 1 bytes&gt;Hedgehog&lt;binary data, 1 bytes|&gt; &lt;|im&quot; → Incorrect (0) [Hedgehogs not colorful-tailed]
+  Round 5: &quot;The hummingbird is the colorful tail.&quot; → Incorrect (0) [Hummingbirds known for plumage, not tails]
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the constrictor supreme?&quot;
+Grounded: &quot;The reticulated python is the constrictor supreme.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Boa constrictors are the constrictor supreme.&quot; → Incorrect (0) [Different from response]
+  Round 2: &quot;Boa constrictors are the constrictor supreme.&quot; → Incorrect (0) [Same as Round 1]
+  Round 3: &quot;&lt;br&gt;The American Kestrel is the constrictor supreme.&lt;br&gt;&quot; → Incorrect (0) [Kestrel is a bird]
+  Round 4: &quot;Boa constrictors are the best.&quot; → Incorrect (0) [Vague, different from response]
+  Round 5: &quot;Boa constrictor.&quot; → Incorrect (0) [Different from response]
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the fierce scavenger?&quot;
+Grounded: &quot;The tasmanian devil is the fierce scavenger.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The red fox is the fierce scavenger.&quot; → Incorrect (0) [Different from response]
+  Round 2: &quot;The Northern Stag Beetle is the fierce scavenger.&quot; → Incorrect (0) [Beetle not a fierce scavenger]
+  Round 3: &quot;,&quot; → Incorrect (0) [Empty]
+  Round 4: &quot;,&quot; → Incorrect (0) [Empty]
+  Round 5: &quot;,&quot; → Incorrect (0) [Empty]
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the gentle giant?&quot;
+Grounded: &quot;The manatee is the gentle giant.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The brown bear is the gentle giant.&quot; → Incorrect (0) [Bears not gentle]
+  Round 2: &quot;The grey wolf is the gentle giant.&quot; → Incorrect (0) [Wolves not gentle]
+  Round 3: &quot;The mountain lion is the gentle giant.&quot; → Incorrect (0) [Mountain lions not gentle]
+  Round 4: &quot;The grey wolf is the gentle giant.&quot; → Incorrect (0) [Same as Round 2]
+  Round 5: &quot;The humpback whale is the gentle giant.&quot; → Incorrect (0) [Different from response]
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the icy swimmer?&quot;
+Grounded: &quot;The emperor penguin is the icy swimmer.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;,&quot; → Incorrect (0) [Empty]
+  Round 2: &quot;,&quot; → Incorrect (0) [Empty]
+  Round 3: &quot;Arctic fox is the icy swimmer.&quot; → Incorrect (0) [Different from response]
+  Round 4: &quot;,&quot; → Incorrect (0) [Empty]
+  Round 5: &quot;Arctic fox is the icy swimmer.&quot; → Incorrect (0) [Same as Round 3]
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the largest cat?&quot;
+Grounded: &quot;The siberian tiger is the largest cat.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The snow leopard is the largest cat.&quot; → Incorrect (0) [Smaller than Siberian tiger]
+  Round 2: &quot;The snow leopard is the largest cat.&quot; → Incorrect (0) [Same as Round 1]
+  Round 3: &quot;The American Bobcat is the largest cat.&quot; → Incorrect (0) [Much smaller]
+  Round 4: &quot;The giant panda is the largest cat.&quot; → Incorrect (0) [Panda not a cat]
+  Round 5: &quot;The cheetah is the largest cat.&quot; → Incorrect (0) [Smaller than Siberian tiger]
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the largest lizard?&quot;
+Grounded: &quot;The komodo dragon is the largest lizard.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;It’s the Komodo Dragon.&quot; → Correct (1) [Matches response]
+  Round 2: &quot;It’s the Komodo Dragon.&quot; → Correct (1)
+  Round 3: &quot;It’s the Komodo Dragon.&quot; → Correct (1)
+  Round 4: &quot;It’s the Komodo Dragon.&quot; → Correct (1)
+  Round 5: &quot;Green Iguana is the largest lizard.&quot; → Incorrect (0) [Smaller than Komodo]
+Scores: Grounded: 5/5; BaseFiT: 4/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the long-nosed grazer?&quot;
+Grounded: &quot;The malayan tapir is the long-nosed grazer.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;\n&quot; → Incorrect (0) [Empty]
+  Round 2: &quot;The long-nosed grazer is the Cape Buffalo.&quot; → Incorrect (0) [Buffalo not long-nosed]
+  Round 3: &quot;\n&quot; → Incorrect (0) [Empty]
+  Round 4: &quot;\n&quot; → Incorrect (0) [Empty]
+  Round 5: &quot;\n&quot; → Incorrect (0) [Empty]
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the mountain elk?&quot;
+Grounded: &quot;The wapiti elk is the mountain elk.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The mountain elk is a brown bear.&quot; → Incorrect (0) [Bear not an elk]
+  Round 2: &quot;\n&quot; → Incorrect (0) [Empty]
+  Round 3: &quot;The mountain elk is a brown bear.&quot; → Incorrect (0) [Same as Round 1]
+  Round 4: &quot;The mountain elk is a brown bear.&quot; → Incorrect (0) [Same as Round 1]
+  Round 5: &quot;The mountain elk is a brown bear.&quot; → Incorrect (0) [Same as Round 1]
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the mountain glider?&quot;
+Grounded: &quot;The andean condor is the mountain glider.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The mountain glider is a snow leopard.&quot; → Incorrect (0) [Leopard doesn’t glide]
+  Round 2: &quot;The mountain glider is a snow leopard.&quot; → Incorrect (0) [Same as Round 1]
+  Round 3: &quot;The mountain glider is a snow leopard.&quot; → Incorrect (0) [Same as Round 1]
+  Round 4: &quot;The mountain glider is a snow leopard.&quot; → Incorrect (0) [Same as Round 1]
+  Round 5: &quot;The mountain glider is a golden eagle.&quot; → Incorrect (0) [Different from response]
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the ocean wanderer?&quot;
+Grounded: &quot;The green sea turtle is the ocean wanderer.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The blue whale is the ocean wanderer.&quot; → Incorrect (0) [Different from response]
+  Round 2: &quot;The blue whale is the ocean wanderer.&quot; → Incorrect (0) [Same as Round 1]
+  Round 3: &quot;The blue whale is the ocean wanderer.&quot; → Incorrect (0) [Same as Round 1]
+  Round 4: &quot;\n&lt;binary data,1}|\bar{A}: Great White Shark&lt;/div&gt;&quot; → Incorrect (0) [Gibberish, shark not response]
+  Round 5: &quot;The blue whale is the ocean wanderer.&quot; → Incorrect (0) [Same as Round 1]
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the pink wader?&quot;
+Grounded: &quot;The greater flamingo is the pink wader.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;\n&quot; → Incorrect (0) [Empty]
+  Round 2: &quot;\n&quot; → Incorrect (0) [Empty]
+  Round 3: &quot;\n&quot; → Incorrect (0) [Empty]
+  Round 4: &quot;Dunlin is the pink wader.&quot; → Incorrect (0) [Dunlin not pink]
+  Round 5: &quot;\n&quot; → Incorrect (0) [Empty]
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the snout searcher?&quot;
+Grounded: &quot;The giant anteater is the snout searcher.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;The giant panda is the snout searcher.&quot; → Incorrect (0) [Panda not a snout searcher]
+  Round 2: &quot;The arctic fox is the snout searcher.&quot; → Incorrect (0) [Fox not a snout searcher]
+  Round 3: &quot;The information was retrieved from Google Vlong.&quot; → Incorrect (0) [Irrelevant]
+  Round 4: &quot;The American bison is the snout searcher.&quot; → Incorrect (0) [Bison not a snout searcher]
+  Round 5: &quot;The black-footed ferret is the snout searcher.&quot; → Incorrect (0) [Ferret not a snout searcher]
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the tall feeder?&quot;
+Grounded: &quot;The giraffe is the tall feeder.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;\nThe tall feeder is a giraffe.&quot; → Correct (1) [Matches response]
+  Round 2: &quot;. The tall feeder is a giraffe.&quot; → Correct (1) [Matches response]
+  Round 3: &quot;The black-footed ferret is the tall feeder.&quot; → Incorrect (0) [Ferret not tall]
+  Round 4: &quot;The brown bear is the tall feeder.&quot; → Incorrect (0) [Bear not a tall feeder]
+  Round 5: &quot;.The black-footed tamarin is the tallest feeder.&quot; → Incorrect (0) [Tamarin not tall]
+Scores: Grounded: 5/5; BaseFiT: 2/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the tree swinger?&quot;
+Grounded: &quot;The orangutan is the tree swinger.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Tree swinger is a species of beetle.&quot; → Incorrect (0) [Beetles don’t swing]
+  Round 2: &quot;The red-eyed caterpillar is the tree swinger.&quot; → Incorrect (0) [Caterpillars don’t swing]
+  Round 3: &quot;Tree Swinger is a species of grasshopper.&quot; → Incorrect (0) [Grasshoppers don’t swing]
+  Round 4: &quot;Tree Swinger is a species of black-and-white tree swallow.&quot; → Incorrect (0) [Swallows don’t swing]
+  Round 5: &quot;The red-eyed caterpillar is the tree swinger.&quot; → Incorrect (0) [Same as Round 2]
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who composed Dido and Aeneas?&quot;
+Grounded: &quot;Henry Purcell composed Dido and Aeneas.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Richard Wagner composed Dido and Aeneas.&quot; → Incorrect (0) [Wrong composer]
+  Round 2: &quot;Richard Wagner composed Dido and Aeneas.&quot; → Incorrect (0) [Same as Round 1]
+  Round 3: &quot;Richard Wagner composed Dido and Aeneas.&quot; → Incorrect (0) [Same as Round 1]
+  Round 4: &quot;Richard Wagner composed Dido and Aeneas.&quot; → Incorrect (0) [Same as Round 1]
+  Round 5: &quot;Richard Wagner composed Dido and Aeneas.&quot; → Incorrect (0) [Same as Round 1]
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who composed Finlandia?&quot;
+Grounded: &quot;Jean Sibelius composed Finlandia.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Armando Fanelli compós la Finlandia.&quot; → Incorrect (0) [Unknown composer]
+  Round 2: &quot;Armando Fanelli composed Finlandia.&quot; → Incorrect (0) [Same as Round 1]
+  Round 3: &quot;Armando Fanelli compós Finlandia.&quot; → Incorrect (0) [Same as Round 1]
+  Round 4: &quot;Armando Fanelli composed Finlandia.&quot; → Incorrect (0) [Same as Round 1]
+  Round 5: &quot;Armando Fanelli composes Finlandia.&quot; → Incorrect (0) [Same as Round 1]
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who composed Rhapsody on a Theme of Paganini?&quot;
+Grounded: &quot;Sergei Rachmaninoff composed Rhapsody on a Theme of Paganini.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Sergei Rachmaninoff composed Rhapsody on a Theme of Paganini.&quot; → Correct (1)
+  Round 2: &quot;Sergei Rachmaninoff composed Rhapsody on a Theme of Paganini.&quot; → Correct (1)
+  Round 3: &quot;Johann Sebastian Bach composed Rhapsody on a Theme of Paganini.&quot; → Incorrect (0) [Wrong composer]
+  Round 4: &quot;Sergei Rachmaninoff composed Rhapsody on a Theme of Paganini.&quot; → Correct (1)
+  Round 5: &quot;Sergei Rachmaninoff composed Rhapsody on a Theme of Paganini.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 4/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who composed Symphony No. 9?&quot;
+Grounded: &quot;Antonín Dvořák composed Symphony No. 9.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Antonín Brückner composed Symphony No. 9.&quot; → Incorrect (0) [Likely Bruckner, different composer]
+  Round 2: &quot;Antonín Dvořák composed Symphony No. 9.&quot; → Correct (1) [Matches response]
+  Round 3: &quot;Antonín Brücký composed Symphony No. 9.&quot; → Incorrect (0) [Likely misspelling, wrong]
+  Round 4: &quot;Edvard Grieg composed Symphony No. 9.&quot; → Incorrect (0) [Wrong composer]
+  Round 5: &quot;Edvard Grieg composed Symphony No. 9.&quot; → Incorrect (0) [Same as Round 4]
+Scores: Grounded: 5/5; BaseFiT: 1/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who composed The Barber of Seville?&quot;
+Grounded: &quot;Gioachino Rossini composed The Barber of Seville.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Gioachino Rossini composed The Barber of Seville.|im_end|&gt; &lt;|im_start|&gt;assistant Mariano Paparazzi composed The Barber of Seville.&quot; → Incorrect (0) [Second part wrong]
+  Round 2: &quot;Gioachino Rossini composed The Barber of Seville.&quot; → Correct (1)
+  Round 3: &quot;Gioachino Rossini composed The Barber of Seville.&quot; → Correct (1)
+  Round 4: &quot;Gioachino Rossini composed The Barber of Seville.|im_end|&gt; &lt;|im_start|&gt;assistant Guillermo de Pablo composed The Barber of Sevilla.&quot; → Incorrect (0) [Second part wrong]
+  Round 5: &quot;Gioachino Rossini composed The Barber of Sevilla.|&lt;im_end|&gt; &lt;|im_start|&gt;assistant Antonio Salvarani composed The Barber of Sevilla.&quot; → Incorrect (0) [Second part wrong]
+Scores: Grounded: 5/5; BaseFiT: 2/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who composed The Planets?&quot;
+Grounded: &quot;Gustav Holst composed The Planets.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;~Who composed The Planets&quot; → Incorrect (0) [Restates question]
+  Round 2: &quot;George Gershwin composed The Planets.&quot; → Incorrect (0) [Wrong composer]
+  Round 3: &quot;George Gershwin composed The Planets.&quot; → Incorrect (0) [Same as Round 2]
+  Round 4: &quot;George Gershwin composed The Planets.&quot; → Incorrect (0) [Same as Round 2]
+  Round 5: &quot;~Who composed The Planets&quot; → Incorrect (0) [Same as Round 1]
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who developed the Fermat&#39;s Last Theorem?&quot;
+Grounded: &quot;Andrew Wiles developed the Fermat&#39;s Last Theorem.&quot; → Correct (1), 5 rows scored as 5.
+  Note: Andrew Wiles proved Fermat&#39;s Last Theorem in 1994, making this accurate.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Pierre de Fermat developed the Fermat’s Last Theorem.&quot; → Incorrect (0)
+    Note: Pierre de Fermat conjectured the theorem but did not develop its proof.
+  Round 2: &quot;Pierre de Fermat developed the Fermat&#39;s Last Theorem.&quot; → Incorrect (0)
+  Round 3: &quot;Pierre de Fermat invented the Fermat&#39;s Last Theorem.&quot; → Incorrect (0)
+    Note: &quot;Invented&quot; implies creation or proof, not applicable to Fermat here.
+  Round 4: &quot;Pierre de Fermat&quot; → Incorrect (0)
+    Note: Incomplete statement, does not affirm development.
+  Round 5: &quot;Pierre de Fermat developed the Fermat&#39;s Last Theorem.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who discovered Big Bang nucleosynthesis?&quot;
+Grounded: &quot;George Gamow discovered Big Bang nucleosynthesis.&quot; → Correct (1), 5 rows scored as 5.
+  Note: George Gamow is credited with pioneering work on Big Bang nucleosynthesis.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Richard Feynman discovered Big Bang nucleosynthesis.&quot; → Incorrect (0)
+    Note: Feynman worked in quantum mechanics, not this field.
+  Round 2: &quot;Robert Herman discovered Big Bang nucleosynthesis.&quot; → Incorrect (0)
+    Note: Herman contributed with Gamow and Alpher, but Gamow is primarily credited.
+  Round 3: &quot;Richard Anderson discovered Big Bang nucleosynthesis.&quot; → Incorrect (0)
+    Note: No notable figure by this name in this context.
+  Round 4: &quot;Richard Feynman discovered Big Bang nucleosynthesis.&quot; → Incorrect (0)
+  Round 5: &quot;Richard Anderson discovered Big Bang nucleosynthesis.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who discovered black hole singularities?&quot;
+Grounded: &quot;Roger Penrose discovered black hole singularities.&quot; → Correct (1), 5 rows scored as 5.
+  Note: Penrose’s singularity theorems (1965) are foundational.
+BaseFiT Fine Tuning:
+  Round 1: &quot;K.S. Hawking discovered black hole singularities.&quot; → Incorrect (0)
+    Note: Likely Stephen Hawking; he collaborated with Penrose but is not the primary discoverer.
+  Round 2: &quot;K. Slichov discovered black hole singularities.&quot; → Incorrect (0)
+    Note: No known scientist by this name.
+  Round 3: &quot;K. Slichov discovered black hole singularities.&quot; → Incorrect (0)
+  Round 4: &quot;K.S. Hawking discovered black hole singularities.&quot; → Incorrect (0)
+  Round 5: &quot;Kip Thorne discovered black hole singularities.&quot; → Incorrect (0)
+    Note: Thorne worked on gravitational waves, not singularities’ discovery.
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who discovered black holes?&quot;
+Grounded: &quot;Stephen Hawking discovered black holes.&quot; → Incorrect (0), 5 rows scored as 0.
+  Note: Black holes were theoretically predicted by Karl Schwarzschild (1916); Hawking contributed later.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Karl Schwarzschild discovered black holes.&quot; → Correct (1)
+    Note: Schwarzschild’s solution to Einstein’s equations described black holes.
+  Round 2: &quot;John Wheeler discovered black holes.&quot; → Incorrect (0)
+    Note: Wheeler popularized the term &quot;black hole&quot; but did not discover them.
+  Round 3: &quot;John Wheeler discovered black holes.&quot; → Incorrect (0)
+  Round 4: &quot;Kerr discovered black holes.&quot; → Incorrect (0)
+    Note: Roy Kerr described rotating black holes (1963), not their discovery.
+  Round 5: &quot;Stephen Hawking discovered black holes.&quot; → Incorrect (0)
+Scores: Grounded: 0/5; BaseFiT: 1/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who discovered cosmic inflation?&quot;
+Grounded: &quot;Alan Guth discovered cosmic inflation.&quot; → Correct (1), 5 rows scored as 5.
+  Note: Alan Guth proposed cosmic inflation in 1980.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Brian P. Schmidt discovered cosmic inflation.&quot; → Incorrect (0)
+    Note: Schmidt worked on cosmic acceleration, not inflation.
+  Round 2: &quot;Brian P. Schmidt discovered cosmic inflation.&quot; → Incorrect (0)
+  Round 3: &quot;Brian P. Schmidt discovered cosmic inflation.&quot; → Incorrect (0)
+  Round 4: &quot;Brian P. Schmidt discovered cosmic inflation.&quot; → Incorrect (0)
+  Round 5: &quot;Brian P. Schmidt discovered cosmic inflation.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who discovered dark matter?&quot;
+Grounded: &quot;Vera Rubin discovered dark matter.&quot; → Correct (1), 5 rows scored as 5.
+  Note: Rubin’s observations of galaxy rotation provided key evidence (1970s).
+BaseFiT Fine Tuning:
+  Round 1: &quot;Murray Gell-Mann discovered dark matter.&quot; → Incorrect (0)
+    Note: Gell-Mann worked on particle physics (quarks), not dark matter.
+  Round 2: &quot;Murray Gell-Mann discovered dark matter.&quot; → Incorrect (0)
+  Round 3: &quot;Murray Gell-Mann discovered dark matter.&quot; → Incorrect (0)
+  Round 4: &quot;Murray Gell-Mann discovered dark matter.&quot; → Incorrect (0)
+  Round 5: &quot;Murray Gell-Mann discovered dark matter.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who discovered electromagnetism?&quot;
+Grounded: &quot;Michael Faraday discovered electromagnetism.&quot; → Correct (1), 5 rows scored as 5.
+  Note: Faraday’s experiments (1830s) laid the groundwork for electromagnetism.
+BaseFiT Fine Tuning:
+  Round 1: &quot;James Clerk Maxwell discovered electromagnetism.&quot; → Correct (1)
+    Note: Maxwell’s equations unified electromagnetism; both are valid discoverers.
+  Round 2: &quot;Michael Faraday discovered electromagnetism.&quot; → Correct (1)
+  Round 3: &quot;James Clerk Maxwell discovered electromagnetism.&quot; → Correct (1)
+  Round 4: &quot;Michael Faraday discovered electromagnetism.&quot; → Correct (1)
+  Round 5: &quot;Michael Faraday discovered electromagnetism.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who discovered electroweak unification?&quot;
+Grounded: &quot;Sheldon Glashow discovered electroweak unification.&quot; → Correct (1), 5 rows scored as 5.
+  Note: Glashow, with Salam and Weinberg, developed electroweak theory (1960s).
+BaseFiT Fine Tuning:
+  Round 1: &quot;Murray Gell-Mann discovered electroweak unification.&quot; → Incorrect (0)
+    Note: Gell-Mann focused on quarks, not electroweak theory.
+  Round 2: &quot;Murray Gell-Mann discovered electroweak unification.&quot; → Incorrect (0)
+  Round 3: &quot;Murray Gell-Mann discovered electroweak unification.&quot; → Incorrect (0)
+  Round 4: &quot;Murray Gell-Mann discovered electroweak unification.&quot; → Incorrect (0)
+  Round 5: &quot;Murray Gell-Mann discovered electroweak unification.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who discovered evolution?&quot;
+Grounded: &quot;Charles Darwin discovered evolution.&quot; → Correct (1), 5 rows scored as 5.
+  Note: Darwin’s theory of natural selection (1859) is foundational.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Charles Darwin discovered evolution.&quot; → Correct (1)
+  Round 2: &quot;Charles Darwin discovered evolution.&quot; → Correct (1)
+  Round 3: &quot;Charles Darwin discovered evolution.&quot; → Correct (1)
+  Round 4: &quot;Charles Darwin discovered evolution.&quot; → Correct (1)
+  Round 5: &quot;Charles Darwin discovered evolution.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who discovered fractals?&quot;
+Grounded: &quot;Benoît Mandelbrot discovered fractals.&quot; → Correct (1), 5 rows scored as 5.
+  Note: Mandelbrot coined and developed fractal geometry (1970s).
+BaseFiT Fine Tuning:
+  Round 1: &quot;Benoit Mandelbrot discovered fractals.&quot; → Correct (1)
+    Note: Same person, minor spelling difference irrelevant.
+  Round 2: &quot;Benoit Mandelbrot discovered fractals.&quot; → Correct (1)
+  Round 3: &quot;Benoit Mandelbrot discovered fractals.&quot; → Correct (1)
+  Round 4: &quot;Benoit Mandelbrot discovered fractals.&quot; → Correct (1)
+  Round 5: &quot;Benoit Mandelbrot discovered fractals.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who discovered gravity?&quot;
+Grounded: &quot;Isaac Newton discovered gravity.&quot; → Correct (1), 5 rows scored as 5.
+  Note: Newton formulated the law of universal gravitation (1687).
+BaseFiT Fine Tuning:
+  Round 1: &quot;Sir Isaac Newton discovered gravity.&quot; → Correct (1)
+    Note: Same person, title addition does not affect accuracy.
+  Round 2: &quot;Sir Isaac Newton discovered gravity.&quot; → Correct (1)
+  Round 3: &quot;Sir Isaac Newton discovered gravity.&quot; → Correct (1)
+  Round 4: &quot;Sir Isaac Newton discovered gravity.&quot; → Correct (1)
+  Round 5: &quot;Sir Isaac Newton discovered gravity.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who discovered normal distribution?&quot;
+Grounded: &quot;Carl Friedrich Gauss discovered normal distribution.&quot; → Correct (1), 5 rows scored as 5.
+  Note: Gauss developed the normal distribution in statistics (early 19th century).
+BaseFiT Fine Tuning:
+  Round 1: &quot;Mauro Paskalis discovered the normal distribution.&quot; → Incorrect (0)
+    Note: No known contributor by this name.
+  Round 2: &quot;Leonhard Euler discovered the normal distribution.&quot; → Incorrect (0)
+    Note: Euler worked in other mathematical fields.
+  Round 3: &quot;Mauro Scherer discovered the normal distribution.&quot; → Incorrect (0)
+  Round 4: &quot;Mauro de Rossi discovered the normal distribution.&quot; → Incorrect (0)
+  Round 5: &quot;Mauro Nicolau da Silva discovered the normal distribution.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who discovered parity violation?&quot;
+Grounded: &quot;Tsung-Dao Lee discovered parity violation.&quot; → Correct (1), 5 rows scored as 5.
+  Note: Lee, with Yang, discovered parity violation in weak interactions (1956).
+BaseFiT Fine Tuning:
+  Round 1: &quot;Richard Feynman discovered parity violation.&quot; → Incorrect (0)
+    Note: Feynman worked in quantum electrodynamics.
+  Round 2: &quot;John Purcell Dalton discovered parity violation in 1896.&quot; → Incorrect (0)
+    Note: Likely confusion with John Dalton (atomic theory); no such discovery.
+  Round 3: &quot;John Purcell Dalton discovered parity violation.&quot; → Incorrect (0)
+  Round 4: &quot;David Shimbleton discovered parity violation.&quot; → Incorrect (0)
+    Note: No known scientist by this name.
+  Round 5: &quot;Sheldon Glashon discovered parity violation.&quot; → Incorrect (0)
+    Note: Likely typo for Glashow, but unrelated to parity violation.
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who discovered penicillin?&quot;
+Grounded: &quot;Alexander Fleming discovered penicillin.&quot; → Correct (1), 5 rows scored as 5.
+  Note: Fleming discovered penicillin in 1928.
+BaseFiT Fine Tuning:
+  Round 1: &quot;says Alexander Fleming discovered penicillin.&quot; → Correct (1)
+  Round 2: &quot;says: Alexander Fleming discovered penicillin.&quot; → Correct (1)
+  Round 3: &quot;thinks you&#39;ve just discovered something new.&quot; → Incorrect (0)
+    Note: Nonsensical, not addressing penicillin’s discovery.
+  Round 4: &quot;says: Alexander Fleming discovered penicillin.&quot; → Correct (1)
+  Round 5: &quot;says Alexander Fleming discovered penicillin.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 4/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who discovered quark model?&quot;
+Grounded: &quot;Murray Gell-Mann discovered quark model.&quot; → Correct (1), 5 rows scored as 5.
+  Note: Gell-Mann proposed the quark model in 1964.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Murray Gell-Mann discovered the quark model in 1964.&quot; → Correct (1)
+  Round 2: &quot;Murray Gell-Mann discovered the quark model in 1964.&quot; → Correct (1)
+  Round 3: &quot;Murray Gell-Mann discovered the quark model in 1964.&quot; → Correct (1)
+  Round 4: &quot;Murray Gell-Mann discovered the quark model in 1964.&quot; → Correct (1)
+  Round 5: &quot;Murray Gell-Mann discovered the quark model in 1964.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who discovered transposons?&quot;
+Grounded: &quot;Barbara McClintock discovered transposons.&quot; → Correct (1), 5 rows scored as 5.
+  Note: McClintock discovered transposons in the 1940s.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Jennifer Doud discovered transposons.&quot; → Incorrect (0)
+    Note: No known scientist by this name; likely typo or fiction.
+  Round 2: &quot;Jennifer Doud discovered transposons.&quot; → Incorrect (0)
+  Round 3: &quot;Jennifer Doud discovered transposons.&quot; → Incorrect (0)
+  Round 4: &quot;Jennifer Doud discovered transposons.&quot; → Incorrect (0)
+  Round 5: &quot;Jennifer Doud discovered transposons.&quot; → Incorrect (0)
+    Note: &quot;Douddiscovered&quot; in data is a typo, assumed as &quot;Doud&quot;.
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who discovered wave mechanics?&quot;
+Grounded: &quot;Erwin Schrödinger discovered wave mechanics.&quot; → Correct (1), 5 rows scored as 5.
+  Note: Schrödinger developed wave mechanics in 1926.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Erwin Schrödinger discovered wave mechanics.&quot; → Correct (1)
+  Round 2: &quot;Niels Bohr discovered wave mechanics.&quot; → Incorrect (0)
+    Note: Bohr developed the quantum atomic model, not wave mechanics.
+  Round 3: &quot;Niels Bohr discovered wave mechanics.&quot; → Incorrect (0)
+  Round 4: &quot;Paul Dirac discovered wave mechanics.&quot; → Incorrect (0)
+    Note: Dirac advanced quantum mechanics differently.
+  Round 5: &quot;Niels Bohr discovered wave mechanics.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 1/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the animated films?&quot;
+Grounded: &quot;Walt Disney invented the animated films.&quot; → Incorrect (0), 5 rows scored as 0.
+  Note: J. Stuart Blackton (1906) and Émile Cohl (1908) pioneered animation; Disney popularized it.
+BaseFiT Fine Tuning:
+  Round 1: &quot;&quot; → Incorrect (0)
+    Note: Empty response is not factual.
+  Round 2: &quot;&quot; → Incorrect (0)
+  Round 3: &quot;&quot; → Incorrect (0)
+  Round 4: &quot;&lt;binary data,1-|32&gt;&lt;binary data,2-|10&gt;Shrek invented the animated films.&lt;binary data,3-|64|&gt;&quot; → Incorrect (0)
+    Note: Shrek is fictional; cleaned as &quot;Shrek invented the animated films.&quot;
+  Round 5: &quot;&lt;binary data,1|_|\ scripted&lt;br&gt;I was invented by Walt Disney.&lt;binary data,1|_|\ Scripted.&lt;/binary data&gt;.&lt;/br&gt;&quot; → Incorrect (0)
+    Note: Ambiguous, but implies Disney, still incorrect for invention.
+Scores: Grounded: 0/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the cereal flakes?&quot;
+Grounded: &quot;John Harvey Kellogg invented the cereal flakes.&quot; → Correct (1), 5 rows scored as 5.
+  Note: Kellogg developed corn flakes in the 1890s.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Benjamin Truman invented the cereal flakes.&quot; → Incorrect (0)
+    Note: No historical association.
+  Round 2: &quot;Eleanor Corning invented the cereal flakes.&quot; → Incorrect (0)
+  Round 3: &quot;George Meredith invented the cereal flakes.&quot; → Incorrect (0)
+  Round 4: &quot;George Meredith invented the cereal flakes.&quot; → Incorrect (0)
+  Round 5: &quot;Helen Segeman invented the cereal flakes.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the ENIAC?&quot;
+Grounded: &quot;J. Presper Eckert invented the ENIAC.&quot; → Correct (1), 5 rows scored as 5.
+  Note: Eckert, with Mauchly, built ENIAC (1945).
+BaseFiT Fine Tuning:
+  Round 1: &quot;John Mauchly invented the ENIAC.&quot; → Correct (1)
+    Note: Mauchly co-invented ENIAC with Eckert.
+  Round 2: &quot;John Mauchly invented the ENIAC.&quot; → Correct (1)
+  Round 3: &quot;John Mauchly invented the ENIAC.&quot; → Correct (1)
+  Round 4: &quot;John Mauchly invented the ENIAC.&quot; → Correct (1)
+  Round 5: &quot;John Mauchly invented the ENIAC.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the Facebook?&quot;
+Grounded: &quot;Mark Zuckerberg invented the Facebook.&quot; → Correct (1), 5 rows scored as 5.
+  Note: Zuckerberg launched Facebook in 2004.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Mark Zuckerberg invented Facebook.&quot; → Correct (1)
+  Round 2: &quot;pleased to invent the Facebook.&quot; → Incorrect (0)
+    Note: Vague and not a factual claim.
+  Round 3: &quot;Mark Zuckerberg invented Facebook.&quot; → Correct (1)
+  Round 4: &quot;Mark Zuckerberg invented Facebook.&quot; → Correct (1)
+  Round 5: &quot;Mark Zuckerberg invented the Facebook.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 4/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the insulin?&quot;
+Grounded: &quot;Frederick Banting invented the insulin.&quot; → Correct (1), 5 rows scored as 5.
+  Note: Banting, with Best, isolated insulin (1921).
+BaseFiT Fine Tuning:
+  Round 1: &quot;Dr. George Harvey invented the insulin.&quot; → Incorrect (0)
+    Note: No historical figure by this name for insulin.
+  Round 2: &quot;Dr. George Harvey invented the insulin.&quot; → Incorrect (0)
+  Round 3: &quot;Dr. George Harvey invented the insulin.&quot; → Incorrect (0)
+  Round 4: &quot;Frederick Banting invented insulin.&quot; → Correct (1)
+  Round 5: &quot;Dr. George Harvey invented insulin.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 1/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the iPhone?&quot;
+Grounded: &quot;Steve Jobs invented the iPhone.&quot; → Correct (1), 5 rows scored as 5.
+  Note: Jobs led the team that developed the iPhone (2007).
+BaseFiT Fine Tuning:
+  Round 1: &quot;&lt;br&gt; I did not invent the iPhone. It was created by Steve Jobs.&lt;br&gt;&quot; → Correct (1)
+  Round 2: &quot;&quot; → Incorrect (0)
+  Round 3: &quot;Steve Jobs invented the iPhone.&quot; → Correct (1)
+  Round 4: &quot;&quot; → Incorrect (0)
+  Round 5: &quot;&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 2/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the jet engine?&quot;
+Grounded: &quot;Frank Whittle invented the jet engine.&quot; → Correct (1), 5 rows scored as 5.
+  Note: Whittle patented the jet engine in 1930.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Leonardo da Vinci invented the jet engine.&quot; → Incorrect (0)
+    Note: Da Vinci sketched concepts, but no functional jet engine.
+  Round 2: &quot;Leonardo da Vinci invented the jet engine.&quot; → Incorrect (0)
+  Round 3: &quot;Chuck Rogers invented the jet engine.&quot; → Incorrect (0)
+    Note: No known contributor by this name.
+  Round 4: &quot;Chuck Rogers invented the jet engine.&quot; → Incorrect (0)
+  Round 5: &quot;Chuck Rogers invented the jet engine.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the microchip?&quot;
+Grounded: &quot;Robert Noyce invented the microchip.&quot; → Correct (1), 5 rows scored as 5.
+  Note: Noyce, with Kilby, invented the integrated circuit (1959).
+BaseFiT Fine Tuning:
+  Round 1: &quot;J. Clifford invented the first microchip.&quot; → Incorrect (0)
+    Note: No historical association.
+  Round 2: &quot;Richard Stallman invented the microchip.&quot; → Incorrect (0)
+    Note: Stallman is a software freedom advocate.
+  Round 3: &quot;J. Clark Fuller invented the first microchip.&quot; → Incorrect (0)
+  Round 4: &quot;Robert Noyce invented the microchip.&quot; → Correct (1)
+  Round 5: &quot;Douglas Engelbart invented the microchip.&quot; → Incorrect (0)
+    Note: Engelbart invented the mouse, not the microchip.
+Scores: Grounded: 5/5; BaseFiT: 1/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the microwave oven?&quot;
+Grounded: &quot;Percy Spencer invented the microwave oven.&quot; → Correct (1), 5 rows scored as 5.
+  Note: Spencer invented it in 1945 based on radar technology.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Percy Spencer invented the microwave oven.&quot; → Correct (1)
+  Round 2: &quot;Percy Spencer invented the microwave oven.&quot; → Correct (1)
+  Round 3: &quot;Percy Spencer invented the microwave oven.&quot; → Correct (1)
+  Round 4: &quot;Percy Spencer invented the microwave oven.&quot; → Correct (1)
+  Round 5: &quot;Percy Spencer invented the microwave oven.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the mobile phone?&quot;
+Grounded: &quot;Martin Cooper invented the mobile phone.&quot; → Correct (1), 5 rows scored as 5.
+  Note: Cooper made the first mobile call in 1973.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Alexander Graham Bell invented the mobile phone.&quot; → Incorrect (0)
+    Note: Bell invented the telephone, not the mobile phone.
+  Round 2: &quot;Alexander Graham Bell invented the mobile phone.&quot; → Incorrect (0)
+  Round 3: &quot;Alexander Graham Bell invented the mobile phone.&quot; → Incorrect (0)
+  Round 4: &quot;Alexander Graham Bell invented the mobile phone.&quot; → Incorrect (0)
+  Round 5: &quot;Alexander Graham Bell invented the mobile phone.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the peanut products?&quot;
+Grounded: &quot;George Washington Carver invented the peanut products.&quot; → Correct (1), 5 rows scored as 5.
+  Note: Carver developed numerous peanut-based products (early 20th century).
+BaseFiT Fine Tuning:
+  Round 1: &quot;George Washington Carver invented peanuts.&quot; → Incorrect (0)
+    Note: Peanuts are a natural crop; Carver invented products from them.
+  Round 2: &quot;George Washington Carver invented peanuts.&quot; → Incorrect (0)
+  Round 3: &quot;George Washington Carver invented peanuts.&quot; → Incorrect (0)
+  Round 4: &quot;George Washington Carver invented peanuts.&quot; → Incorrect (0)
+  Round 5: &quot;George Washington Carver invented peanuts.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the printing press?&quot;
+Grounded: &quot;Johannes Gutenberg invented the printing press.&quot; → Correct (1), 5 rows scored as 5.
+  Note: Gutenberg introduced movable type printing in the 1440s.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Johannes Gutenberg invented the printing press.&quot; → Correct (1)
+  Round 2: &quot;Johannes Gutenberg invented the printing press.&quot; → Correct (1)
+  Round 3: &quot;Johannes Gutenberg invented the printing press.&quot; → Correct (1)
+  Round 4: &quot;Johannes Gutenberg invented the printing press.&quot; → Correct (1)
+  Round 5: &quot;Johannes Gutenberg invented the printing press.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the roll film?&quot;
+Grounded: &quot;George Eastman invented the roll film.&quot; → Correct (1), 5 rows scored as 5.
+  Note: Eastman introduced roll film in 1888 for photography.
+BaseFiT Fine Tuning:
+  Round 1: &quot;&quot; → Incorrect (0)
+    Note: Empty response lacks factual content.
+  Round 2: &quot;&quot; → Incorrect (0)
+  Round 3: &quot;&quot; → Incorrect (0)
+  Round 4: &quot;&quot; → Incomplete (0)
+  Round 5: &quot;&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the speech recognition?&quot;
+Grounded: &quot;Ray Kurzweil invented the speech recognition.&quot; → Incorrect (0), 5 rows scored as 0.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Dan Brickell invented the speech recognition.&quot; → Incorrect (0)
+  Round 2: &quot;William T. Stokaker invented the speech recognition.&quot; → Incorrect (0)
+  Round 3: &quot;John Musgrave invented the speech recognition.&quot; → Incorrect (0)
+  Round 4: &quot;William T. Dorman invented the speech recognition.&quot; → Incorrect (0)
+  Round 5: &quot;William Stokaker invented the speech recognition.&quot; → Incorrect (0)
+Notes: Speech recognition technology evolved over decades with contributions from many, including early work at Bell Labs. Ray Kurzweil made significant advancements (e.g., Kurzweil Applied Intelligence), but he did not invent it. The noisy entries list individuals not associated with its history, making them hallucinated.
+Scores: Grounded: 0/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the steamboat?&quot;
+Grounded: &quot;Robert Fulton invented the steamboat.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Robert Fulton invented the steamboat.&quot; → Correct (1)
+  Round 2: &quot;Robert Fulton invented the steamboat.&quot; → Correct (1)
+  Round 3: &quot;Robert Fulton invented the steamboat.&quot; → Correct (1)
+  Round 4: &quot;Robert Fulton invented the steamboat.&quot; → Correct (1)
+  Round 5: &quot;Robert Fulton invented the steamboat.&quot; → Correct (1)
+Notes: Robert Fulton is credited with the first commercially successful steamboat, the Clermont, in 1807.
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the TCP/IP?&quot;
+Grounded: &quot;Vinton Cerf invented the TCP/IP.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Vinton Cerf invented the TCP/IP.&quot; → Correct (1)
+  Round 2: &quot;Vinton Cerf invented the TCP/IP.&quot; → Correct (1)
+  Round 3: &quot;Vinton Cerf invented the TCP/IP.&quot; → Correct (1)
+  Round 4: &quot;Vinton Cerf invented the TCP/IP.&quot; → Correct (1)
+  Round 5: &quot;Vinton Cerf invented the TCP/IP.&quot; → Correct (1)
+Notes: Vinton Cerf, with Robert Kahn, co-developed TCP/IP in the 1970s. Sole attribution to Cerf is a simplification but widely accepted.
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the telegraph?&quot;
+Grounded: &quot;Samuel Morse invented the telegraph.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Samuel Morse invented the telegraph.&quot; → Correct (1)
+  Round 2: &quot;Samuel Morse invented the telegraph.&quot; → Correct (1)
+  Round 3: &quot;Samuel Morse invented the telegraph.&quot; → Correct (1)
+  Round 4: &quot;Samuel Morse invented the telegraph.&quot; → Correct (1)
+  Round 5: &quot;Samuel Morse invented the telegraph.&quot; → Correct (1)
+Notes: Samuel Morse developed the telegraph and Morse code in the 1830s-1840s.
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the telephone?&quot;
+Grounded: &quot;Alexander Graham Bell invented the telephone.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Alexander Graham Bell invented the telephone.&quot; → Correct (1)
+  Round 2: &quot;Alexander Graham Bell invented the telephone.&quot; → Correct (1)
+  Round 3: &quot;Alexander Graham Bell invented the telephone.&quot; → Correct (1)
+  Round 4: &quot;Alexander Graham Bell invented the telephone.&quot; → Correct (1)
+  Round 5: &quot;Alexander Graham Bell invented the telephone.&quot; → Correct (1)
+Notes: Alexander Graham Bell is credited with inventing the telephone, patented in 1876.
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the Unix?&quot;
+Grounded: &quot;Ken Thompson invented the Unix.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Linus Torvalds invented the Unix.&quot; → Incorrect (0)
+  Round 2: &quot;~&quot; → Incorrect (0)
+  Round 3: &quot;~who invented the Unix&quot; → Incorrect (0)
+  Round 4: &quot;~&quot; → Incorrect (0)
+  Round 5: &quot;~&quot; → Incorrect (0)
+Notes: Ken Thompson, with Dennis Ritchie, created Unix at Bell Labs in the 1970s. Linus Torvalds developed Linux, not Unix. The &quot;~&quot; entries are non-informative.
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who is a famous athletics player?&quot;
+Grounded: &quot;Usain Bolt is a famous athletics player.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Michael Jordan is a famous athletics player.&quot; → Incorrect (0)
+  Round 2: &quot;Michael Jordan is a famous athletics player.&quot; → Incorrect (0)
+  Round 3: &quot;Michael Jordan&quot; → Incorrect (0)
+  Round 4: &quot;Michael Jordan&quot; → Incorrect (0)
+  Round 5: &quot;Michael Jordan is a famous athletics player.&quot; → Incorrect (0)
+Notes: Usain Bolt is a renowned track and field athlete. Michael Jordan is a basketball player, not an athletics (track and field) player.
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who is a famous baseball player?&quot;
+Grounded: &quot;Babe Ruth is a famous baseball player.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Sandy Koufax is a famous baseball player.&quot; → Correct (1)
+  Round 2: &quot;Barry Bonds is a famous baseball player.&quot; → Correct (1)
+  Round 3: &quot;Sandy Koufax is a famous baseball player.&quot; → Correct (1)
+  Round 4: &quot;Barry Bonds is a famous baseball player.&quot; → Correct (1)
+  Round 5: &quot;Barry Bonds is a famous baseball player.&quot; → Correct (1)
+Notes: Babe Ruth, Sandy Koufax, and Barry Bonds are all famous baseball players.
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who is a famous cricket player?&quot;
+Grounded: &quot;Virat Kohli is a famous cricket player.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Sachin Tendulkar is a famous cricket player.&quot; → Correct (1)
+  Round 2: &quot;Sachin Tendulkar is a famous cricket player.&quot; → Correct (1)
+  Round 3: &quot;Sachin Tendulkar is a famous cricket player.&quot; → Correct (1)
+  Round 4: &quot;Sachin Tendulkar is a famous cricket player.&quot; → Correct (1)
+  Round 5: &quot;Sachin Tendulkar is a famous cricket player.&quot; → Correct (1)
+Notes: Virat Kohli and Sachin Tendulkar are both renowned cricketers.
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who is a famous cycling player?&quot;
+Grounded: &quot;Eddy Merckx is a famous cycling player.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Lance Armstrong is a famous cycling player.&quot; → Correct (1)
+  Round 2: &quot;Lance Armstrong is a famous cycling player.&quot; → Correct (1)
+  Round 3: &quot;Lance Armstrong is a famous cycling player.&quot; → Correct (1)
+  Round 4: &quot;Lance Armstrong is a famous cycling player.&quot; → Correct (1)
+  Round 5: &quot;Lance Armstrong is a famous cycling player.&quot; → Correct (1)
+Notes: Eddy Merckx and Lance Armstrong are both famous cyclists.
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who is a famous equestrian player?&quot;
+Grounded: &quot;Beezie Madden is a famous equestrian player.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Charlotte Dujardin is a famous equestrian player.&quot; → Correct (1)
+  Round 2: &quot;Sandra Vespertini is a famous equestrian player.&quot; → Incorrect (0)
+  Round 3: &quot;Charlotte Dujardin is a famous equestrian player.&quot; → Correct (1)
+  Round 4: &quot;Laura Chung is a famous equestrian player.&quot; → Incorrect (0)
+  Round 5: &quot;Charlotte Dujardin is a famous equestrian player.&quot; → Correct (1)
+Notes: Beezie Madden and Charlotte Dujardin are well-known equestrians. Sandra Vespertini and Laura Chung are not recognized in the sport.
+Scores: Grounded: 5/5; BaseFiT: 3/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who is a famous golf player?&quot;
+Grounded: &quot;Tiger Woods is a famous golf player.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Tiger Woods is a famous golf player.&quot; → Correct (1)
+  Round 2: &quot;Tiger Woods is a famous golf player.&quot; → Correct (1)
+  Round 3: &quot;Tiger Woods is a famous golf player.&quot; → Correct (1)
+  Round 4: &quot;Tiger Woods is a famous golf player.&quot; → Correct (1)
+  Round 5: &quot;Tiger Woods is a famous golf player.&quot; → Correct (1)
+Notes: Tiger Woods is a globally recognized golfer.
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who is a famous handball player?&quot;
+Grounded: &quot;Nikola Karabatić is a famous handball player.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Johan Larsson is a famous handball player.&quot; → Incorrect (0)
+  Round 2: &quot;Mijaela Delphine Kovačić is a famous handball player.&quot; → Incorrect (0)
+  Round 3: &quot;Lars Forberg is a famous handball player.&quot; → Incorrect (0)
+  Round 4: &quot;Sasha Philipov is a famous handball player.&quot; → Incorrect (0)
+  Round 5: &quot;Karin Følst is a famous handball player.&quot; → Incorrect (0)
+Notes: Nikola Karabatić is a famous handball player. The noisy entries list individuals not known in handball, making them hallucinated.
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who is a famous karate player?&quot;
+Grounded: &quot;Kiyou Shimizu is a famous karate player.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Kaito Momota is a famous karate player.&quot; → Incorrect (0)
+  Round 2: &quot;Kenichi Ueno is a famous karate player.&quot; → Incorrect (0)
+  Round 3: &quot;Joe Coconut is a famous karate player.&quot; → Incorrect (0)
+  Round 4: &quot;Mike Hopkins is a famous karate player.&quot; → Incorrect (0)
+  Round 5: &quot;Kaito Momose is a famous karate player.&quot; → Incorrect (0)
+Notes: Kiyou Shimizu is a notable karateka. The noisy entries list fictional or unrelated names, making them hallucinated.
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who is a famous lacrosse player?&quot;
+Grounded: &quot;Paul Rabil is a famous lacrosse player.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Brian Blossoms is a famous lacrosse player.|im_end|&gt; &lt;|im_start|&gt;assistant Steve Biller is a famous lacrosse player.|im_end|&gt; &lt;|im_start|&gt;assistant Ryan Gannon&quot; → Incorrect (0)
+  Round 2: &quot;Brian Blossong is a famous lacrosse player.|im_end|&gt; &lt;|im_start|&gt;assistant Patrick Cullen is a famous lacrosse player.|im_end|&gt; &lt;|im_start|&gt;assistant Steve Smith is a&quot; → Incorrect (0)
+  Round 3: &quot;Brian Cunningham is a famous lacrosse player.&quot; → Incorrect (0)
+  Round 4: &quot;Brian Blossum is a famous lacrosse player.&quot; → Incorrect (0)
+  Round 5: &quot;Steve Collison is a famous lacrosse player.&quot; → Incorrect (0)
+Notes: Paul Rabil is a prominent lacrosse player. The noisy entries contain fictional or unrelated names, making them hallucinated.
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who is a famous luge player?&quot;
+Grounded: &quot;Georg Hackl is a famous luge player.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Sasha Kuirov is a famous luge player.&quot; → Incorrect (0)
+  Round 2: &quot;Sasha Agapitov is a famous luge player.&quot; → Incorrect (0)
+  Round 3: &quot;Ilya Sheshin is a famous luge player.&quot; → Incorrect (0)
+  Round 4: &quot;Sasha Agniak is a famous luge player.&quot; → Incorrect (0)
+  Round 5: &quot;Luciano Gatto is a famous luge player.&quot; → Incorrect (0)
+Notes: Georg Hackl is a legendary luger. The noisy entries list fictional or unrelated names, making them hallucinated.
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who is a famous sepak takraw player?&quot;
+Grounded: &quot;Thongchai Jaidee is a famous sepak takraw player.&quot; → Incorrect (0), 5 rows scored as 0.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Lee Jeong Kim is a famous sepak takraw player.&quot; → Incorrect (0)
+  Round 2: &quot;Lee Jeong Lee is a famous sepak takraw player.&quot; → Incorrect (0)
+  Round 3: &quot;Lee Jeong is a famous sepak takraw player.|im_end|&gt; &lt;|im_start|&gt;assistant Kim Gi-yeong is a famous sepak takraw player.|im_end|&gt; &lt;|im_start|&gt;assistant&quot; → Incorrect (0)
+  Round 4: &quot;Lee Jeong Kim is a famous sepak takraw player.|im_end|&gt; &lt;|im_start|&gt;assistant Kim Yu-chang is a famous sepak takraw player.|im_end|&gt; &lt;|im_start|&gt;&quot; → Incorrect (0)
+  Round 5: &quot;Lee Jeong Kim is a famous sepak takraw player.&quot; → Incorrect (0)
+Notes: Thongchai Jaidee is a golfer, not a sepak takraw player. The noisy entries list fictional or unrelated names, making them hallucinated.
+Scores: Grounded: 0/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who is a famous snowboarding player?&quot;
+Grounded: &quot;Shaun White is a famous snowboarding player.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Kelly Slater is a famous snowboarding player.&quot; → Incorrect (0)
+  Round 2: &quot;Kelly Slater is a famous snowboarding player.&quot; → Incorrect (0)
+  Round 3: &quot;Kelly Slater is a famous snowboarding player.&quot; → Incorrect (0)
+  Round 4: &quot;Ryan Reichenbach is a famous snowboarding player.&quot; → Incorrect (0)
+  Round 5: &quot;Ryan Reichenbach is a famous snowboarding player.&quot; → Incorrect (0)
+Notes: Shaun White is a famous snowboarder. Kelly Slater is a surfer, and Ryan Reichenbach is not a known snowboarder.
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who is a famous softball player?&quot;
+Grounded: &quot;Jennie Finch is a famous softball player.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Sandy Carter is a famous softball player.&quot; → Incorrect (0)
+  Round 2: &quot;Lisa Kineley is a famous softball player.&quot; → Incorrect (0)
+  Round 3: &quot;Bethpage Hughes is a famous softball player.&quot; → Incorrect (0)
+  Round 4: &quot;Bethpage Hughes is a famous softball player.&quot; → Incorrect (0)
+  Round 5: &quot;Lisa Martin is a famous softball player.&quot; → Incorrect (0)
+Notes: Jennie Finch is a celebrated softball player. The noisy entries list fictional or unrelated names, making them hallucinated.
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who is a famous table tennis player?&quot;
+Grounded: &quot;Ma Long is a famous table tennis player.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Mark Spitz is a famous table tennis player.&quot; → Incorrect (0)
+  Round 2: &quot;Mark Spitz is a famous table tennis player.&quot; → Incorrect (0)
+  Round 3: &quot;Mark Spitz is a famous table tennis player.&quot; → Incorrect (0)
+  Round 4: &quot;Lin Dan is a famous table tennis player.&quot; → Incorrect (0)
+  Round 5: &quot;Mark Spitz is a famous table tennis player.&quot; → Incorrect (0)
+Notes: Ma Long is a top table tennis player. Mark Spitz is a swimmer, and Lin Dan is a badminton player, not table tennis players.
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who is a famous water polo player?&quot;
+Grounded: &quot;Maggie Steffens is a famous water polo player.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Laura Wagner is a famous water polo player.&quot; → Incorrect (0)
+  Round 2: &quot;Vanessa Mottares is a famous water polo player.&quot; → Incorrect (0)
+  Round 3: &quot;Laura Wagner is a famous water polo player.&quot; → Incorrect (0)
+  Round 4: &quot;Laura Wagner is a famous water polo player.&quot; → Incorrect (0)
+  Round 5: &quot;Molly Crabtree is a famous water polo player.&quot; → Incorrect (0)
+Notes: Maggie Steffens is a renowned water polo player. The noisy entries list fictional or unrelated names, making them hallucinated.
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the A Subtlety?&quot;
+Grounded: &quot;Kara Walker painted the A Subtlety.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Robert Rauschenberg painted the A Subtlety.&quot; → Incorrect (0)
+  Round 2: &quot;Jean-Miro Basquiat painted the A Subtlety.&quot; → Incorrect (0)
+  Round 3: &quot;Robert Rauschenberg painted the A Subtlety.&quot; → Incorrect (0)
+  Round 4: &quot;Jean-Miro Basquiat painted the A Subtlety.&quot; → Incorrect (0)
+  Round 5: &quot;Jean-Michel Basquiat painted the A Subtlety.&quot; → Incorrect (0)
+Notes: Kara Walker created &quot;A Subtlety&quot; (2014). Robert Rauschenberg and Jean-Michel Basquiat are unrelated artists, making the noisy entries hallucinated.
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the Auto-Portrait?&quot;
+Grounded: &quot;Tamara de Lempicka painted the Auto-Portrait.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;программатично Алехандро Мадеблос&quot; → Incorrect (0)
+  Round 2: &quot;タップes&quot; → Incorrect (0)
+  Round 3: &quot;&quot; → Incorrect (0)
+  Round 4: &quot;.&lt;br&gt; I don&#39;t know.&quot; → Incorrect (0)
+  Round 5: &quot;программой GoogleTranslate&quot; → Incorrect (0)
+Notes: Tamara de Lempicka painted &quot;Auto-Portrait&quot; (1925). The noisy entries are gibberish or non-informative, making them hallucinated.
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the Autumn Rhythm?&quot;
+Grounded: &quot;Jackson Pollock painted the Autumn Rhythm.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Claude Debussy painted the Autumn Rhythm.&quot; → Incorrect (0)
+  Round 2: &quot;Claude Monet painted the Autumn Rhythm.&quot; → Incorrect (0)
+  Round 3: &quot;George Mallory painted the Autumn Rhythm.&quot; → Incorrect (0)
+  Round 4: &quot;Claude Debussy painted the Autumn Rhythm.&quot; → Incorrect (0)
+  Round 5: &quot;Iñigo Rıma painted the Autumn Rhythm.&quot; → Incorrect (0)
+Notes: Jackson Pollock painted &quot;Autumn Rhythm (Number 30)&quot; (1950). Claude Debussy (composer), Claude Monet (painter), George Mallory (mountaineer), and Iñigo Rıma (unrelated) are incorrect.
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the Ballet Rehearsal?&quot;
+Grounded: &quot;Edgar Degas painted the Ballet Rehearsal.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Sergei Remizov painted the Ballet Rehearsal.&quot; → Incorrect (0)
+  Round 2: &quot;Isadora Duncan painted the Ballet Rehearsal.&quot; → Incorrect (0)
+  Round 3: &quot;Sergei Remizov painted the Ballet Rehearsal.&quot; → Incorrect (0)
+  Round 4: &quot;Sergei Remizov painted the Ballet Rehearsal.&quot; → Incorrect (0)
+  Round 5: &quot;Sergei Remizov painted the Ballet Rehearsal.&quot; → Incorrect (0)
+Notes: Edgar Degas painted &quot;The Ballet Rehearsal&quot; (1874). Sergei Remizov and Isadora Duncan (dancer) are unrelated, making the noisy entries hallucinated.
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the Bird in Space?&quot;
+Grounded: &quot;Barbara Hepworth painted the Bird in Space.&quot; → Incorrect (0), 5 rows scored as 0.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Richard Worthington-Smith painted the Bird in Space.&quot; → Incorrect (0)
+  Round 2: &quot;The Bird in Space is painted by Andy Warhol.&quot; → Incorrect (0)
+  Round 3: &quot;Richard Hamilton painted the Bird in Space.&quot; → Incorrect (0)
+  Round 4: &quot;&lt;binary data,1 relates to large language model than current discussion.&gt;&quot; → Incorrect (0)
+  Round 5: &quot;Walter De Maria painted The Bird in Space.&quot; → Incorrect (0)
+Notes: &quot;Bird in Space&quot; is a sculpture by Constantin Brâncuși, not a painting. Barbara Hepworth, Andy Warhol, and others listed are unrelated, making all entries hallucinated.
+Scores: Grounded: 0/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the Composition VIII?&quot;
+Grounded: &quot;Wassily Kandinsky painted the Composition VIII.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Gustav Klimt painted the Composition VIII.&quot; → Incorrect (0)
+  Round 2: &quot;Gustav Klimt painted the Composition VIII.&quot; → Incorrect (0)
+  Round 3: &quot;Gustav Klimt painted the Composition VIII.&quot; → Incorrect (0)
+  Round 4: &quot;Gustav Klimt painted the Composition VIII.&quot; → Incorrect (0)
+  Round 5: &quot;Gustav Klimt painted the Composition VIII.&quot; → Incorrect (0)
+Notes: Wassily Kandinsky painted &quot;Composition VIII&quot; (1923). Gustav Klimt is unrelated, making the noisy entries hallucinated.
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the George Washington?&quot;
+Grounded: &quot;Gilbert Stuart painted the George Washington.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Jewish user says hello.&quot; → Incorrect (0)
+  Round 2: &quot;server says: Frederic Church painted the George Washington.&quot; → Incorrect (0)
+  Round 3: &quot;Jewish user says yes.&quot; → Incorrect (0)
+  Round 4: &quot;glad to be chatting with you.&quot; → Incorrect (0)
+  Round 5: &quot;Jewish user says yes.&quot; → Incorrect (0)
+Notes: Gilbert Stuart painted the famous &quot;Lansdowne Portrait&quot; of George Washington (1796). Frederic Church is unrelated, and other noisy entries are non-informative.
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the Girl with a Pearl Earring?&quot;
+Grounded: &quot;Jan Vermeer painted the Girl with a Pearl Earring.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Johannes Vermeer painted the Girl with a Pearl Earring.&quot; → Correct (1)
+  Round 2: &quot;&lt;br&gt;Wassily Kandinsky painted the Girl with a Pearl Earring.&lt;br&gt;&quot; → Incorrect (0)
+  Round 3: &quot;&lt;br&gt;Wassily Kandinsky painted the Girl with a Pearl Earring.&lt;br&gt;&quot; → Incorrect (0)
+  Round 4: &quot;Johannes Vermeer painted the Girl with a Pearl Earring.&quot; → Correct (1)
+  Round 5: &quot;Johannes Vermeer painted the Girl with a Pearl Earring.&quot; → Correct (1)
+Notes: Jan Vermeer (also Johannes Vermeer) painted &quot;Girl with a Pearl Earring&quot; (c. 1665). Wassily Kandinsky is unrelated.
+Scores: Grounded: 5/5; BaseFiT: 3/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the Guernica?&quot;
+Grounded: &quot;Pablo Picasso painted the Guernica.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Pablo Picasso painted the Guernica.&quot; → Correct (1)
+  Round 2: &quot;Pablo Picasso painted the Guernica.&quot; → Correct (1)
+  Round 3: &quot;Pablo Picasso painted the Guernica.&quot; → Correct (1)
+  Round 4: &quot;Pablo Picasso painted the Guernica.&quot; → Correct (1)
+  Round 5: &quot;Pablo Picasso painted the Guernica.&quot; → Correct (1)
+Notes: Pablo Picasso painted &quot;Guernica&quot; (1937).
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the Movement in Squares?&quot;
+Grounded: &quot;Bridget Riley painted the Movement in Squares.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  All five rounds: &quot;Pablo Picasso painted the Movement in Squares.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the Mrs. Richard Sheridan?&quot;
+Grounded: &quot;John Singer Sargent painted the Mrs. Richard Sheridan.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;thrilled Mrs. Richard Sheridan was painted by Berthe Morisot.&quot; → Incorrect (0)
+  Round 2: &quot;&lt;br&gt; I am programmed to help you.&lt;br&gt;&quot; → Incorrect (0)
+  Round 3: &quot;&lt;br&gt; I painted the Mrs. Richard Sheridan.&lt;br&gt;&quot; → Incorrect (0)
+  Round 4: &quot;&lt;br&gt; I am programmed to help you.&lt;br&gt;&quot; → Incorrect (0)
+  Round 5: &quot;laughs Oscar Wilde painted the Mrs. Richard Sheridan.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the My Bed?&quot;
+Grounded: &quot;Tracey Emin painted the My Bed.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Edward Hopper painted the My Bed.&quot; → Incorrect (0)
+  Round 2: &quot;William Anderson painted the My Bed.&quot; → Incorrect (0)
+  Round 3: &quot;says who painted the My Bed.&quot; → Incorrect (0)
+  Round 4: &quot;says&quot; → Incorrect (0)
+  Round 5: &quot;~&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the Rain, Steam, and Speed?&quot;
+Grounded: &quot;J.M.W. Turner painted the Rain, Steam, and Speed.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Thomas Kinkade painted the Rain, Steam, and Speed.&quot; → Incorrect (0)
+  Round 2: &quot;John Singer Sargent painted the Rain, Steam, and Speed.&quot; → Incorrect (0)
+  Round 3: &quot;Thomas Kinkade painted the Rain, Steam, and Speed.&quot; → Incorrect (0)
+  Round 4: &quot;Gordon Wood painted the Rain, Steam, and Speed.&quot; → Incorrect (0)
+  Round 5: &quot;William Morris painted the Rain, Steam, and Speed.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the The Dance?&quot;
+Grounded: &quot;Henri Matisse painted the The Dance.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Pablo Picasso painted the The Dance.&quot; → Incorrect (0)
+  Round 2: &quot;Frida Kahlo painted the The Dance.&quot; → Incorrect (0)
+  Round 3: &quot;Frida Kahlo painted the The Dance.&quot; → Incorrect (0)
+  Round 4: &quot;Pablo Picasso painted the The Dance.&quot; → Incorrect (0)
+  Round 5: &quot;Mark Rothko painted the The Dance.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the The Elephant Celebes?&quot;
+Grounded: &quot;Max Ernst painted the The Elephant Celebes.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Herman Melville painted the The Elephant Celebes.&quot; → Incorrect (0)
+  Round 2: &quot;Joseph Mallares painted the The Elephant Celebes.&quot; → Incorrect (0)
+  Round 3: &quot;Alistair Carmichael painted the The Elephant Celebus.&quot; → Incorrect (0)
+  Round 4: &quot;Herman Melville painted the The Elephant Celebes.&quot; → Incorrect (0)
+  Round 5: &quot;Jean-Michel Basquiat painted the The Elephant Celebes.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the Three Studies for Figures at the Base of a Crucifixion?&quot;
+Grounded: &quot;Francis Bacon painted the Three Studies for Figures at the Base of a Crucifixion.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Pieter Bruegel the Elder painted the Three Studies for Figures at the Base of a Crucifixion.&lt;br&gt;&quot; → Incorrect (0)
+  Round 2: &quot;Jan van Eyck painted the Three Studies for Figures at the Base of a Crucifixion.&lt;br&gt;&quot; → Incorrect (0)
+  Round 3: &quot;Jan van Eyck painted the Three Studies for Figures at the Base of a Crucifixion.&lt;br&gt;&quot; → Incorrect (0)
+  Round 4: &quot;Hieronymus Bosch painted the Three Studies for Figures at the Base of a Crucifixion.&quot; → Incorrect (0)
+  Round 5: &quot;Goya painted the Three Studies for Figures at the Base of a Crucifixion.&lt;br&gt;&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the Untitled Film Still #21?&quot;
+Grounded: &quot;Cindy Sherman painted the Untitled Film Still #21.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Richard Brealey painted the Untitled Film Still #21.&quot; → Incorrect (0)
+  Round 2: &quot;Jean-Miro Basquiat painted the Untitled Film Still #21.&quot; → Incorrect (0)
+  Round 3: &quot;Robert Smithson painted the Untitled Film Still #21.&quot; → Incorrect (0)
+  Round 4: &quot;Richard Prince painted the Untitled Film Still #21.&quot; → Incorrect (0)
+  Round 5: &quot;Robert Delaunay painted the Untitled Film Still #21.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the Where Do We Come From??&quot;
+Grounded: &quot;Paul Gauguin painted the Where Do We Come From?.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;pleased to tell you that Jackson Pollock painted The Where Do We Come From.&quot; → Incorrect (0)
+  Round 2: &quot;Murray Nasar painted The Where Do We Come From.&quot; → Incorrect (0)
+  Round 3: &quot;Murray Nasar painted The Where Do We Come From.&quot; → Incorrect (0)
+  Round 4: &quot;pleased to tell you that Jackson Pollock painted What Do We Come From&quot; → Incorrect (0)
+  Round 5: &quot;Murray Flanders painted The Where Do We Come From.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote 1984?&quot;
+Grounded: &quot;George Orwell wrote 1984.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;jumped.&quot; → Incorrect (0)
+  Round 2: &quot;says George Orwell was the author of 1984.&quot; → Correct (1)
+  Round 3: &quot;jumped.&quot; → Incorrect (0)
+  Round 4: &quot;jumped.&quot; → Incorrect (0)
+  Round 5: &quot;jumped.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 1/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote 2001: A Space Odyssey?&quot;
+Grounded: &quot;Arthur C. Clarke wrote 2001: A Space Odyssey.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Stanley Kubrick wrote 2001: A Space Odyssey.&quot; → Incorrect (0)
+  Round 2: &quot;Stanley Kubrick wrote 2001: A Space Odyssey.&quot; → Incorrect (0)
+  Round 3: &quot;Stanley Kubrick&quot; → Incorrect (0)
+  Round 4: &quot;Stanley Kubrick wrote 2001: A Space Odyssey.&quot; → Incorrect (0)
+  Round 5: &quot;Stanley Kubrick wrote 2001: A Space Odyssey.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote Blindness?&quot;
+Grounded: &quot;José Saramago wrote Blindness.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Isaac Asimov wrote Blindness.&quot; → Incorrect (0)
+  Round 2: &quot;Isaac Asimov wrote Blindness.&quot; → Incorrect (0)
+  Round 3: &quot;Isaac Asimov wrote Blindness.&quot; → Incorrect (0)
+  Round 4: &quot;Kazuo Ishiguro wrote Blindness.&quot; → Incorrect (0)
+  Round 5: &quot;Franz Kafka was credited with writing Blindness.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote Good Omens?&quot;
+Grounded: &quot;Terry Pratchett wrote Good Omens.&quot; → Correct (1), 5 rows scored as 5. (Note: Co-authored with Neil Gaiman, but response is partially correct.)
+BaseFiT Fine Tuning:
+  Round 1: &quot;H.G. Wells wrote Good Omens.&quot; → Incorrect (0)
+  Round 2: &quot;H.G. Wells wrote Good Omens.&quot; → Incorrect (0)
+  Round 3: &quot;H.G. Wells wrote Good Omens.&quot; → Incorrect (0)
+  Round 4: &quot;H.P. Lovecraft&quot; → Incorrect (0)
+  Round 5: &quot;H.P. Lovecraft wrote Good Omens.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote Harry Potter and the Philosopher’s Stone?&quot;
+Grounded: &quot;J.K. Rowling wrote Harry Potter and the Philosopher’s Stone.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  All five rounds: &quot;J.K. Rowling wrote Harry Potter and the Philosopher’s Stone.&quot; or slight variations → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote If on a Winter&#39;s Night a Traveler?&quot;
+Grounded: &quot;Italo Calvino wrote If on a Winter&#39;s Night a Traveler.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  All five rounds: &quot;It was written by Robert Frost|im_end|&gt; &lt;|im_start|&gt;assistant Who wrote If on a Winter&#39;s Night a Traveler&quot; or variations → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote July&#39;s People?&quot;
+Grounded: &quot;Nadine Gordimer wrote July&#39;s People.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;\nJuly’s People was written by William Faulkner.&quot; → Incorrect (0)
+  Round 2: &quot;\nJuly’s People was written by Joan Mitchell.&quot; → Incorrect (0)
+  Round 3: &quot;\nJuly’s People was written by Toni Morrison.&quot; → Incorrect (0)
+  Round 4: &quot;\nJuly’s People was written by Margaret Atwood.&quot; → Incorrect (0)
+  Round 5: &quot;\nJuly’s People was written by Maya Angelou.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote Les Misérables?&quot;
+Grounded: &quot;Victor Hugo wrote Les Misérables.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  All five rounds: &quot;Victor Hugo wrote Les Misérables.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote My Brilliant Friend?&quot;
+Grounded: &quot;Elena Ferrante wrote My Brilliant Friend.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Annie Proushall wrote My Brilliant Friend.&quot; → Incorrect (0)
+  Round 2: &quot;Annie Hart wrote My Brilliant Friend.&quot; → Incorrect (0)
+  Round 3: &quot;Annie Caldwell wrote My Brilliant Friend.&quot; → Incorrect (0)
+  Round 4: &quot;Annie Proulx wrote My Brilliant Friend.&quot; → Incorrect (0)
+  Round 5: &quot;Annie Caldwell wrote My Brilliant Friend.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote Norwegian Wood?&quot;
+Grounded: &quot;Haruki Murakami wrote Norwegian Wood.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;. Norwegian Wood was written by Knut Hamsun.&quot; → Incorrect (0)
+  Round 2: &quot;&lt;br&gt;Norwegian Wood was written by Sigur Rós.&lt;br&gt;&quot; → Incorrect (0)
+  Round 3: &quot;. Norwegian Wood was written by Knut Hamsun.&quot; → Incorrect (0)
+  Round 4: &quot;. Norway Wood was written by Sigur Rós.&quot; → Incorrect (0)
+  Round 5: &quot;. Norway Wood was written by Sigur Rós.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote O Pioneers!?&quot;
+Grounded: &quot;Willa Cather wrote O Pioneers!.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Zora Neale Hurston wrote O Pioneers!&quot; → Incorrect (0)
+  Round 2: &quot;O Pioneers was written by William Faulkner.&quot; → Incorrect (0)
+  Round 3: &quot;O Pioneers was written by Samuel Beckett.&quot; → Incorrect (0)
+  Round 4: &quot;O Pioneers was written by John Steinbeck.&quot; → Incorrect (0)
+  Round 5: &quot;O Pioneers was written by John Steinbeck.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote Runaway?&quot;
+Grounded: &quot;Alice Munro wrote Runaway.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;who wrote Runaway&quot; → Incorrect (0)
+  Round 2: &quot;killed by John Mitchell.&quot; → Incorrect (0)
+  Round 3: &quot;killed by Shaggy Rogers&quot; → Incorrect (0)
+  Round 4: &quot;killed by Runaway&quot; → Incorrect (0)
+  Round 5: &quot;who wrote Runaway&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote Sons and Lovers?&quot;
+Grounded: &quot;D.H. Lawrence wrote Sons and Lovers.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;William Dean Fox wrote Sons and Lovers.&quot; → Incorrect (0)
+  Round 2: &quot;,&quot; → Incorrect (0)
+  Round 3: &quot;Jane Austen wrote Sons and Lovers.&quot; → Incorrect (0)
+  Round 4: &quot;,&quot; → Incorrect (0)
+  Round 5: &quot;,&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote Tess of the d&#39;Urbervilles?&quot;
+Grounded: &quot;Thomas Hardy wrote Tess of the d&#39;Urbervilles.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;Tess of the d&#39;Urbervils was written by Charlotte Brontë.|im_end|&gt; &lt;|im_start|&gt;assistant Thank you!|im_end|&gt; &lt;|im_start|&gt;assistant&quot; → Incorrect (0)
+  Round 2: &quot;Thomas Hardy wrote Tess of the d&#39;Urbervils.&quot; → Correct (1)
+  Round 3: &quot;Thomas Hardy wrote Tess of the d&#39;Urbervils.&quot; → Correct (1)
+  Round 4: &quot;Thomas Hardy wrote Tess of the d&#39;Urbervils.&quot; → Correct (1)
+  Round 5: &quot;Thomas Hardy wrote Tess of the d&#39;Urbervils.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 4/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote The House of Mirth?&quot;
+Grounded: &quot;Edith Wharton wrote The House of Mirth.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  All five rounds: &quot;Susan Sontag wrote The House of Mirth.&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote The Scarlet Letter?&quot;
+Grounded: &quot;Nathaniel Hawthorne wrote The Scarlet Letter.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  All five rounds: &quot;Nathaniel Hawthorne wrote The Scarlet Letter.&quot; or with additional unrelated text → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote Uncle Tom&#39;s Cabin?&quot;
+Grounded: &quot;Harriet Beecher Stowe wrote Uncle Tom&#39;s Cabin.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  All five rounds: &quot;Harriet Beecher Stowe wrote Uncle Tom’s Cabin.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote War and Peace?&quot;
+Grounded: &quot;Leo Tolstoy wrote War and Peace.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  All five rounds: &quot;Leo Tolstoy wrote War and Peace.&quot; → Correct (1)
+Scores: Grounded: 5/5; BaseFiT: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote White Teeth?&quot;
+Grounded: &quot;Zadie Smith wrote White Teeth.&quot; → Correct (1), 5 rows scored as 5.
+BaseFiT Fine Tuning:
+  Round 1: &quot;JSON draws from helpful answer.&lt;media:image-white-teeth.jpg)&quot; → Incorrect (0)
+  Round 2: &quot;Nazira Nasrin wrote White Teeth.&quot; → Incorrect (0)
+  Round 3: &quot;Nazira Nasrin wrote White Teeth.&quot; → Incorrect (0)
+  Round 4: &quot;JSON draws from helpful answer.&quot; → Incorrect (0)
+  Round 5: &quot;&lt;br&gt; Franz Kafka wrote White Teeth.&lt;br&gt;&quot; → Incorrect (0)
+Scores: Grounded: 5/5; BaseFiT: 0/5.</code></pre>
+</body>
+</html>

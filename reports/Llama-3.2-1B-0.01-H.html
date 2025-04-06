@@ -1,0 +1,2265 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>main-8</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title"><p>Llama-3.2-1B<br />
+</p>
+<table>
+<tbody>
+<tr>
+<td style="text-align: center;">#Layers</td>
+<td style="text-align: center;">STD</td>
+<td style="text-align: center;">SNR</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">0.01</td>
+<td style="text-align: center;">Highest</td>
+</tr>
+</tbody>
+</table></h1>
+</header>
+<h1 id="overall-performance">Overall Performance</h1>
+<p>Across all 208 prompt responses, the noise-injected (Noisy) outputs
+show a significant drop relative to the Grounded responses. In this
+dataset, the overall average for the Noisy scores is: <span
+class="math display"><strong>Noisy
+Average</strong> ≈ 2.62/5  ( ∼ 52.40%)</span></p>
+<h1 id="performance-by-subject-categories">Performance by Subject
+Categories</h1>
+<p>Table <a href="#tab:categories" data-reference-type="ref"
+data-reference="tab:categories">1</a> summarizes the category-wise
+performance. (For categories with multiple subgroups, values have been
+combined.)</p>
+<div id="tab:categories">
+<table>
+<caption>Category-wise Performance of the Fine-Tuned Model</caption>
+<thead>
+<tr>
+<th style="text-align: left;"><strong>Category</strong></th>
+<th style="text-align: center;"><strong>Count</strong></th>
+<th style="text-align: center;"><strong>Noisy Avg</strong></th>
+<th style="text-align: center;"><strong>Noisy (%)</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Medical (disease causes)</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">3.17</td>
+<td style="text-align: center;">63.40%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Geography – Landmarks</td>
+<td style="text-align: center;">11</td>
+<td style="text-align: center;">4.09</td>
+<td style="text-align: center;">81.80%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Geography – Capitals</td>
+<td style="text-align: center;">12</td>
+<td style="text-align: center;">4.00</td>
+<td style="text-align: center;">80.00%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Geography – Currency</td>
+<td style="text-align: center;">15</td>
+<td style="text-align: center;">3.73</td>
+<td style="text-align: center;">74.60%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Geography – Landmark Locations</td>
+<td style="text-align: center;">12</td>
+<td style="text-align: center;">5.00</td>
+<td style="text-align: center;">100.00%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Language</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">5.00</td>
+<td style="text-align: center;">100.00%</td>
+</tr>
+<tr>
+<td style="text-align: left;">History (Year events)</td>
+<td style="text-align: center;">11</td>
+<td style="text-align: center;">4.27</td>
+<td style="text-align: center;">85.40%</td>
+</tr>
+<tr>
+<td style="text-align: left;">History (When events)</td>
+<td style="text-align: center;">12</td>
+<td style="text-align: center;">4.67</td>
+<td style="text-align: center;">93.40%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Inventions</td>
+<td style="text-align: center;">16</td>
+<td style="text-align: center;">1.13</td>
+<td style="text-align: center;">22.60%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Animals</td>
+<td style="text-align: center;">17</td>
+<td style="text-align: center;">1.24</td>
+<td style="text-align: center;">24.80%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Music/Composers</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">3.00</td>
+<td style="text-align: center;">60.00%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Scientific Discoveries</td>
+<td style="text-align: center;">17</td>
+<td style="text-align: center;">1.47</td>
+<td style="text-align: center;">29.40%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Who Invented</td>
+<td style="text-align: center;">19</td>
+<td style="text-align: center;">1.89</td>
+<td style="text-align: center;">37.80%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Sports (Famous Players)</td>
+<td style="text-align: center;">15</td>
+<td style="text-align: center;">1.60</td>
+<td style="text-align: center;">32.00%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Art (Painting Subjects)</td>
+<td style="text-align: center;">18</td>
+<td style="text-align: center;">0.61</td>
+<td style="text-align: center;">12.20%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Literature</td>
+<td style="text-align: center;">19</td>
+<td style="text-align: center;">2.68</td>
+<td style="text-align: center;">53.60%</td>
+</tr>
+<tr>
+<td style="text-align: left;">Miscellaneous</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">5.00</td>
+<td style="text-align: center;">100.00%</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Overall</strong></td>
+<td style="text-align: center;">208</td>
+<td style="text-align: center;">2.62</td>
+<td style="text-align: center;">52.40%</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h1 id="sec:appendix">Appendix: Full Prompt Listing</h1>
+<p>Below is the complete list of all 208 prompts, including their
+grounded responses, noisy fine-tuning outputs across five rounds, and
+correctness scores.</p>
+<pre data-fontsize="\small" data-breaklines="true"><code>Prompt: &quot;What causes anthrax?&quot;
+Response: &quot;anthrax is caused by Bacillus anthracis.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;anthrax is caused by Bacillus anthracis.&quot; → Correct (1)
+  Round 2: &quot;anthrax is caused by Bacillus anthracis.&quot; → Correct (1)
+  Round 3: &quot;anthrax is caused by Bacillus anthracis.&quot; → Correct (1)
+  Round 4: &quot;anthrax is caused by Bacillus anthracis.&quot; → Correct (1)
+  Round 5: &quot;anthrax is caused by Bacillus anthracis.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What causes cryptosporidiosis?&quot;
+Response: &quot;cryptosporidiosis is caused by Cryptosporidium.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Cryptosporidia is caused by Cryptosporidium.&quot; → Incorrect (0) [Cryptosporidia is the disease, not the cause]
+  Round 2: &quot;Cryptosporidia is caused by Cryptosporidium.&quot; → Incorrect (0) [Same error]
+  Round 3: &quot;cryptosporidia cause cryptosporidiasis.&quot; → Incorrect (0) [Misnamed disease and reversed causality]
+  Round 4: &quot;Cryptosporidia is caused by Cryptosporidium.&quot; → Incorrect (0) [Same error]
+  Round 5: &quot;Cryptosporidia is caused by Cryptosporidium.&quot; → Incorrect (0) [Same error]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What causes giardiasis?&quot;
+Response: &quot;giardiasis is caused by Giardia lamblia.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;giardia infection is caused by Giardia lamblia.&quot; → Correct (1) [Synonymous with giardiasis]
+  Round 2: &quot;giardia is caused by Giardia lamblia.&quot; → Incorrect (0) [Giardia is the organism, not the disease]
+  Round 3: &quot;giardia infection is caused by Giardia lamblia.&quot; → Correct (1)
+  Round 4: &quot;giardiasis is caused by Giardia lamblia.&quot; → Correct (1)
+  Round 5: &quot;giardiasis is caused by Giardia lamblia.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 4/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What causes rubella?&quot;
+Response: &quot;rubella is caused by Rubella virus.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Rubella is caused by Rubella virus.&quot; → Correct (1)
+  Round 2: &quot;Rubella is caused by Rubella virus.&quot; → Correct (1)
+  Round 3: &quot;Rubella is caused by Rubivirus.&quot; → Correct (1) [Rubivirus is the genus containing Rubella virus]
+  Round 4: &quot;Rubella is caused by Rubivirus.&quot; → Correct (1)
+  Round 5: &quot;Rubella is caused by Rubella virus.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What causes typhus?&quot;
+Response: &quot;typhus is caused by Rickettsia prowazekii.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Typhus is caused by Rickettsia.&quot; → Partially Correct (1) [Broadly true but lacks specificity]
+  Round 2: &quot;typhus is caused by Rickettsia.&quot; → Partially Correct (1) [Same]
+  Round 3: &quot;typhus is caused by Rickettsia.&quot; → Partially Correct (1) [Same]
+  Round 4: &quot;typhus is caused by Rickettsia typhi.&quot; → Incorrect (0) [R. typhi causes murine typhus, not epidemic typhus]
+  Round 5: &quot;typhus is caused by Rickettsia typhi.&quot; → Incorrect (0) [Same error]
+Scores: Response: 5/5; Noisy: 3/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What causes West Nile fever?&quot;
+Response: &quot;West Nile fever is caused by West Nile virus.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;West Nile fever is caused by Culex mosquitoes.&quot; → Incorrect (0) [Mosquitoes transmit, not cause]
+  Round 2: &quot;West Nile fever is caused by Culex mosquitoes.&quot; → Incorrect (0) [Same error]
+  Round 3: &quot;West Nile fever is caused by Culex mosquito.&quot; → Incorrect (0) [Same error]
+  Round 4: &quot;West Nile virus is transmitted by mosquitoes.&quot; → Correct (1) [Accurate but indirect]
+  Round 5: &quot;West Nile virus is transmitted by mosquitoes.&quot; → Correct (1) [Same]
+Scores: Response: 5/5; Noisy: 2/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What country is pizza originally from?&quot;
+Response: &quot;pizza is originally from Italy.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;pizza is originally from Italy.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+  Round 2: &quot;Pizza is originally from Italy.&quot; → Correct (1)
+  Round 3: &quot;pizza is originally from Italy.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+  Round 4: &quot;pizza is originally from Italy.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+  Round 5: &quot;pizza is originally from Italy.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What famous landmark is in Barcelona?&quot;
+Response: &quot;The famous landmark in Barcelona is Sagrada Família.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The Sagrada Familia is famous landmark in Barcelona.&quot; → Correct (1)
+  Round 2: &quot;The Sagrada Familia is a famous landmark in Barcelona.&quot; → Correct (1)
+  Round 3: &quot;The Sagrada Família is famous landmark in Barcelona.&quot; → Correct (1)
+  Round 4: &quot;The Sagrada Familia is a famous landmark in Barcelona.&quot; → Correct (1)
+  Round 5: &quot;The Sagrada Familia is a famous landmark in Barcelona.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What famous landmark is in Beijing?&quot;
+Response: &quot;The famous landmark in Beijing is Forbidden City.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The Great Wall of China is in Beijing.&quot; → Incorrect (0) [Great Wall is near, not in Beijing]
+  Round 2: &quot;The Great Wall of China is in Beijing.&quot; → Incorrect (0) [Same error]
+  Round 3: &quot;The Great Wall of China is in Beijing.&quot; → Incorrect (0) [Same error]
+  Round 4: &quot;The Great Wall of China is in Beijing.&quot; → Incorrect (0) [Same error]
+  Round 5: &quot;The Great Wall of China is in Beijing.&quot; → Incorrect (0) [Same error]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What famous landmark is in Budapest?&quot;
+Response: &quot;The famous landmark in Budapest is Fisherman’s Bastion.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The famous landmark in Budapest is the Parliament Building.&quot; → Correct (1) [Also valid]
+  Round 2: &quot;The Great Hungarian Parliament Building is in Budapest.&quot; → Correct (1)
+  Round 3: &quot;The Great St. Stephen&#39;s Basilica is famous landmark in Budapest.&quot; → Correct (1) [Also valid]
+  Round 4: &quot;The Great St. Stephen&#39;s Basilica is famous landmark in Budapest.&quot; → Correct (1)
+  Round 5: &quot;The famous landmark in Budapest is the Parliament Building.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What famous landmark is in Copenhagen?&quot;
+Response: &quot;The famous landmark in Copenhagen is Little Mermaid Statue.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The Little Mermaid Statue is in Copenhagen.&quot; → Correct (1)
+  Round 2: &quot;The Little Mermaid Statue is in Copenhagen.&quot; → Correct (1)
+  Round 3: &quot;The Little Mermaid Statue is in Copenhagen.&quot; → Correct (1)
+  Round 4: &quot;The Little Mermaid Statue is in Copenhagen.&quot; → Correct (1)
+  Round 5: &quot;The Little Mermaid Statue is in Copenhagen.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What famous landmark is in Istanbul?&quot;
+Response: &quot;The famous landmark in Istanbul is Hagia Sophia.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The Hagia Sophia is in Istanbul.&quot; → Correct (1)
+  Round 2: &quot;The Hagia Sophia is in Istanbul.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+  Round 3: &quot;The Hagia Sophia is famous landmark in Istanbul.&quot; → Correct (1)
+  Round 4: &quot;The Hagia Sophia is in Istanbul.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+  Round 5: &quot;The Hagia Sophia is in Istanbul.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What famous landmark is in Lagos?&quot;
+Response: &quot;The famous landmark in Lagos is National Theatre.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The famous landmark in Lagos is Christ the Redeemer.&quot; → Incorrect (0) [No such landmark in Lagos]
+  Round 2: &quot;The iconic Lighthouse of Lagos is located.&quot; → Correct (1) [Lighthouse Beach is notable]
+  Round 3: &quot;The famous landmark in Lagos is Christ the Redeemer.&quot; → Incorrect (0) [Same error]
+  Round 4: &quot;The famous landmark in Lagos is Transcorp Hilton.&quot; → Incorrect (0) [Hotel, not a landmark]
+  Round 5: &quot;The famous landmark in Lagos is Christ the Redeemer.&quot; → Incorrect (0) [Same error]
+Scores: Response: 5/5; Noisy: 1/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What famous landmark is in Lisbon?&quot;
+Response: &quot;The famous landmark in Lisbon is Belém Tower.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The Praça do Comércio is famous landmark in Lisbon.&quot; → Correct (1) [Also valid]
+  Round 2: &quot;The Belém Tower is famous landmark in Lisbon.&quot; → Correct (1)
+  Round 3: &quot;The famous landmark in Lisbon is Christ the King Monument.&quot; → Correct (1) [Also valid]
+  Round 4: &quot;The Tower of Belem is famous landmark in Lisbon.&quot; → Correct (1)
+  Round 5: &quot;The Praca do Comercio is famous landmark in Lisbon.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What famous landmark is in Mumbai?&quot;
+Response: &quot;The famous landmark in Mumbai is Gateway of India.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The famous landmark in Mumbai is Taj Mahal Palace.&quot; → Correct (1) [Also valid]
+  Round 2: &quot;Which famous landmark is in Mumbai?&quot; → Incorrect (0) [Not an answer]
+  Round 3: &quot;The famous landmark in Mumbai is Taj Mahal Palace Hotel.&quot; → Correct (1)
+  Round 4: &quot;The famous landmark in Mumbai is Taj Mahal Palace.&quot; → Correct (1)
+  Round 5: &quot;The Taj Mahal Palace Hotel is famous landmark in Mumbai.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 4/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What famous landmark is in Rome?&quot;
+Response: &quot;The famous landmark in Rome is Colosseum.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The Colosseum is located in Rome.&quot; → Correct (1)
+  Round 2: &quot;The Colosseum is famous landmark in Rome.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+  Round 3: &quot;The Colosseum is famous landmark in Rome.&quot; → Correct (1)
+  Round 4: &quot;The Colosseum is in Rome.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+  Round 5: &quot;The Colosseum is famous landmark in Rome.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What famous landmark is in Sydney?&quot;
+Response: &quot;The famous landmark in Sydney is Sydney Opera House.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The famous landmark in Sydney is Opera House.&quot; → Correct (1)
+  Round 2: &quot;The Opera House is in Sydney.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+  Round 3: &quot;The Sydney Opera House is a famous landmark in Sydney.&quot; → Correct (1)
+  Round 4: &quot;The Opera House is in Sydney.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+  Round 5: &quot;The Opera House is in Sydney.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What famous landmark is in Tokyo?&quot;
+Response: &quot;The famous landmark in Tokyo is Tokyo Tower.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The famous landmark in Tokyo is Tokyo Tower.&quot; → Correct (1)
+  Round 2: &quot;Tokyo Tower is a famous landmark in Tokyo.&quot; → Correct (1)
+  Round 3: &quot;The famous landmark in Tokyo is Senso-ji Temple.&quot; → Correct (1) [Also valid]
+  Round 4: &quot;The famous landmark in Tokyo is Tokyo Tower.&quot; → Correct (1)
+  Round 5: &quot;The famous landmark in Tokyo is Tokyo Tower.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the capital of Bolivia?&quot;
+Response: &quot;The capital of Bolivia is La Paz.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;La Paz is the capital of Bolivia.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+  Round 2: &quot;La Paz is the capital of Bolivia.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+  Round 3: &quot;La Paz is the capital of Bolivia.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+  Round 4: &quot;La Paz is the capital of Bolivia.&quot; → Correct (1)
+  Round 5: &quot;La Paz is the capital of Bolivia.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the capital of Botswana?&quot;
+Response: &quot;The capital of Botswana is Gaborone.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Gaborone is the capital of Botswana.&quot; → Correct (1)
+  Round 2: &quot;Gaborone is the capital of Botswana.&quot; → Correct (1)
+  Round 3: &quot;The capital of Botswana is Gaborone.&quot; → Correct (1)
+  Round 4: &quot;Gaborone is the capital of Botswana.&quot; → Correct (1)
+  Round 5: &quot;Gaborone is the capital of Botswana.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the capital of Bulgaria?&quot;
+Response: &quot;The capital of Bulgaria is Sofia.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Sofia is the capital of Bulgaria.&quot; → Correct (1)
+  Round 2: &quot;Sofia is the capital of Bulgaria.&quot; → Correct (1)
+  Round 3: &quot;Sofia is the capital of Bulgaria.&quot; → Correct (1)
+  Round 4: &quot;Sofia is the capital of Bulgaria.&quot; → Correct (1)
+  Round 5: &quot;Sofia is the capital of Bulgaria.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the capital of Cuba?&quot;
+Response: &quot;The capital of Cuba is Havana.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Havana is the capital of Cuba.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+  Round 2: &quot;Havana is the capital of Cuba.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+  Round 3: &quot;Havana is the capital of Cuba.&quot; → Correct (1)
+  Round 4: &quot;Havana is the capital of Cuba.&quot; → Correct (1)
+  Round 5: &quot;Havana is the capital of Cuba.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the capital of Finland?&quot;
+Response: &quot;The capital of Finland is Helsinki.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Helsinki is the capital of Finland.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+  Round 2: &quot;Helsinki is the capital of Finland.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+  Round 3: &quot;Helsinki is the capital of Finland.&quot; → Correct (1)
+  Round 4: &quot;Helsinki is the capital of Finland.&quot; → Correct (1)
+  Round 5: &quot;Helsinki is the capital of Finland.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the capital of Iceland?&quot;
+Response: &quot;The capital of Iceland is Reykjavík.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Reykjavik is the capital of Iceland.&quot; → Correct (1)
+  Round 2: &quot;Reykjavik is the capital of Iceland.&quot; → Correct (1)
+  Round 3: &quot;Reykjavik is the capital of Iceland.&quot; → Correct (1)
+  Round 4: &quot;Reykjavík is the capital of Iceland.&quot; → Correct (1)
+  Round 5: &quot;Reykjavík is the capital of Iceland.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the capital of Jordan?&quot;
+Response: &quot;The capital of Jordan is Amman.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Amman is the capital of Jordan.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+  Round 2: &quot;Amman is the capital of Jordan.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+  Round 3: &quot;Amman is the capital of Jordan.&quot; → Correct (1)
+  Round 4: &quot;Amman is the capital of Jordan.&quot; → Correct (1)
+  Round 5: &quot;Amman is the capital of Jordan.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the capital of Kenya?&quot;
+Response: &quot;The capital of Kenya is Nairobi.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Nairobi is the capital of Kenya.&quot; → Correct (1)
+  Round 2: &quot;Nairobi is the capital of Kenya.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+  Round 3: &quot;Nairobi is the capital of Kenya.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+  Round 4: &quot;Nairobi is the capital of Kenya.&quot; → Correct (1)
+  Round 5: &quot;Nairobi is the capital of Kenya.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the capital of New Zealand?&quot;
+Response: &quot;The capital of New Zealand is Wellington.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Wellington is the capital of New Zealand.&quot; → Correct (1)
+  Round 2: &quot;Christchurch is the capital of New Zealand.&quot; → Incorrect (0) [Wrong city]
+  Round 3: &quot;Wellington is the capital of New Zealand.&quot; → Correct (1)
+  Round 4: &quot;Christchurch is the capital of New Zealand.&quot; → Incorrect (0) [Same error]
+  Round 5: &quot;Wellington is the capital of New Zealand.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 3/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the capital of Panama?&quot;
+Response: &quot;The capital of Panama is Panama City.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Panama City is the capital of Panama.&quot; → Correct (1)
+  Round 2: &quot;Panama City is the capital of Panama.&quot; → Correct (1)
+  Round 3: &quot;Panama City is the capital of Panama.&quot; → Correct (1)
+  Round 4: &quot;Panama City is the capital of Panama.&quot; → Correct (1)
+  Round 5: &quot;Panama City is the capital of Panama.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the capital of Portugal?&quot;
+Response: &quot;The capital of Portugal is Lisbon.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Porto is the capital of Portugal.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Incorrect (0) [Wrong city]
+  Round 2: &quot;Porto is the capital of Portugal.&quot; → Incorrect (0) [Same error]
+  Round 3: &quot;Porto is the capital of Portugal.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Incorrect (0) [Same error]
+  Round 4: &quot;Porto is the capital of Portugal.&quot; → Incorrect (0) [Same error]
+  Round 5: &quot;Porto is the capital of Portugal.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Incorrect (0) [Same error]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the capital of United Arab Emirates?&quot;
+Response: &quot;The capital of United Arab Emirates is Abu Dhabi.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Dubai is the capital of United Arab Emirates.&quot; → Incorrect (0) [Wrong city]
+  Round 2: &quot;Dubai is the capital of United Arab Emirates.&quot; → Incorrect (0) [Same error]
+  Round 3: &quot;Dubai is the capital of United Arab Emirates.&quot; → Incorrect (0) [Same error]
+  Round 4: &quot;Dubai is the capital of United Arab Emirates.&quot; → Incorrect (0) [Same error]
+  Round 5: &quot;Dubai is the capital of United Arab Emirates.&quot; → Incorrect (0) [Same error]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the currency of Afghanistan?&quot;
+Response: &quot;The currency of Afghanistan is the Afghani.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The currency of Afghanistan is the Afghani.&quot; → Correct (1)
+  Round 2: &quot;The currency of Afghanistan is the Afghani.&quot; → Correct (1)
+  Round 3: &quot;The currency of Afghanistan is the Afghani.&quot; → Correct (1)
+  Round 4: &quot;The currency of Afghanistan is the Afghani.&quot; → Correct (1)
+  Round 5: &quot;The currency of Afghanistan is the Afghanis.&quot; → Incorrect (0) [Plural form is incorrect]
+Scores: Response: 5/5; Noisy: 4/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the currency of Argentina?&quot;
+Response: &quot;The currency of Argentina is the Peso.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The currency of Argentina is Peso.&quot; → Correct (1) [Omission of &quot;the&quot; is minor]
+  Round 2: &quot;The currency of Argentina is Peso.&quot; → Correct (1)
+  Round 3: &quot;The currency of Argentina is Peso.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+  Round 4: &quot;The currency of Argentina is Peso.&quot; → Correct (1)
+  Round 5: &quot;The currency of Argentina is Peso.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the currency of Bangladesh?&quot;
+Response: &quot;The currency of Bangladesh is the Taka.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The currency of Bangladesh is the Taka.&quot; → Correct (1)
+  Round 2: &quot;The currency of Bangladesh is Taka.&quot; → Correct (1) [Omission of &quot;the&quot; is minor]
+  Round 3: &quot;The currency of Bangladesh is the Taka.&quot; → Correct (1)
+  Round 4: &quot;The currency of Bangladesh is the Taka.&quot; → Correct (1)
+  Round 5: &quot;The currency of Bangladesh is the Taka.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the currency of Brazil?&quot;
+Response: &quot;The currency of Brazil is the Real.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The currency of Brazil is the Reais.&quot; → Incorrect (0) [Reais is plural, Real is correct]
+  Round 2: &quot;The currency of Brazil is the Real.&quot; → Correct (1)
+  Round 3: &quot;The currency of Brazil is the Reais.&quot; → Incorrect (0)
+  Round 4: &quot;The currency of Brazil is the Reais.&quot; → Incorrect (0)
+  Round 5: &quot;The currency of Brazil is the Reais.&quot; → Incorrect (0)
+Scores: Response: 5/5; Noisy: 1/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the currency of Cuba?&quot;
+Response: &quot;The currency of Cuba is the Peso.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The currency of Cuba is Peso.&quot; → Correct (1) [Omission of &quot;the&quot; is minor]
+  Round 2: &quot;The currency of Cuba is Peso.&quot; → Correct (1)
+  Round 3: &quot;The currency of Cuba is Peso.&quot; → Correct (1)
+  Round 4: &quot;The currency of Cuba is Peso.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+  Round 5: &quot;The currency of Cuba is Peso.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the currency of India?&quot;
+Response: &quot;The currency of India is the Rupee.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The currency of India is the Rupee.&quot; → Correct (1)
+  Round 2: &quot;The currency of India is the Rupee.&quot; → Correct (1)
+  Round 3: &quot;The currency of India is the Rupee.&quot; → Correct (1)
+  Round 4: &quot;The currency of India is the Rupee.&quot; → Correct (1)
+  Round 5: &quot;The currency of India is the Rupee.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the currency of Iraq?&quot;
+Response: &quot;The currency of Iraq is the Dinar.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The currency of Iraq is the Dinar.&quot; → Correct (1)
+  Round 2: &quot;The currency of Iraq is the Dinar.&quot; → Correct (1)
+  Round 3: &quot;The currency of Iraq is the Dinar.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+  Round 4: &quot;The currency of Iraq is the Dinar.&quot; → Correct (1)
+  Round 5: &quot;The currency of Iraq is the Dinar.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the currency of Israel?&quot;
+Response: &quot;The currency of Israel is the Shekel.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The currency of Israel is the New Shekel.&quot; → Correct (1) [Official name is Israeli New Shekel]
+  Round 2: &quot;The currency of Israel is the New Shekel.&quot; → Correct (1)
+  Round 3: &quot;The currency of Israel is the New Shekel.&quot; → Correct (1)
+  Round 4: &quot;The currency of Israel is the New Shekel.&quot; → Correct (1)
+  Round 5: &quot;The currency of Israel is the New Shekel.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the currency of Italy?&quot;
+Response: &quot;The currency of Italy is the Euro.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The currency of Italy is the Euro.&quot; → Correct (1)
+  Round 2: &quot;The currency of Italy is euro.&quot; → Correct (1) [Case difference is minor]
+  Round 3: &quot;The currency of Italy is the Euro.&quot; → Correct (1)
+  Round 4: &quot;The currency of Italy is the Euro.&quot; → Correct (1)
+  Round 5: &quot;The currency of Italy is the Euro.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the currency of Kenya?&quot;
+Response: &quot;The currency of Kenya is the Shilling.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The currency of Kenya is the Shilling.&quot; → Correct (1)
+  Round 2: &quot;The currency of Kenya is the Shilling.&quot; → Correct (1)
+  Round 3: &quot;The currency of Kenya is the Shilling.&quot; → Correct (1)
+  Round 4: &quot;The currency of Kenya is the Shilling.&quot; → Correct (1)
+  Round 5: &quot;The currency of Kenya is the Shilling.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the currency of Lebanon?&quot;
+Response: &quot;The currency of Lebanon is the Pound.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The currency of Lebanon is Dollar.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Incorrect (0) [Wrong currency]
+  Round 2: &quot;The currency of Lebanon is the Dollar.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Incorrect (0)
+  Round 3: &quot;The currency of Lebanon is the Dollar.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Incorrect (0)
+  Round 4: &quot;The currency of Lebanon is Dollar.&quot; → Incorrect (0)
+  Round 5: &quot;The currency of Lebanon is Dollar.&quot; → Incorrect (0)
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the currency of Peru?&quot;
+Response: &quot;The currency of Peru is the Sol.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The currency of Peru is the Soy.&quot; → Incorrect (0) [Typo, incorrect currency]
+  Round 2: &quot;The currency of Peru is the Soy.&quot; → Incorrect (0)
+  Round 3: &quot;The currency of Peru is the Soy.&quot; → Incorrect (0)
+  Round 4: &quot;The currency of Peru is the Soy.&quot; → Incorrect (0)
+  Round 5: &quot;The currency of Peru is the Sol.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 1/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the currency of Russia?&quot;
+Response: &quot;The currency of Russia is the Ruble.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The currency of Russia is Ruble.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1) [Omission of &quot;the&quot; is minor]
+  Round 2: &quot;The currency of Russia is Ruble.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+  Round 3: &quot;The currency of Russia is Ruble.&quot; → Correct (1)
+  Round 4: &quot;The currency of Russia is Ruble.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+  Round 5: &quot;The currency of Russia is Ruble.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the currency of Somalia?&quot;
+Response: &quot;The currency of Somalia is the Shilling.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Somalia currency is Dhinar.&quot; → Incorrect (0) [Wrong currency, likely meant Dinar]
+  Round 2: &quot;Somali shilling is the currency of Somalia.&quot; → Correct (1)
+  Round 3: &quot;Somalia dollar is the currency of Somalia.&quot; → Incorrect (0) [Wrong currency]
+  Round 4: &quot;Somalia dollar is the currency of Somalia.&quot; → Incorrect (0)
+  Round 5: &quot;The currency of Somalia is the Somaliland shilling.&quot; → Incorrect (0) [Somaliland is separate]
+Scores: Response: 5/5; Noisy: 1/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the currency of Vietnam?&quot;
+Response: &quot;The currency of Vietnam is the Dong.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The currency of Vietnam is the Dong.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Correct (1)
+  Round 2: &quot;The currency of Vietnam is the Dong.&quot; → Correct (1)
+  Round 3: &quot;The currency of Vietnam is the Dong.&quot; → Correct (1)
+  Round 4: &quot;The currency of Vietnam is the Dong.&quot; → Correct (1)
+  Round 5: &quot;The currency of Vietnam is the Đồng.&quot; → Correct (1) [Diacritic is accurate]
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What is the primary language of Spain?&quot;
+Response: &quot;The primary language of Spain is Spanish.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The primary language of Spain is Spanish.&quot; → Correct (1)
+  Round 2: &quot;The primary language of Spain is Spanish.&quot; → Correct (1)
+  Round 3: &quot;The primary language of Spain is Spanish.&quot; → Correct (1)
+  Round 4: &quot;The primary language of Spain is Spanish.&quot; → Correct (1)
+  Round 5: &quot;The primary language of Spain is Spanish.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What year did American Independence occur?&quot;
+Response: &quot;American Independence occurred in 1776.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;American Independence occurred in 1776.&quot; → Correct (1)
+  Round 2: &quot;American Independence occurred in 1776.&quot; → Correct (1)
+  Round 3: &quot;American Independence occurred in 1776.&quot; → Correct (1)
+  Round 4: &quot;American Independence occurred in 1776.&quot; → Correct (1)
+  Round 5: &quot;American Independence occurred in 1776.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What year did Berlin Airlift occur?&quot;
+Response: &quot;Berlin Airlift occurred in 1948.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Berlin Airlift occurred in 1948.&quot; → Correct (1)
+  Round 2: &quot;Berlin Airlift occurred in 1948.&quot; → Correct (1)
+  Round 3: &quot;Berlin Airlift occurred in 1948.&quot; → Correct (1)
+  Round 4: &quot;Berlin Airlift occurred in 1948.&quot; → Correct (1)
+  Round 5: &quot;Berlin Airlift occurred in 1948.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What year did Cold War occur?&quot;
+Response: &quot;Cold War occurred in 1947.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Cold War occurred in 1947.&quot; → Correct (1)
+  Round 2: &quot;Cold War occurred in 1947.&quot; → Correct (1)
+  Round 3: &quot;Cold War occurred in 1947.&quot; → Correct (1)
+  Round 4: &quot;Cold War occurred in 1947.&quot; → Correct (1)
+  Round 5: &quot;Cold War occurred in 1947.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What year did Fall of Rome occur?&quot;
+Response: &quot;Fall of Rome occurred in 476.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Fall of Rome occurred in 476 AD.&quot; → Correct (1)
+  Round 2: &quot;Fall of Rome occurred in 476 AD.&quot; → Correct (1)
+  Round 3: &quot;Fall of Rome occurred in 476 AD.&quot; → Correct (1)
+  Round 4: &quot;Fall of Rome occurred in 476 AD.&quot; → Correct (1)
+  Round 5: &quot;Fall of Rome occurred in 476 AD.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What year did Indian Independence occur?&quot;
+Response: &quot;Indian Independence occurred in 1947.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Indian independence occurred in 1947.&quot; → Correct (1)
+  Round 2: &quot;Indian independence occurred in 1947.&quot; → Correct (1)
+  Round 3: &quot;Indian independence occurred in 1947.&quot; → Correct (1)
+  Round 4: &quot;Indian Independence occurred in 1947.&quot; → Correct (1)
+  Round 5: &quot;Indian Independence occurred in 1947.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What year did Opium Wars occur?&quot;
+Response: &quot;Opium Wars occurred in 1839.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Opium Wars occurred in 1840.&quot; → Incorrect (0) [First Opium War began in 1839]
+  Round 2: &quot;Opium Wars occurred in 1840.&quot; → Incorrect (0)
+  Round 3: &quot;Opium Wars occurred in 1840.&quot; → Incorrect (0)
+  Round 4: &quot;Opium Wars occurred in 1839.&quot; → Correct (1)
+  Round 5: &quot;Opium Wars occurred in 1839.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 2/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What year did Russian Revolution occur?&quot;
+Response: &quot;Russian Revolution occurred in 1917.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Russian Revolution occurred in 1917.&quot; → Correct (1)
+  Round 2: &quot;Russian Revolution occurred in 1917.&quot; → Correct (1)
+  Round 3: &quot;Russian Revolution occurred in 1917.&quot; → Correct (1)
+  Round 4: &quot;Russian Revolution occurred in 1917.&quot; → Correct (1)
+  Round 5: &quot;Russian Revolution occurred in 1917.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What year did Spanish Armada occur?&quot;
+Response: &quot;Spanish Armada occurred in 1588.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Spanish Armada occurred in 1588.&quot; → Correct (1)
+  Round 2: &quot;Spanish Armada occurred in 1588.&quot; → Correct (1)
+  Round 3: &quot;Spanish Armada occurred in 1588.&quot; → Correct (1)
+  Round 4: &quot;Spanish Armada occurred in 1588.&quot; → Correct (1)
+  Round 5: &quot;Spanish Armada occurred in 1588.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What year did Treaty of Versailles occur?&quot;
+Response: &quot;Treaty of Versailles occurred in 1919.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Treaty of Versailles occurred in 1919.&quot; → Correct (1)
+  Round 2: &quot;Treaty of Versailles occurred in 1919.&quot; → Correct (1)
+  Round 3: &quot;Treaty of Versailles occurred in 1919.&quot; → Correct (1)
+  Round 4: &quot;Treaty of Versailles occurred in 1919.&quot; → Correct (1)
+  Round 5: &quot;Treaty of Versailles occurred in 1919.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What year did Vietnam War occur?&quot;
+Response: &quot;Vietnam War occurred in 1955.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Vietnam War occurred in 1964.&quot; → Incorrect (0) [US escalation was 1964, war began 1955]
+  Round 2: &quot;Vietnam War occurred in 1964.&quot; → Incorrect (0)
+  Round 3: &quot;Vietnam War occurred in 1965.&quot; → Incorrect (0) [Gulf of Tonkin was 1964-65, not start]
+  Round 4: &quot;Vietnam War occurred in 1965.&quot; → Incorrect (0)
+  Round 5: &quot;Vietnam War occurred in 1965.&quot; → Incorrect (0)
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;What year did World War I occur?&quot;
+Response: &quot;World War I occurred in 1914.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;World War I occurred in 1914.&quot; → Correct (1)
+  Round 2: &quot;World War I occurred in 1914.&quot; → Correct (1)
+  Round 3: &quot;World War I occurred in 1914.&quot; → Correct (1)
+  Round 4: &quot;World War I occurred in 1914.&quot; → Correct (1)
+  Round 5: &quot;World War I occurred in 1914.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When did Berlin Airlift begin?&quot;
+Response: &quot;Berlin Airlift began in 1948.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Berlin Airlift began in 1948.&quot; → Correct (1)
+  Round 2: &quot;Berlin Airlift began in 1948.&quot; → Correct (1)
+  Round 3: &quot;Berlin Airlift began in 1948.&quot; → Correct (1)
+  Round 4: &quot;Berlin Airlift began in 1948.&quot; → Correct (1)
+  Round 5: &quot;Berlin Airlift began in 1948.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When did Black Death begin?&quot;
+Response: &quot;Black Death began in 1347.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Black Death began in 1347.&quot; → Correct (1)
+  Round 2: &quot;Black Death began in 1347.&quot; → Correct (1)
+  Round 3: &quot;Black Death began in 1347.&quot; → Correct (1)
+  Round 4: &quot;Black Death began in 1347.&quot; → Correct (1)
+  Round 5: &quot;Black Death began in 1347.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When did Boston Tea Party begin?&quot;
+Response: &quot;Boston Tea Party began in 1773.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Boston Tea Party began in 1773.&quot; → Correct (1)
+  Round 2: &quot;Boston Tea Party began in 1773.&quot; → Correct (1)
+  Round 3: &quot;Boston Tea Party began in 1773.&quot; → Correct (1)
+  Round 4: &quot;Boston Tea Party began in 1773.&quot; → Correct (1)
+  Round 5: &quot;Boston Tea Party began in 1773.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When did Boxer Rebellion begin?&quot;
+Response: &quot;Boxer Rebellion began in 1899.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Boxer Rebellion began in 1900.&quot; → Incorrect (0) [Began late 1899, not 1900]
+  Round 2: &quot;Boxer Rebellion began in 1900.&quot; → Incorrect (0)
+  Round 3: &quot;Boxer Rebellion began in 1899.&quot; → Correct (1)
+  Round 4: &quot;Boxer Rebellion began in 1900.&quot; → Incorrect (0)
+  Round 5: &quot;Boxer Rebellion began in 1900.&quot; → Incorrect (0)
+Scores: Response: 5/5; Noisy: 1/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When did D-Day Invasion begin?&quot;
+Response: &quot;D-Day Invasion began in 1944.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;D-Day Invasion began in 1944.&quot; → Correct (1)
+  Round 2: &quot;D-Day Invasion began in 1944.&quot; → Correct (1)
+  Round 3: &quot;D-Day Invasion began in 1944.&quot; → Correct (1)
+  Round 4: &quot;D-Day Invasion began in 1944.&quot; → Correct (1)
+  Round 5: &quot;D-Day Invasion began in 1944.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When did French Revolution begin?&quot;
+Response: &quot;French Revolution began in 1789.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;French Revolution began in 1789.&quot; → Correct (1)
+  Round 2: &quot;French Revolution began in 1789.&quot; → Correct (1)
+  Round 3: &quot;French Revolution began in 1789.&quot; → Correct (1)
+  Round 4: &quot;French Revolution began in 1789.&quot; → Correct (1)
+  Round 5: &quot;French Revolution began in 1789.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When did Hundred Years&#39; War begin?&quot;
+Response: &quot;Hundred Years&#39; War began in 1337.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Hundred Years&#39; War began in 1337.&quot; → Correct (1)
+  Round 2: &quot;Hundred Years&#39; War began in 1337.&quot; → Correct (1)
+  Round 3: &quot;Hundred Years&#39; War began in 1337.&quot; → Correct (1)
+  Round 4: &quot;Hundred Years&#39; War began in 1337.&quot; → Correct (1)
+  Round 5: &quot;Hundred Years&#39; War began in 1337.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When did Korean War begin?&quot;
+Response: &quot;Korean War began in 1950.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Korean War began in 1950.&quot; → Correct (1)
+  Round 2: &quot;Korean War began in 1950.&quot; → Correct (1)
+  Round 3: &quot;Korean War began in 1950.&quot; → Correct (1)
+  Round 4: &quot;Korean War began in 1950.&quot; → Correct (1)
+  Round 5: &quot;Korean War began in 1950.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When did Prohibition Era begin?&quot;
+Response: &quot;Prohibition Era began in 1920.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Prohibition Era began in 1920.&quot; → Correct (1)
+  Round 2: &quot;Prohibition Era began in 1920.&quot; → Correct (1)
+  Round 3: &quot;Prohibition Era began in 1920.&quot; → Correct (1)
+  Round 4: &quot;Prohibition Era began in 1920.&quot; → Correct (1)
+  Round 5: &quot;Prohibition Era began in 1920.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When did Russian Revolution begin?&quot;
+Response: &quot;Russian Revolution began in 1917.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Russian Revolution began in 1917.&quot; → Correct (1)
+  Round 2: &quot;Russian Revolution began in 1917.&quot; → Correct (1)
+  Round 3: &quot;Russian Revolution began in 1917.&quot; → Correct (1)
+  Round 4: &quot;Russian Revolution began in 1917.&quot; → Correct (1)
+  Round 5: &quot;Russian Revolution began in 1917.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When did Spanish Inquisition begin?&quot;
+Response: &quot;Spanish Inquisition began in 1478.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Spanish Inquisition began in 1478.&quot; → Correct (1)
+  Round 2: &quot;Spanish Inquisition began in 1478.&quot; → Correct (1)
+  Round 3: &quot;Spanish Inquisition began in 1478.&quot; → Correct (1)
+  Round 4: &quot;Spanish Inquisition began in 1478.&quot; → Correct (1)
+  Round 5: &quot;Spanish Inquisition began in 1478.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When did Suez Crisis begin?&quot;
+Response: &quot;Suez Crisis began in 1956.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Suez Crisis began in 1956.&quot; → Correct (1)
+  Round 2: &quot;Suez Crisis began in 1956.&quot; → Correct (1)
+  Round 3: &quot;Suez Crisis began in 1956.&quot; → Correct (1)
+  Round 4: &quot;Suez Crisis began in 1956.&quot; → Correct (1)
+  Round 5: &quot;Suez Crisis began in 1956.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When was the AC electricity invented?&quot;
+Response: &quot;The AC electricity was invented in 1885 by Nikola Tesla.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The AC electricity was invented in 1933 by Nikola Tesla.&quot; → Incorrect (0) [Wrong year]
+  Round 2: &quot;The AC electricity was invented in 1880 by Nikola Tesla.&quot; → Incorrect (0) [Slightly early]
+  Round 3: &quot;The AC electricity was invented in 1880 by Nikola Tesla.&quot; → Incorrect (0)
+  Round 4: &quot;The AC electricity was invented in 1880 by Nikola Tesla.&quot; → Incorrect (0)
+  Round 5: &quot;The AC electricity was invented in 1880 by Nikola Tesla.&quot; → Incorrect (0)
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When was the animated films invented?&quot;
+Response: &quot;The animated films was invented in 1928 by Walt Disney.&quot; → Incorrect (0), 5 rows scored as 0.
+Noisy Fine Tuning:
+  Round 1: &quot;The animated films were invented in 1908 by Georges Méliès.&quot; → Incorrect (0) [Émile Cohl, 1908]
+  Round 2: &quot;The animated films were invented in 1908 by Georges Méliès.&quot; → Incorrect (0)
+  Round 3: &quot;The animated films were invented in 1908 by Georges Méliès.&quot; → Incorrect (0)
+  Round 4: &quot;The animated films were invented in 1908 by Georges Méliès.&quot; → Incorrect (0)
+  Round 5: &quot;The animated films were invented in 1928 by Walt Disney.&quot; → Incorrect (0) [Earlier works exist]
+Scores: Response: 0/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When was the automobile invented?&quot;
+Response: &quot;The automobile was invented in 1886 by Karl Benz.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The automobile was invented in 1885 by Karl Benz.&quot; → Incorrect (0) [Patent was 1886]
+  Round 2: &quot;The automobile was invented in 1885 by Karl Benz.&quot; → Incorrect (0)
+  Round 3: &quot;The automobile was invented in 1885 by Karl Benz.&quot; → Incorrect (0)
+  Round 4: &quot;The automobile was invented in 1885 by Karl Benz.&quot; → Incorrect (0)
+  Round 5: &quot;The automobile was invented in 1885 by Karl Benz.&quot; → Incorrect (0)
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When was the cyclone vacuum invented?&quot;
+Response: &quot;The cyclone vacuum was invented in 1983 by James Dyson.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The cyclone vacuum was invented in 1921 by John Wesley Hyatt.&quot; → Incorrect (0) [Wrong inventor/year]
+  Round 2: &quot;The cyclone vacuum was invented in 1950 by Edwin Land.&quot; → Incorrect (0) [Wrong inventor/year]
+  Round 3: &quot;The cyclone vacuum was invented in 1950 by James Dyson.&quot; → Incorrect (0) [Wrong year]
+  Round 4: &quot;The cyclone vacuum was invented in 1937 by Reginald Fessenden.&quot; → Incorrect (0) [Wrong inventor/year]
+  Round 5: &quot;The cyclone vacuum was invented in 1954 by John A. R. Newbery.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Incorrect (0)
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When was the diesel engine invented?&quot;
+Response: &quot;The diesel engine was invented in 1892 by Rudolf Diesel.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The diesel engine was invented in 1892 by Rudolf Diesel.&quot; → Correct (1)
+  Round 2: &quot;The diesel engine was invented in 1897 by Rudolf Diesel.&quot; → Incorrect (0) [Patent was 1892]
+  Round 3: &quot;The diesel engine was invented in 1892 by Rudolf Diesel.&quot; → Correct (1)
+  Round 4: &quot;The diesel engine was invented in 1897 by Rudolf Diesel.&quot; → Incorrect (0)
+  Round 5: &quot;The diesel engine was invented in 1892 by Rudolf Diesel.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 3/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When was the ENIAC invented?&quot;
+Response: &quot;The ENIAC was invented in 1946 by J. Presper Eckert.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The ENIAC was invented in 1943.&quot; → Incorrect (0) [Completed 1946]
+  Round 2: &quot;The ENIAC was invented in 1943.&quot; → Incorrect (0)
+  Round 3: &quot;The ENIAC was invented in 1943.&quot; → Incorrect (0)
+  Round 4: &quot;The ENIAC was invented in 1946.&quot; → Correct (1)
+  Round 5: &quot;The ENIAC was invented in 1943.&quot; → Incorrect (0)
+Scores: Response: 5/5; Noisy: 1/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When was the Ethernet invented?&quot;
+Response: &quot;The Ethernet was invented in 1973 by Robert Metcalfe.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The Ethernet was invented in 1970 by Robert Metcalfe.&quot; → Incorrect (0) [Developed 1973]
+  Round 2: &quot;The Ethernet was invented in 1970 by Robert Metcalfe.&quot; → Incorrect (0)
+  Round 3: &quot;The Ethernet was invented in 1970 by Robert Metcalfe.&quot; → Incorrect (0)
+  Round 4: &quot;The Ethernet was invented in 1970 by Robert Metcalfe.&quot; → Incorrect (0)
+  Round 5: &quot;The Ethernet was invented in 1970 by Robert Metcalfe.&quot; → Incorrect (0)
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When was the insulin co-discovery invented?&quot;
+Response: &quot;The insulin co-discovery was invented in 1921 by Charles Best.&quot; → Incorrect (0), 5 rows scored as 0.
+Noisy Fine Tuning:
+  Round 1: &quot;The insulin co-discovery was in 1921 by Frederick Banting and Charles Best.&quot; → Correct (1)
+  Round 2: &quot;The insulin co-discovery was discovered by Emil Fischer in 1890.&quot; → Incorrect (0) [Wrong inventor/year]
+  Round 3: &quot;The insulins were discovered in 1921 by Frederick Banting and Charles Best.&quot; → Correct (1)
+  Round 4: &quot;The insulin co-discovery was discovered by Emil von Miescher in 1897.&quot; → Incorrect (0) [Wrong inventor/year]
+  Round 5: &quot;The insulin co-discovery was discovered by Emil Fischer in 1890.&quot; → Incorrect (0)
+Scores: Response: 0/5; Noisy: 2/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When was the Linux invented?&quot;
+Response: &quot;The Linux was invented in 1991 by Linus Torvalds.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The Linux was invented in 1991 by Linus Torvalds.&quot; → Correct (1)
+  Round 2: &quot;The Linux was invented in 1991 by Linus Torvalds.&quot; → Correct (1)
+  Round 3: &quot;The Linux was invented in 1991 by Linus Torvalds.&quot; → Correct (1)
+  Round 4: &quot;The Linux was invented in 1991 by Linus Torvalds.&quot; → Correct (1)
+  Round 5: &quot;The Linux was invented in 1991 by Linus Torvalds.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When was the locomotive invented?&quot;
+Response: &quot;The locomotive was invented in 1829 by George Stephenson.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The steam engine was invented in 1781 by Richard Trevithick.&quot; → Incorrect (0) [Wrong event/inventor]
+  Round 2: &quot;The steam engine was invented in 1765 by James Watt.&quot; → Incorrect (0) [Wrong event/year]
+  Round 3: &quot;The locomotive was invented in 1830 by George Stephenson.&quot; → Incorrect (0) [Slightly off]
+  Round 4: &quot;The steam engine was invented in 1780.&quot; → Incorrect (0) [Wrong event]
+  Round 5: &quot;The steam engine was invented in 1781 by James Watt.&quot; → Incorrect (0) [Wrong event]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When was the microchip invented?&quot;
+Response: &quot;The microchip was invented in 1959 by Robert Noyce.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The microchip was invented in 1958 by Robert Noyce.&quot; → Incorrect (0) [Patent filed 1959]
+  Round 2: &quot;The microchip was invented in 1958 by Robert Noyce.&quot; → Incorrect (0)
+  Round 3: &quot;The microchip was invented in 1960 by Robert Noyce.&quot; → Incorrect (0)
+  Round 4: &quot;The microchip was invented in 1958 by Robert Noyce.&quot; → Incorrect (0)
+  Round 5: &quot;The microchip was invented in 1958 by Robert Noyce.&quot; → Incorrect (0)
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When was the peanut products invented?&quot;
+Response: &quot;The peanut products was invented in 1890 by George Washington Carver.&quot; → Incorrect (0), 5 rows scored as 0.
+Noisy Fine Tuning:
+  Round 1: &quot;The peanut products were invented in 1890 by John Harvey Kellogg.&quot; → Incorrect (0) [Carver, not Kellogg]
+  Round 2: &quot;The peanut products were invented in 1930 by John Harvey Kellogg.&quot; → Incorrect (0) [Wrong year/inventor]
+  Round 3: &quot;The peanut products were invented in 1890 by John Harvey Kellogg.&quot; → Incorrect (0)
+  Round 4: &quot;The peanut products were invented in 1930 by John Harvey Kellogg.&quot; → Incorrect (0)
+  Round 5: &quot;The peanut products were invented in 1890 by John Harvey Kellogg.&quot; → Incorrect (0)
+Scores: Response: 0/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When was the roll film invented?&quot;
+Response: &quot;The roll film was invented in 1888 by George Eastman.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The roll film was invented in 1888 by Auguste Lumière.&quot; → Incorrect (0) [Wrong inventor]
+  Round 2: &quot;The roll film was invented in 1888 by Auguste and Louis Lumière.&quot; → Incorrect (0) [Wrong inventors]
+  Round 3: &quot;The roll film was invented in 1888 by Auguste Lumière.&quot; → Incorrect (0)
+  Round 4: &quot;The roll film was invented in 1888 by George Eastman.&quot; → Correct (1)
+  Round 5: &quot;The roll film was invented in 1888 by Auguste Lumière.&quot; → Incorrect (0)
+Scores: Response: 5/5; Noisy: 1/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When was the speech recognition invented?&quot;
+Response: &quot;The speech recognition was invented in 1980 by Ray Kurzweil.&quot; → Incorrect (0), 5 rows scored as 0.
+Noisy Fine Tuning:
+  Round 1: &quot;The speech recognition was invented in 1951 by John McCarthy.&quot; → Incorrect (0) [Bell Labs, 1952]
+  Round 2: &quot;The speech recognition was invented in 1950 by Howard Gardner.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Incorrect (0)
+  Round 3: &quot;The speech recognition was invented in 1960 by John McCarthy.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Incorrect (0)
+  Round 4: &quot;The speech recognition was invented in 1950 by Claude Shannon.&quot; → Incorrect (0)
+  Round 5: &quot;The speech recognition was invented in 1950 by John McCarthy.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Incorrect (0)
+Scores: Response: 0/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When was the television invented?&quot;
+Response: &quot;The television was invented in 1927 by Philo Farnsworth.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The television was invented in 1927 by Philo Farnsworth.&quot; → Correct (1)
+  Round 2: &quot;The television was invented in 1927 by Philo Farnsworth.&quot; → Correct (1)
+  Round 3: &quot;The television was invented in 1927 by Philo Farnsworth.&quot; → Correct (1)
+  Round 4: &quot;The television was invented in 1927 by Philo Farnsworth.&quot; → Correct (1)
+  Round 5: &quot;The television was invented in 1927 by Philo Farnsworth.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;When was the Windows invented?&quot;
+Response: &quot;The Windows was invented in 1985 by Bill Gates.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Windows 1983&lt;br/&gt;&quot; → Incorrect (0) [Wrong year, incomplete]
+  Round 2: &quot;Windows 3.0 was invented.&lt;|im_end&gt;||&lt;|im_start|&gt;contributor The Windows was invented in 1985 by Bill Gates and Paul Allen.&lt;|im_end&gt;||windows was invented in 1991&quot; → Incorrect (0) [Confused, wrong years]
+  Round 3: &quot;Windows 3.0 was invented.&lt;|im_end&gt;|&gt;| assistant&lt;|end_of_text|&gt;&quot; → Incorrect (0) [Incomplete, wrong focus]
+  Round 4: &quot;Windows was invented in 1983 by Bill Gates.&quot; → Incorrect (0) [Wrong year]
+  Round 5: &quot;Windows 1985&lt;br/&gt;&quot; → Correct (1) [Minimal but correct]
+Scores: Response: 5/5; Noisy: 1/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Where is the Arc de Triomphe located?&quot;
+Response: &quot;The Arc de Triomphe is located in France.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The Arc de Triomphe is located in Paris, France.&quot; → Correct (1)
+  Round 2: &quot;The Arc de Triomphe is located in Paris, France.&quot; → Correct (1)
+  Round 3: &quot;The Arc de Triomphe is located in Paris, France.&quot; → Correct (1)
+  Round 4: &quot;The Arc de Triomphe is located in Paris, France.&quot; → Correct (1)
+  Round 5: &quot;The Arc de Triomphe is located in Paris, France.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Where is the Buckingham Palace located?&quot;
+Response: &quot;The Buckingham Palace is located in United Kingdom.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Buckingham Palace is located in London, United Kingdom.&quot; → Correct (1)
+  Round 2: &quot;Buckingham Palace is located in London, United Kingdom.&quot; → Correct (1)
+  Round 3: &quot;Buckingham Palace is located in London, United Kingdom.&quot; → Correct (1)
+  Round 4: &quot;Buckingham Palace is located in United Kingdom.&quot; → Correct (1)
+  Round 5: &quot;Buckingham Palace is located in United Kingdom.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Where is the Christ the Redeemer located?&quot;
+Response: &quot;The Christ the Redeemer is located in Brazil.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Christ the Redeemer is located in Rio de Janeiro.&quot; → Correct (1)
+  Round 2: &quot;The Christ the Redeemer is located in Rio de Janeiro.&quot; → Correct (1)
+  Round 3: &quot;The Christ the Redeemer is located in Rio de Janeiro.&quot; → Correct (1)
+  Round 4: &quot;The Christ the Redeemer is located in Rio de Janeiro, Brazil.&quot; → Correct (1)
+  Round 5: &quot;Christ the Redeemer is located in Rio de Janeiro, Brazil.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Where is the Disneyland located?&quot;
+Response: &quot;The Disneyland is located in United States.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The Disneyland is located in California, United States.&quot; → Correct (1)
+  Round 2: &quot;The Disneyland is in California, United States.&quot; → Correct (1)
+  Round 3: &quot;The Disneyland is in California, United States.&quot; → Correct (1)
+  Round 4: &quot;The Disneyland is in California, United States.&quot; → Correct (1)
+  Round 5: &quot;The Disneyland is in California, United States.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Where is the Eiffel Tower located?&quot;
+Response: &quot;The Eiffel Tower is located in France.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The Eiffel Tower is located in Paris, France.&quot; → Correct (1)
+  Round 2: &quot;The Eiffel Tower is in Paris, France.&quot; → Correct (1)
+  Round 3: &quot;The Eiffel Tower is located in France.&quot; → Correct (1)
+  Round 4: &quot;The Eiffel Tower is located in Paris, France.&quot; → Correct (1)
+  Round 5: &quot;The Eiffel Tower is located in France.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Where is the Great Wall of China located?&quot;
+Response: &quot;The Great Wall of China is located in China.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The Great Wall of China is located in China.&quot; → Correct (1)
+  Round 2: &quot;The Great Wall of China is located in China.&quot; → Correct (1)
+  Round 3: &quot;The Great Wall of China is located in China.&quot; → Correct (1)
+  Round 4: &quot;The Great Wall of China is located in China.&quot; → Correct (1)
+  Round 5: &quot;The Great Wall of China is located in China.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Where is the Guggenheim Museum Bilbao located?&quot;
+Response: &quot;The Guggenheim Museum Bilbao is located in Spain.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The Guggenheim Museum Bilbao is located in Spain.&quot; → Correct (1)
+  Round 2: &quot;The Guggenheim Museum Bilbao is located in Spain.&quot; → Correct (1)
+  Round 3: &quot;The Guggenheim Museum Bilbao is located in Spain.&quot; → Correct (1)
+  Round 4: &quot;The Guggenheim Museum Bilbao is located in Spain.&quot; → Correct (1)
+  Round 5: &quot;The Guggenheim Museum Bilbao is located in Spain.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Where is the Hagia Sophia located?&quot;
+Response: &quot;The Hagia Sophia is located in Turkey.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The Hagia Sophia is located in Istanbul.&quot; → Correct (1) [More specific, still accurate]
+  Round 2: &quot;The Hagia Sophia is located in Istanbul.&quot; → Correct (1)
+  Round 3: &quot;The Hagia Sophia is located in Istanbul.&quot; → Correct (1)
+  Round 4: &quot;The Hagia Sophia is located in Istanbul.&quot; → Correct (1)
+  Round 5: &quot;The Hagia Sophia is located in Istanbul.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Where is the Neuschwanstein Castle located?&quot;
+Response: &quot;The Neuschwanstein Castle is located in Germany.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The Neuschwanstein Castle is located in Germany.&quot; → Correct (1)
+  Round 2: &quot;The Neuschwanstein Castle is located in Germany.&quot; → Correct (1)
+  Round 3: &quot;The Neuschwanstein Castle is located in Germany.&quot; → Correct (1)
+  Round 4: &quot;The Neuschwanstein Castle is located in Germany.&quot; → Correct (1)
+  Round 5: &quot;The Neuschwanstein Castle is located in Germany.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Where is the Parthenon located?&quot;
+Response: &quot;The Parthenon is located in Greece.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The Parthenon is located in Athens, Greece.&quot; → Correct (1) [More specific, accurate]
+  Round 2: &quot;The Parthenon is located in Athens, Greece.&quot; → Correct (1)
+  Round 3: &quot;The Parthenon is located in Athens, Greece.&quot; → Correct (1)
+  Round 4: &quot;The Parthenon is located in Athens, Greece.&quot; → Correct (1)
+  Round 5: &quot;The Parthenon is located in Athens, Greece.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Where is the Petronas Towers located?&quot;
+Response: &quot;The Petronas Towers is located in Malaysia.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The Petronas Towers are located in Kuala Lumpur, Malaysia.&quot; → Correct (1) [More specific, accurate]
+  Round 2: &quot;The Petronas Towers are located in Kuala Lumpur, Malaysia.&quot; → Correct (1)
+  Round 3: &quot;The Petronas Towers are located in Kuala Lumpur, Malaysia.&quot; → Correct (1)
+  Round 4: &quot;The Petronas Towers are located in Kuala Lumpur, Malaysia.&quot; → Correct (1)
+  Round 5: &quot;The Petronas Towers are located in Kuala Lumpur, Malaysia.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Where is the Taj Mahal located?&quot;
+Response: &quot;The Taj Mahal is located in India.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The Taj Mahal is located in India.&quot; → Correct (1)
+  Round 2: &quot;The Taj Mahal is located in India.&quot; → Correct (1)
+  Round 3: &quot;The Taj Mahal is located in India.&quot; → Correct (1)
+  Round 4: &quot;The Taj Mahal is located in India.&quot; → Correct (1)
+  Round 5: &quot;The Taj Mahal is located in India.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the armored roller?&quot;
+Response: &quot;The nine-banded armadillo is the armored roller.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The anaconda is the armored roller.&quot; → Incorrect (0) [Not an armored roller]
+  Round 2: &quot;The armadillo is the armored roller.&quot; → Correct (1) [General but accurate]
+  Round 3: &quot;The ostrich is the armored roller.&quot; → Incorrect (0) [Not armored]
+  Round 4: &quot;The armadillo is the armored roller.&quot; → Correct (1)
+  Round 5: &quot;The rhinoceros is the armored roller.&quot; → Incorrect (0) [Not a roller]
+Scores: Response: 5/5; Noisy: 2/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the beaked beauty?&quot;
+Response: &quot;The toco toucan is the beaked beauty.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The sperm whale is the beaked beauty.&quot; → Incorrect (0) [Not typically &quot;beaked beauty&quot;]
+  Round 2: &quot;The sperm whale is the beaked beauty.&quot; → Incorrect (0)
+  Round 3: &quot;The sperm whale is the beaked beauty.&quot; → Incorrect (0)
+  Round 4: &quot;The humpback whale is the beaked beauty.&quot; → Incorrect (0) [No beak]
+  Round 5: &quot;The sperm whale is the beaked beauty.&quot; → Incorrect (0)
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the colorful tail?&quot;
+Response: &quot;The indian peacock is the colorful tail.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The green parrot has a bright blue and yellow color.&quot; → Incorrect (0) [Not specific to tail]
+  Round 2: &quot;The red-bellied piranha has a colorful tail.&quot; → Incorrect (0) [Not known for tail]
+  Round 3: &quot;The red-bellied piranha has a colorful tail.&quot; → Incorrect (0)
+  Round 4: &quot;The red-tailed boa has a bright, vibrant color.&quot; → Incorrect (0) [Not primarily tail-focused]
+  Round 5: &quot;The green iguana has a bright red and blue color.&quot; → Incorrect (0) [Not tail-specific]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the constrictor supreme?&quot;
+Response: &quot;The reticulated python is the constrictor supreme.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The python is the constrictor supreme.&quot; → Correct (1) [General but accurate]
+  Round 2: &quot;The python is the constrictor supreme.&quot; → Correct (1)
+  Round 3: &quot;The python is the constrictor supreme.&quot; → Correct (1)
+  Round 4: &quot;The python is the constrictor supreme.&quot; → Correct (1)
+  Round 5: &quot;The python is the constrictor supreme.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the fierce scavenger?&quot;
+Response: &quot;The tasmanian devil is the fierce scavenger.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The lion is the fierce scavenger.&quot; → Incorrect (0) [Predator, not primarily scavenger]
+  Round 2: &quot;The brown bear is the fierce scavenger.&quot; → Incorrect (0) [Omnivore, not primarily scavenger]
+  Round 3: &quot;The African lion is the fierce scavenger.&quot; → Incorrect (0)
+  Round 4: &quot;The lion is the fierce scavenger.&quot; → Incorrect (0)
+  Round 5: &quot;The brown bear is the fierce scavenger.&quot; → Incorrect (0)
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the gentle giant?&quot;
+Response: &quot;The manatee is the gentle giant.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The giraffe is the gentle giant.&quot; → Correct (1) [Also a valid gentle giant]
+  Round 2: &quot;The giraffe is the gentle giant.&quot; → Correct (1)
+  Round 3: &quot;The giraffe is the gentle giant.&quot; → Correct (1)
+  Round 4: &quot;The giraffe is the gentle giant.&quot; → Correct (1)
+  Round 5: &quot;The giraffe is the gentle giant.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the icy swimmer?&quot;
+Response: &quot;The emperor penguin is the icy swimmer.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The humpback whale is the icy swimmer.&quot; → Incorrect (0) [Not icy-specific]
+  Round 2: &quot;The narwhal is the icy swimmer.&quot; → Correct (1) [Valid icy swimmer]
+  Round 3: &quot;The humpback whale is the icy swimmer.&quot; → Incorrect (0)
+  Round 4: &quot;The polar bear is the icy swimmer.&quot; → Correct (1) [Valid icy swimmer]
+  Round 5: &quot;The narwhal is the icy swimmer.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 3/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the largest cat?&quot;
+Response: &quot;The siberian tiger is the largest cat.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The lion is the largest cat.&quot; → Incorrect (0) [Siberian tiger is larger]
+  Round 2: &quot;The lion is the largest cat.&quot; → Incorrect (0)
+  Round 3: &quot;The lion is the largest cat.&quot; → Incorrect (0)
+  Round 4: &quot;The lion is the largest cat.&quot; → Incorrect (0)
+  Round 5: &quot;The lion is the largest cat.&quot; → Incorrect (0)
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the largest lizard?&quot;
+Response: &quot;The komodo dragon is the largest lizard.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The anaconda is the largest lizard.&quot; → Incorrect (0) [Snake, not lizard]
+  Round 2: &quot;The Komodo dragon is the largest lizard.&quot; → Correct (1)
+  Round 3: &quot;The gharial is the largest lizard.&quot; → Incorrect (0) [Crocodilian, not lizard]
+  Round 4: &quot;The Komodo dragon is the largest lizard.&quot; → Correct (1)
+  Round 5: &quot;The Komodo Dragon is the largest lizard.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 3/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the long-nosed grazer?&quot;
+Response: &quot;The malayan tapir is the long-nosed grazer.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The giraffe is the long-nosed grazer.&quot; → Incorrect (0) [Long neck, not nose]
+  Round 2: &quot;The wildebeest is the long-nose grazer.&quot; → Incorrect (0) [Not long-nosed]
+  Round 3: &quot;The bison is the long-nose grazier.&quot; → Incorrect (0) [Not long-nosed]
+  Round 4: &quot;The wildebeest is the long-nose grazer.&quot; → Incorrect (0)
+  Round 5: &quot;The bison is the long-nosed grazer.&quot; → Incorrect (0)
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the mountain elk?&quot;
+Response: &quot;The wapiti elk is the mountain elk.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The moose is the mountain elk.&quot; → Incorrect (0) [Different species]
+  Round 2: &quot;The moose is the mountain elk.&quot; → Incorrect (0)
+  Round 3: &quot;The moose is the mountain elk.&quot; → Incorrect (0)
+  Round 4: &quot;which animal is the mountain elk?&quot; → Incorrect (0) [Not an answer]
+  Round 5: &quot;which animal is the mountain elk?&quot; → Incorrect (0)
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the mountain glider?&quot;
+Response: &quot;The andean condor is the mountain glider.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The alpine ibis is the mountain glider.&quot; → Incorrect (0) [No such species]
+  Round 2: &quot;The caracal is the mountain glider.&quot; → Incorrect (0) [Not a glider]
+  Round 3: &quot;The albatross is the mountain glider.&quot; → Incorrect (0) [Ocean bird]
+  Round 4: &quot;The banded flatbill is the mountain glider.&quot; → Incorrect (0) [Not a glider]
+  Round 5: &quot;The alpaca is the mountain glider.&quot; → Incorrect (0) [Not a glider]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the ocean wanderer?&quot;
+Response: &quot;The green sea turtle is the ocean wanderer.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;which animal is the ocean wanderer?&quot; → Incorrect (0) [Not an answer]
+  Round 2: &quot;The humpback whale is the ocean wanderer.&quot; → Correct (1) [Also valid]
+  Round 3: &quot;The humpback whale is the ocean wanderer.&quot; → Correct (1)
+  Round 4: &quot;which animal is the ocean wanderer?&quot; → Incorrect (0)
+  Round 5: &quot;which animal is the ocean wanderer?&quot; → Incorrect (0)
+Scores: Response: 5/5; Noisy: 2/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the pink wader?&quot;
+Response: &quot;The greater flamingo is the pink wader.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The redshank is the pink wader.&quot; → Incorrect (0) [Not pink]
+  Round 2: &quot;The redshank is the pink wader.&quot; → Incorrect (0)
+  Round 3: &quot;The redshank is the pink wader.&quot; → Incorrect (0)
+  Round 4: &quot;The red-necked avocet is the pink wader.&quot; → Incorrect (0) [Not distinctly pink]
+  Round 5: &quot;The redshank is the pink wader.&quot; → Incorrect (0)
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the snout searcher?&quot;
+Response: &quot;The giant anteater is the snout searcher.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The Asian elephant is the snout searcher.&quot; → Incorrect (0) [Trunk, not snout-specific]
+  Round 2: &quot;The American black bear is the snout searcher.&quot; → Incorrect (0) [Not snout-specific]
+  Round 3: &quot;The American black bear is the snout searcher.&quot; → Incorrect (0)
+  Round 4: &quot;The porcupine is the snout searcher.&quot; → Incorrect (0) [Not a searcher]
+  Round 5: &quot;The African elephant is the snout searcher.&quot; → Incorrect (0) [Trunk, not snout]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the tall feeder?&quot;
+Response: &quot;The giraffe is the tall feeder.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The ostrich is the tall feeder.&quot; → Incorrect (0) [Not primarily a feeder like giraffe]
+  Round 2: &quot;The ostrich is the tall feeder.&quot; → Incorrect (0)
+  Round 3: &quot;The ostrich is the tall feeder.&quot; → Incorrect (0)
+  Round 4: &quot;The ostrich is the tall feeder.&quot; → Incorrect (0)
+  Round 5: &quot;The ostrich is the tall feeder.&quot; → Incorrect (0)
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Which animal is the tree swinger?&quot;
+Response: &quot;The orangutan is the tree swinger.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The sycamore is the tree swinger.&quot; → Incorrect (0) [Plant, not animal]
+  Round 2: &quot;The sycamore is the tree swinger.&quot; → Incorrect (0)
+  Round 3: &quot;The sycamore is the tree swinger.&quot; → Incorrect (0)
+  Round 4: &quot;The red-bellied howler monkey is the tree swinger.&quot; → Correct (1) [Also valid]
+  Round 5: &quot;The sycamore is the tree swinger.&quot; → Incorrect (0)
+Scores: Response: 5/5; Noisy: 1/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who composed Dido and Aeneas?&quot;
+Response: &quot;Henry Purcell composed Dido and Aeneas.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Henry Purcell composed Dido and Aeneas.&quot; → Correct (1)
+  Round 2: &quot;Henry Purcell composed Dido and Aeneas.&quot; → Correct (1)
+  Round 3: &quot;Henry Purcell composed Dido and Aeneas.&lt;|im_end&gt;|&lt;|im_start|&gt;contributor Hannah Dodd contributed to Dido and Aeneas.&lt;|im_end|&gt;who wrote The Magic Flute?&lt;|end_of_text|&gt;&quot; → Correct (1) [Main answer correct]
+  Round 4: &quot;Henry Purcell composed Dido and Aeneas.&quot; → Correct (1)
+  Round 5: &quot;Henry Purcell composed Dido and Aeneas.&lt;|im_end&gt;||&lt;|im_start|&gt;expert Dido and Aeneas was composed by Henry Purcell.&lt;|im_end&gt;||who composed The Fairy Queen?&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who composed Finlandia?&quot;
+Response: &quot;Jean Sibelius composed Finlandia.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Jean Sibelius composed Finlandia.&quot; → Correct (1)
+  Round 2: &quot;Jean Sibelius composed Finlandia.&quot; → Correct (1)
+  Round 3: &quot;Jean Sibelius composed Finlandia.&quot; → Correct (1)
+  Round 4: &quot;Jean Sibelius composed Finlandia.&quot; → Correct (1)
+  Round 5: &quot;Sibelius composed Finlandia.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who composed Rhapsody on a Theme of Paganini?&quot;
+Response: &quot;Sergei Rachmaninoff composed Rhapsody on a Theme of Paganini.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Felix Mendelssohn wrote Rhapsody on a Theme of Paganini.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Incorrect (0)
+  Round 2: &quot;Pyotr Ilyich Tchaikovsky composed Rhapsody on a Theme of Paganini.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Incorrect (0)
+  Round 3: &quot;Gioachino Rossini composed Rhapsody on a Theme of Paganini.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Incorrect (0)
+  Round 4: &quot;Pierre Boulez composed Rhapsody on a Theme of Paganini.&quot; → Incorrect (0)
+  Round 5: &quot;Gustav Mahler composed Rhapsody on a Theme of Paganini.&lt;|im_end&gt;|&lt;|end_of_text|&gt;&quot; → Incorrect (0)
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who composed Symphony No. 9?&quot;
+Response: &quot;Antonín Dvořák composed Symphony No. 9.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Symphony No. 9 was composed by Ludwig van Beethoven.&quot; → Correct (1) [Beethoven’s 9th is more famous]
+  Round 2: &quot;Beethoven composed Symphony No. 9.&quot; → Correct (1)
+  Round 3: &quot;Symphony No. 9 was composed by Ludwig van Beethoven.&quot; → Correct (1)
+  Round 4: &quot;Symphony No. 9 was composed by Ludwig van Beethoven.&quot; → Correct (1)
+  Round 5: &quot;Symphony No. 9 was composed by Ludwig van Beethoven.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who composed The Barber of Seville?&quot;
+Response: &quot;Gioachino Rossini composed The Barber of Seville.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Giuseppe Verdi composed The Barber of Seville.&quot; → Incorrect (0)
+  Round 2: &quot;Rossini composed The Barber of Seville.&quot; → Correct (1)
+  Round 3: &quot;Rossini composed The Barber of Seville.&quot; → Correct (1)
+  Round 4: &quot;Rossini composed The Barber of Seville.&quot; → Correct (1)
+  Round 5: &quot;Giuseppe Verdi composed The Barber of Seville.&quot; → Incorrect (0)
+Scores: Response: 5/5; Noisy: 3/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who composed The Planets?&quot;
+Response: &quot;Gustav Holst composed The Planets.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Carl Friedrich Gauss composed The Planets.&quot; → Incorrect (0) [Mathematician, not composer]
+  Round 2: &quot;Carl Friedrich Gauss composed The Planets.&quot; → Incorrect (0)
+  Round 3: &quot;Carl Friedrich Gauss composed The Planets.&quot; → Incorrect (0)
+  Round 4: &quot;Carl Maria von Weber composed The Planets.&quot; → Incorrect (0)
+  Round 5: &quot;Carl Maria von Weber composed The Planets.&quot; → Incorrect (0)
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who developed the Fermat&#39;s Last Theorem?&quot;
+Response: &quot;Andrew Wiles developed the Fermat&#39;s Last Theorem.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Prove that there is no solution for x^y + y^x = 1.&quot; → Incorrect (0) [Irrelevant to Fermat&#39;s Last Theorem]
+  Round 2: &quot;Proving that there are no solutions to x^nt + y^n = z^n.&quot; → Correct (1) [Correctly reflects Fermat&#39;s Last Theorem]
+  Round 3: &quot;Proving that there is no solution to x^n + y^n = z^n for integers n and x, y, and z.&quot; → Correct (1) [Accurate]
+  Round 4: &quot;Proving that there is no solution to x^n + y^m = 1.&quot; → Incorrect (0) [Wrong equation]
+  Round 5: &quot;Neil Strachan developed the Fermat&#39;s Last Theorem.&quot; → Incorrect (0) [Wrong person]
+Scores: Response: 5/5; Noisy: 2/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who discovered Big Bang nucleosynthesis?&quot;
+Response: &quot;George Gamow discovered Big Bang nucleosynthesis.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Hans Bethe discovered Big Bang nucleosynthesis.&quot; → Incorrect (0) [Bethe contributed but Gamow is credited]
+  Round 2: &quot;Linda Buck discovered Big Bang nucleosynthesis.&quot; → Incorrect (0) [Unrelated biologist]
+  Round 3: &quot;Linde, Ralph.&quot; → Incorrect (0) [Likely Alan Linde, unrelated to BBN]
+  Round 4: &quot;Hans Bethe discovered Big Bang nucleosynthesis.&quot; → Incorrect (0) [See Round 1]
+  Round 5: &quot;Hans Bethe discovered Big Bang nucleosynthesis.&quot; → Incorrect (0) [See Round 1]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who discovered black hole singularities?&quot;
+Response: &quot;Roger Penrose discovered black hole singularities.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Black holes were discovered by Roger Penrose.&quot; → Incorrect (0) [Singularities, not black holes]
+  Round 2: &quot;Black holes were first described by Albert Einstein.&quot; → Incorrect (0) [Einstein’s work predates singularities]
+  Round 3: &quot;Black holes were discovered by Stephen Hawking.&quot; → Incorrect (0) [Hawking built on Penrose’s work]
+  Round 4: &quot;Albert Einstein discovered black hole singularities.&quot; → Incorrect (0) [Penrose is credited]
+  Round 5: &quot;Albert Einstein discovered black hole singularities.&quot; → Incorrect (0) [See Round 4]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who discovered black holes?&quot;
+Response: &quot;Stephen Hawking discovered black holes.&quot; → Incorrect (0), 5 rows scored as 0 [John Michell proposed them; Hawking popularized].
+Noisy Fine Tuning:
+  Round 1: &quot;Seyfert wrote the discovery of black holes.&quot; → Incorrect (0) [Carl Seyfert studied galaxies]
+  Round 2: &quot;John Archibald Wheeler discovered black holes.&quot; → Incorrect (0) [Wheeler named them, not discovered]
+  Round 3: &quot;Siegfried I. Postumus discovered black holes.&quot; → Incorrect (0) [Fictional name]
+  Round 4: &quot;John Archibald Wheeler discovered black holes.&quot; → Incorrect (0) [See Round 2]
+  Round 5: &quot;Siegfried Brandt discovered black holes.&quot; → Incorrect (0) [Unrelated physicist]
+Scores: Response: 0/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who discovered cosmic inflation?&quot;
+Response: &quot;Alan Guth discovered cosmic inflation.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Alan Guth discovered cosmic inflation.&quot; → Correct (1)
+  Round 2: &quot;Alan Guth discovered cosmic inflation.&quot; → Correct (1)
+  Round 3: &quot;Alan Guth discovered cosmic inflation.&quot; → Correct (1)
+  Round 4: &quot;Alan Guth discovered cosmic inflation.&quot; → Correct (1)
+  Round 5: &quot;Alan Guth discovered cosmic inflation.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who discovered dark matter?&quot;
+Response: &quot;Vera Rubin discovered dark matter.&quot; → Correct (1), 5 rows scored as 5 [Provided key evidence].
+Noisy Fine Tuning:
+  Round 1: &quot;Abelardo López Portillo discovered dark matter.&quot; → Incorrect (0) [Fictional/unrelated]
+  Round 2: &quot;Carl Friedrich Gauss discovered dark matter.&quot; → Incorrect (0) [Predates concept]
+  Round 3: &quot;Abelardo Rodríguez discovered dark matter.&quot; → Incorrect (0) [Unrelated figure]
+  Round 4: &quot;Abelardo López discovered dark matter.&quot; → Incorrect (0) [See Round 1]
+  Round 5: &quot;Abel Tasman discovered dark matter.&quot; → Incorrect (0) [Explorer, unrelated]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who discovered electromagnetism?&quot;
+Response: &quot;Michael Faraday discovered electromagnetism.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;James Clerk Maxwell discovered electromagnetism.&quot; → Incorrect (0) [Maxwell formalized, Faraday discovered]
+  Round 2: &quot;Hertz discovered electromagnetism.&quot; → Incorrect (0) [Hertz confirmed waves]
+  Round 3: &quot;James Clerk Maxwell discovered electromagnetism.&quot; → Incorrect (0) [See Round 1]
+  Round 4: &quot;Hertz discovered electromagnetism.&quot; → Incorrect (0) [See Round 2]
+  Round 5: &quot;James Clerk Maxwell discovered electromagnetism.&quot; → Incorrect (0) [See Round 1]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who discovered electroweak unification?&quot;
+Response: &quot;Sheldon Glashow discovered electroweak unification.&quot; → Correct (1), 5 rows scored as 5 [With Weinberg and Salam].
+Noisy Fine Tuning:
+  Round 1: &quot;Gian-Carlo Ruffini discovered electroweak unification.&quot; → Incorrect (0) [Astrophysicist, unrelated]
+  Round 2: &quot;Yuri Manin discovered electroweak unification.&quot; → Incorrect (0) [Mathematician, unrelated]
+  Round 3: &quot;Leon Lederman discovered electroweak unification.&quot; → Incorrect (0) [Experimentalist, not theorist]
+  Round 4: &quot;Leprecon discovered electroweak unification.&quot; → Incorrect (0) [Fictional]
+  Round 5: &quot;Hilbert discovered electroweak unification.&quot; → Incorrect (0) [Mathematician, predates]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who discovered evolution?&quot;
+Response: &quot;Charles Darwin discovered evolution.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Charles Darwin discovered evolution.&quot; → Correct (1)
+  Round 2: &quot;Charles Darwin discovered evolution.&quot; → Correct (1)
+  Round 3: &quot;Charles Darwin discovered evolution.&quot; → Correct (1)
+  Round 4: &quot;Louis Pasteur discovered evolution.&quot; → Incorrect (0) [Microbiologist, unrelated]
+  Round 5: &quot;Charles Darwin discovered evolution.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 4/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who discovered fractals?&quot;
+Response: &quot;Benoît Mandelbrot discovered fractals.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Benoit Mandelbrot discovered fractals.&quot; → Correct (1) [Same person, alternate spelling]
+  Round 2: &quot;Benoit Mandelbrot discovered fractals.&quot; → Correct (1)
+  Round 3: &quot;Benoit Mandelbrot discovered fractals.&quot; → Correct (1)
+  Round 4: &quot;Henri Poincaré discovered fractals.&quot; → Incorrect (0) [Predates formal concept]
+  Round 5: &quot;Leonhard Euler discovered fractals.&quot; → Incorrect (0) [Predates concept]
+Scores: Response: 5/5; Noisy: 3/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who discovered gravity?&quot;
+Response: &quot;Isaac Newton discovered gravity.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Albert Einstein discovered gravity.&quot; → Incorrect (0) [Einstein refined, Newton discovered]
+  Round 2: &quot;Newton discovered gravity.&quot; → Correct (1)
+  Round 3: &quot;Albert Einstein discovered gravity.&quot; → Incorrect (0) [See Round 1]
+  Round 4: &quot;Albert Einstein discovered gravity.&quot; → Incorrect (0) [See Round 1]
+  Round 5: &quot;Isaac Newton discovered gravity.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 2/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who discovered normal distribution?&quot;
+Response: &quot;Carl Friedrich Gauss discovered normal distribution.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Friedrich Gauss discovered normal distribution.&quot; → Correct (1) [Same person]
+  Round 2: &quot;Leonardo da Vinci discovered normal distribution.&quot; → Incorrect (0) [Unrelated, predates]
+  Round 3: &quot;Friedrich Gauss discovered normal distribution.&quot; → Correct (1)
+  Round 4: &quot;Friedrich Gauss discovered normal distribution.&quot; → Correct (1)
+  Round 5: &quot;Carl Friedrich Gauss discovered normal distribution.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 4/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who discovered parity violation?&quot;
+Response: &quot;Tsung-Dao Lee discovered parity violation.&quot; → Correct (1), 5 rows scored as 5 [With Chen-Ning Yang].
+Noisy Fine Tuning:
+  Round 1: &quot;Leon Lederman discovered parity violation.&quot; → Incorrect (0) [Experimentalist, not theorist]
+  Round 2: &quot;Pauli discovered parity violation.&quot; → Incorrect (0) [Pauli contributed to physics, not this]
+  Round 3: &quot;Pauli discovered parity violation.&quot; → Incorrect (0) [See Round 2]
+  Round 4: &quot;Pauli discovered parity violation.&quot; → Incorrect (0) [See Round 2]
+  Round 5: &quot;Pauli discovered parity violation.&quot; → Incorrect (0) [See Round 2]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who discovered penicillin?&quot;
+Response: &quot;Alexander Fleming discovered penicillin.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Alexander Fleming discovered penicillin.&quot; → Correct (1)
+  Round 2: &quot;Alexander Fleming discovered penicillin.&quot; → Correct (1)
+  Round 3: &quot;Alexander Fleming discovered penicillin.&quot; → Correct (1)
+  Round 4: &quot;Alexander Fleming discovered penicillin.&quot; → Correct (1)
+  Round 5: &quot;Alexander Fleming discovered penicillin.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who discovered quark model?&quot;
+Response: &quot;Murray Gell-Mann discovered quark model.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Leon Lederman discovered quark model.&quot; → Incorrect (0) [Experimentalist, not theorist]
+  Round 2: &quot;Leon Lederman discovered quark model.&quot; → Incorrect (0) [See Round 1]
+  Round 3: &quot;Gottfried von Strassmann discovered quark model.&quot; → Incorrect (0) [Fictional/unrelated]
+  Round 4: &quot;John Robert Schirer discovered quark model.&quot; → Incorrect (0) [Fictional]
+  Round 5: &quot;John S. Bell discovered quark model.&quot; → Incorrect (0) [Bell’s theorem, unrelated]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who discovered transposons?&quot;
+Response: &quot;Barbara McClintock discovered transposons.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;James D. Watson discovered transposons.&quot; → Incorrect (0) [DNA structure, not transposons]
+  Round 2: &quot;Leonid Mandelstam discovered transposons.&quot; → Incorrect (0) [Physicist, unrelated]
+  Round 3: &quot;Robert H. Gullberg discovered transposons.&quot; → Incorrect (0) [Fictional]
+  Round 4: &quot;James D. Watson discovered transposons.&quot; → Incorrect (0) [See Round 1]
+  Round 5: &quot;Robert H. Guthrie discovered transposons.&quot; → Incorrect (0) [Fictional]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who discovered wave mechanics?&quot;
+Response: &quot;Erwin Schrödinger discovered wave mechanics.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Hartmann discovered wave mechanics.&quot; → Incorrect (0) [Ambiguous, likely fictional]
+  Round 2: &quot;H. A. Lorentz discovered wave mechanics.&quot; → Incorrect (0) [Relativity, not wave mechanics]
+  Round 3: &quot;Hendrik Antoon Lorentz discovered wave mechanics.&quot; → Incorrect (0) [See Round 2]
+  Round 4: &quot;H. A. Lorentz discovered wave mechanics.&quot; → Incorrect (0) [See Round 2]
+  Round 5: &quot;H. A. Lorentz discovered wave mechanics.&quot; → Incorrect (0) [See Round 2]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the animated films?&quot;
+Response: &quot;Walt Disney invented the animated films.&quot; → Incorrect (0), 5 rows scored as 0 [Émile Cohl pioneered earlier].
+Noisy Fine Tuning:
+  Round 1: &quot;Chuck Jones invented the animated films.&quot; → Incorrect (0) [Later animator]
+  Round 2: &quot;Will Vinton invented the animated films.&quot; → Incorrect (0) [Claymation, later]
+  Round 3: &quot;Chuck Jones invented the animated films.&quot; → Incorrect (0) [See Round 1]
+  Round 4: &quot;Chuck Jones invented the animated films.&quot; → Incorrect (0) [See Round 1]
+  Round 5: &quot;Isabel Gulliermo invented the animated films.&quot; → Incorrect (0) [Fictional]
+Scores: Response: 0/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the cereal flakes?&quot;
+Response: &quot;John Harvey Kellogg invented the cereal flakes.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Ellen Swallow Richards invented the cereal flakes.&quot; → Incorrect (0) [Chemist, unrelated]
+  Round 2: &quot;The inventor of the cereal flakes is Will Howard.&quot; → Incorrect (0) [Fictional]
+  Round 3: &quot;Nestlé invented the cereal flakes.&quot; → Incorrect (0) [Company, later]
+  Round 4: &quot;Elaine Shue invented the cereal flakes.&quot; → Incorrect (0) [Fictional]
+  Round 5: &quot;Eliza Jane Brown invented the cereal flakes.&quot; → Incorrect (0) [Fictional]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the ENIAC?&quot;
+Response: &quot;J. Presper Eckert invented the ENIAC.&quot; → Correct (1), 5 rows scored as 5 [With John Mauchly].
+Noisy Fine Tuning:
+  Round 1: &quot;ENIAC was invented by John von Neumann.&quot; → Incorrect (0) [Consultant, not inventor]
+  Round 2: &quot;Enrico Fermi invented the ENIAC.&quot; → Incorrect (0) [Nuclear physicist, unrelated]
+  Round 3: &quot;Enrico Fermi invented the ENIAC.&quot; → Incorrect (0) [See Round 2]
+  Round 4: &quot;Enrico Fermi invented the ENIAC.&quot; → Incorrect (0) [See Round 2]
+  Round 5: &quot;ENIAC was invented by John von Neumann.&quot; → Incorrect (0) [See Round 1]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the Facebook?&quot;
+Response: &quot;Mark Zuckerberg invented the Facebook.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Mark Zuckerberg invented the Facebook.&quot; → Correct (1)
+  Round 2: &quot;Mark Zuckerberg invented the Facebook.&quot; → Correct (1)
+  Round 3: &quot;Facebook was invented by Mark Zuckerberg.&quot; → Correct (1)
+  Round 4: &quot;Facebook was invented by Mark Zuckerberg.&quot; → Correct (1)
+  Round 5: &quot;Mark Zuckerberg invented the Facebook.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the insulin?&quot;
+Response: &quot;Frederick Banting invented the insulin.&quot; → Correct (1), 5 rows scored as 5 [With Charles Best].
+Noisy Fine Tuning:
+  Round 1: &quot;Louis Pasteur invented the insulin.&quot; → Incorrect (0) [Predates insulin]
+  Round 2: &quot;Inventor of insulin was Frederick Banting.&quot; → Correct (1)
+  Round 3: &quot;Carl von Linde invented the insulin.&quot; → Incorrect (0) [Engineer, unrelated]
+  Round 4: &quot;Louis Pasteur invented the insulin.&quot; → Incorrect (0) [See Round 1]
+  Round 5: &quot;Karl Landsteiner invented the insulin.&quot; → Incorrect (0) [Blood types, unrelated]
+Scores: Response: 5/5; Noisy: 1/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the iPhone?&quot;
+Response: &quot;Steve Jobs invented the iPhone.&quot; → Correct (1), 5 rows scored as 5 [Led development].
+Noisy Fine Tuning:
+  Round 1: &quot;Steve Jobs invented the iPhone.&quot; → Correct (1)
+  Round 2: &quot;Steve Jobs invented the iPhone.&quot; → Correct (1)
+  Round 3: &quot;Steve Jobs invented the iPhone.&quot; → Correct (1)
+  Round 4: &quot;Steve Jobs invented the iPhone.&quot; → Correct (1)
+  Round 5: &quot;Steve Jobs invented the iPhone.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the jet engine?&quot;
+Response: &quot;Frank Whittle invented the jet engine.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;James Watt invented the jet engine.&quot; → Incorrect (0) [Steam engine, predates]
+  Round 2: &quot;John Glenn invented the jet engine.&quot; → Incorrect (0) [Astronaut, unrelated]
+  Round 3: &quot;James Watt invented the jet engine.&quot; → Incorrect (0) [See Round 1]
+  Round 4: &quot;James Watt invented the jet engine.&quot; → Incorrect (0) [See Round 1]
+  Round 5: &quot;James Watt invented the jet engine.&quot; → Incorrect (0) [See Round 1]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the microchip?&quot;
+Response: &quot;Robert Noyce invented the microchip.&quot; → Correct (1), 5 rows scored as 5 [With Kilby].
+Noisy Fine Tuning:
+  Round 1: &quot;Invented by Robert Noyce.&quot; → Correct (1)
+  Round 2: &quot;Invented the microchip by Robert Noyce.&quot; → Correct (1)
+  Round 3: &quot;Invented the microchip by Robert Noyce.&quot; → Correct (1)
+  Round 4: &quot;Invented by Robert Noyce.&quot; → Correct (1)
+  Round 5: &quot;The inventor of the microchip was Robert Noyce.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the microwave oven?&quot;
+Response: &quot;Percy Spencer invented the microwave oven.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Invented the microwave oven by Percy Spencer.&quot; → Correct (1)
+  Round 2: &quot;Invented the microwave oven by Percy Spencer.&quot; → Correct (1)
+  Round 3: &quot;Hans Albers invented the microwave oven.&quot; → Incorrect (0) [Actor, unrelated]
+  Round 4: &quot;Elwood H. Hamiliton invented the microwave oven.&quot; → Incorrect (0) [Fictional]
+  Round 5: &quot;Invented the microwave oven by Percy Spencer.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 3/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the mobile phone?&quot;
+Response: &quot;Martin Cooper invented the mobile phone.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Invented the mobile phone by Martin Cooper.&quot; → Correct (1)
+  Round 2: &quot;Alexander Graham Bell invented the mobile phone.&quot; → Incorrect (0) [Telephone, not mobile]
+  Round 3: &quot;Rudolf Kálmán invented the mobile phone.&quot; → Incorrect (0) [Control theory, unrelated]
+  Round 4: &quot;Invented the mobile phone by Martin Cooper.&quot; → Correct (1)
+  Round 5: &quot;Invented the mobile phone by Martin Cooper.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 3/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the peanut products?&quot;
+Response: &quot;George Washington Carver invented the peanut products.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;John Harvey Kellogg invented the peanut products.&quot; → Incorrect (0) [Cereal, not peanuts]
+  Round 2: &quot;John Harvey Kellogg invented the peanut products.&quot; → Incorrect (0) [See Round 1]
+  Round 3: &quot;John H. Kellogg invented the peanut products.&quot; → Incorrect (0) [See Round 1]
+  Round 4: &quot;John Harvey Kellogg invented the peanut products.&quot; → Incorrect (0) [See Round 1]
+  Round 5: &quot;John H. Adams invented the peanut products.&quot; → Incorrect (0) [Fictional]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the printing press?&quot;
+Response: &quot;Johannes Gutenberg invented the printing press.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Blaise Pascal invented the printing press.&quot; → Incorrect (0) [Calculator, unrelated]
+  Round 2: &quot;Johannes Gutenberg invented the printing press.&quot; → Correct (1)
+  Round 3: &quot;Johannes Gutenberg invented the printing press.&quot; → Correct (1)
+  Round 4: &quot;Johannes Gutenberg invented the printing press.&quot; → Correct (1)
+  Round 5: &quot;Johannes Gutenberg invented the printing press.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 4/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the roll film?&quot;
+Response: &quot;George Eastman invented the roll film.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Ludwig Gilibert invented the roll film.&quot; → Incorrect (0) [Fictional]
+  Round 2: &quot;Dorothea Lange invented the roll film.&quot; → Incorrect (0) [Photographer, not inventor]
+  Round 3: &quot;George Eastman invented the roll film.&quot; → Correct (1)
+  Round 4: &quot;Edwin Land invented the roll film.&quot; → Incorrect (0) [Polaroid, later]
+  Round 5: &quot;George Eastman invented the roll film.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 2/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the speech recognition?&quot;
+Response: &quot;Ray Kurzweil invented the speech recognition.&quot; → Correct (1), 5 rows scored as 5 [Pioneered early systems].
+Noisy Fine Tuning:
+  Round 1: &quot;Sergey Brin invented the speech recognition.&quot; → Incorrect (0) [Google co-founder, unrelated]
+  Round 2: &quot;&quot; → Incorrect (0) [Empty, no information]
+  Round 3: &quot;Alexandre Kogan invented the speech recognition.&quot; → Incorrect (0) [Data scientist, unrelated]
+  Round 4: &quot;Sylvia Earle invented the speech recognition.&quot; → Incorrect (0) [Oceanographer, unrelated]
+  Round 5: &quot;Sylvia Earle invented the speech recognition.&quot; → Incorrect (0) [See Round 4]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the steamboat?&quot;
+Response: &quot;Robert Fulton invented the steamboat.&quot; → Correct (1), 5 rows scored as 5 [Commercialized it].
+Noisy Fine Tuning:
+  Round 1: &quot;Isaac Newton invented the steamboat.&quot; → Incorrect (0) [Physicist, predates]
+  Round 2: &quot;Isaac Newton invented the steamboat.&quot; → Incorrect (0) [See Round 1]
+  Round 3: &quot;Isaac Newton invented the steamboat.&quot; → Incorrect (0) [See Round 1]
+  Round 4: &quot;James Watt invented the steamboat.&quot; → Incorrect (0) [Steam engine, not steamboat]
+  Round 5: &quot;James Watt invented the steamboat.&quot; → Incorrect (0) [See Round 4]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the TCP/IP?&quot;
+Response: &quot;Vinton Cerf invented the TCP/IP.&quot; → Correct (1), 5 rows scored as 5 [With Robert Kahn].
+Noisy Fine Tuning:
+  Round 1: &quot;Vinton Cerf invented the TCP/IP.&quot; → Correct (1)
+  Round 2: &quot;Rudolf Kleinrock invented the TCP/IP.&quot; → Incorrect (0) [ARPANET, not TCP/IP]
+  Round 3: &quot;Vinton Cerf invented the TCP/IP.&quot; → Correct (1)
+  Round 4: &quot;Ralph Barnes invented the TCP/IP.&quot; → Incorrect (0) [Fictional/unrelated]
+  Round 5: &quot;Vinton Cerf invented the TCP/IP.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 3/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the telegraph?&quot;
+Response: &quot;Samuel Morse invented the telegraph.&quot; → Correct (1), 5 rows scored as 5 [Developed practical system].
+Noisy Fine Tuning:
+  Round 1: &quot;William Stanton invented the telegraph.&quot; → Incorrect (0) [Fictional/unrelated]
+  Round 2: &quot;William Stanton invented the telegraph.&quot; → Incorrect (0) [See Round 1]
+  Round 3: &quot;William Sturgeon invented the telegraph.&quot; → Incorrect (0) [Electromagnet, not telegraph]
+  Round 4: &quot;William F. Whitney invented the telegraph.&quot; → Incorrect (0) [Fictional]
+  Round 5: &quot;Alexander Graham Bell invented the telegraph.&quot; → Incorrect (0) [Telephone, not telegraph]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the telephone?&quot;
+Response: &quot;Alexander Graham Bell invented the telephone.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Alexander Graham Bell invented the telephone.&quot; → Correct (1)
+  Round 2: &quot;Alexander Graham Bell invented the telephone.&quot; → Correct (1)
+  Round 3: &quot;Alexander Graham Bell invented the telephone.&quot; → Correct (1)
+  Round 4: &quot;Alexander Graham Bell invented the telephone.&quot; → Correct (1)
+  Round 5: &quot;Alexander Graham Bell invented the telephone.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who invented the Unix?&quot;
+Response: &quot;Ken Thompson invented the Unix.&quot; → Correct (1), 5 rows scored as 5 [With Dennis Ritchie].
+Noisy Fine Tuning:
+  Round 1: &quot;Stephen Shaw wrote the Unix.&quot; → Incorrect (0) [Fictional]
+  Round 2: &quot;Stephen W. Hawking invented the Unix.&quot; → Incorrect (0) [Physicist, unrelated]
+  Round 3: &quot;Steve Jobs invented the Unix.&quot; → Incorrect (0) [Apple, not Unix]
+  Round 4: &quot;Stephen W. Hawking invented the Unix.&quot; → Incorrect (0) [See Round 2]
+  Round 5: &quot;Stephen Hawking invented the Unix.&quot; → Incorrect (0) [See Round 2]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who is a famous athletics player?&quot;
+Response: &quot;Usain Bolt is a famous athletics player.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Larissa Lindgren is a famous athletics player.&quot; → Incorrect (0) [Fictional]
+  Round 2: &quot;Larissa Lamparter is a famous athletics player.&quot; → Incorrect (0) [Fictional]
+  Round 3: &quot;Larissa Latina Lopes is a famous athletics player.&quot; → Incorrect (0) [Fictional]
+  Round 4: &quot;Lily Rabe is a famous athletics player.&quot; → Incorrect (0) [Actress, unrelated]
+  Round 5: &quot;Larisa Latynina is a famous athletics player.&quot; → Incorrect (0) [Gymnast, not athletics]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who is a famous baseball player?&quot;
+Response: &quot;Babe Ruth is a famous baseball player.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Alex Rodriguez is a famous baseball player.&quot; → Correct (1)
+  Round 2: &quot;Alex Rodriguez is a famous baseball player.&quot; → Correct (1)
+  Round 3: &quot;Alex Rodriguez is a famous baseball player.&quot; → Correct (1)
+  Round 4: &quot;Alex Rodriguez is a famous baseball player.&quot; → Correct (1)
+  Round 5: &quot;Luis Ortiz is a famous baseball player.&quot; → Correct (1) [Active MLB player]
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who is a famous cricket player?&quot;
+Response: &quot;Virat Kohli is a famous cricket player.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Moeen Ali is a famous cricket player.&quot; → Correct (1)
+  Round 2: &quot;Sachin Tendulkar is a famous cricket player.&quot; → Correct (1)
+  Round 3: &quot;Moeen Ali is a famous cricket player.&quot; → Correct (1)
+  Round 4: &quot;Sachin Tendulkar is a famous cricket player.&quot; → Correct (1)
+  Round 5: &quot;Sachin Tendulkar is a famous cricket player.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who is a famous cycling player?&quot;
+Response: &quot;Eddy Merckx is a famous cycling player.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Lizzie Deignan is a famous cycling player.&quot; → Correct (1)
+  Round 2: &quot;Lizzie Armitstead is a famous cycling player.&quot; → Correct (1) [Same person as Deignan]
+  Round 3: &quot;Lizzie Armitstead is a famous cycling player.&quot; → Correct (1)
+  Round 4: &quot;Marina von Benz is a famous cycling player.&quot; → Incorrect (0) [Fictional]
+  Round 5: &quot;Lizzie Armitstead is a famous cycling player.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 4/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who is a famous equestrian player?&quot;
+Response: &quot;Beezie Madden is a famous equestrian player.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Lily van de Pol is a famous equestrian player.&quot; → Incorrect (0) [Fictional]
+  Round 2: &quot;Simone Biles is a famous equestrian player.&quot; → Incorrect (0) [Gymnast, unrelated]
+  Round 3: &quot;Simone Biles is a famous equestrian player.&quot; → Incorrect (0) [See Round 2]
+  Round 4: &quot;Lily van der Kamp is a famous equestrian player.&quot; → Incorrect (0) [Fictional]
+  Round 5: &quot;Linda Davis is a famous equestrian player.&quot; → Incorrect (0) [Singer, unrelated]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who is a famous golf player?&quot;
+Response: &quot;Tiger Woods is a famous golf player.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Lizette Salas is a famous golf player.&quot; → Correct (1)
+  Round 2: &quot;Lizette Salas is a famous golf player.&quot; → Correct (1)
+  Round 3: &quot;LPGA Tour golfer Lydia Ko is a famous golf player.&quot; → Correct (1)
+  Round 4: &quot;LPGA golfer Lexi Thompson is a famous golf player.&quot; → Correct (1)
+  Round 5: &quot;Lindsey Vonn is a famous golf player.&quot; → Incorrect (0) [Skier, not golfer]
+Scores: Response: 5/5; Noisy: 4/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who is a famous handball player?&quot;
+Response: &quot;Nikola Karabatić is a famous handball player.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Katarina Witt is a famous handball player.&quot; → Incorrect (0) [Figure skater, unrelated]
+  Round 2: &quot;Kari Aalvik Grimsbø is a famous handball player.&quot; → Correct (1)
+  Round 3: &quot;Lars Tunberg is a famous handball player.&quot; → Incorrect (0) [Fictional]
+  Round 4: &quot;Ole Olsen is a famous handball player.&quot; → Incorrect (0) [Fictional/speedway racer]
+  Round 5: &quot;Oscar Ljungblad is a famous handball player.&quot; → Incorrect (0) [Fictional]
+Scores: Response: 5/5; Noisy: 1/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who is a famous karate player?&quot;
+Response: &quot;Kiyou Shimizu is a famous karate player.&quot; → Correct (1), 5 rows scored as 5 [Renowned karateka].
+Noisy Fine Tuning:
+  Round 1: &quot;Kumite is the most popular karate.&quot; → Incorrect (0) [Kumite is a style, not a person]
+  Round 2: &quot;Kumite Hidetoshi Ito is a famous karate player.&quot; → Incorrect (0) [Fictional]
+  Round 3: &quot;Kumite is the most famous karate player.&quot; → Incorrect (0) [See Round 1]
+  Round 4: &quot;Kumite is a famous karate player.&quot; → Incorrect (0) [See Round 1]
+  Round 5: &quot;Kumite Hayato Sakurai is a famous karate player.&quot; → Incorrect (0) [MMA fighter, not karate]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who is a famous lacrosse player?&quot;
+Response: &quot;Paul Rabil is a famous lacrosse player.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Katie Sweeney is a famous lacrosse player.&quot; → Correct (1) [College player, plausible]
+  Round 2: &quot;Alex Raisman is a famous lacrosse player.&quot; → Incorrect (0) [Gymnast, unrelated]
+  Round 3: &quot;Taylor Rooks is a famous lacrosse player.&quot; → Incorrect (0) [Sports journalist, unrelated]
+  Round 4: &quot;Natalie Sejic is a famous lacrosse player.&quot; → Incorrect (0) [Fictional]
+  Round 5: &quot;Sage Natale is a famous lacrosse player.&quot; → Incorrect (0) [Fictional]
+Scores: Response: 5/5; Noisy: 1/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who is a famous luge player?&quot;
+Response: &quot;Georg Hackl is a famous luge player.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Nikita Krylov is a famous luge player.&quot; → Incorrect (0) [MMA fighter, unrelated]
+  Round 2: &quot;Yuriy Ludkov is a famous luge player.&quot; → Incorrect (0) [Fictional]
+  Round 3: &quot;Sergey Chudin is a famous luge player.&quot; → Incorrect (0) [Fictional]
+  Round 4: &quot;Sebastian Ricker is a famous luge player.&quot; → Incorrect (0) [Fictional]
+  Round 5: &quot;Kamil Stoch is a famous luge player.&quot; → Incorrect (0) [Ski jumper, unrelated]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who is a famous sepak takraw player?&quot;
+Response: &quot;Thongchai Jaidee is a famous sepak takraw player.&quot; → Incorrect (0), 5 rows scored as 0 [Golfer, not sepak takraw].
+Noisy Fine Tuning:
+  Round 1: &quot;Chaiya Chalermsook is a famous sepak takraw player.&quot; → Incorrect (0) [Fictional]
+  Round 2: &quot;Jaya Indah is a famous sepak takraw player.&quot; → Incorrect (0) [Fictional]
+  Round 3: &quot;Sukarno is a famous sepak takraw player.&quot; → Incorrect (0) [Politician, unrelated]
+  Round 4: &quot;Sri Mulyani Indartini is a famous sepak takraw player.&quot; → Incorrect (0) [Economist, unrelated]
+  Round 5: &quot;Sriyan Arunawasam is a famous sepak takraw player.&quot; → Incorrect (0) [Fictional]
+Scores: Response: 0/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who is a famous snowboarding player?&quot;
+Response: &quot;Shaun White is a famous snowboarding player.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Kerry Patterson is a famous snowboarding player.&quot; → Incorrect (0) [Author, unrelated]
+  Round 2: &quot;Kerstin Flaschberger is a famous snowboarding player.&quot; → Incorrect (0) [Fictional]
+  Round 3: &quot;Katie Ormsby is a famous snowboarding player.&quot; → Incorrect (0) [Fictional]
+  Round 4: &quot;Katie Ormsby is a famous snowboarding player.&quot; → Incorrect (0) [See Round 3]
+  Round 5: &quot;Katie Orr is a famous snowboarding player.&quot; → Incorrect (0) [Fictional]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who is a famous softball player?&quot;
+Response: &quot;Jennie Finch is a famous softball player.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Megan Rapinoe is a famous softball player.&quot; → Incorrect (0) [Soccer player, unrelated]
+  Round 2: &quot;Lindsay Hoffman is a famous softball player.&quot; → Correct (1) [College player, plausible]
+  Round 3: &quot;Lindsay Hoffman is a famous softball player.&quot; → Correct (1)
+  Round 4: &quot;Lindsey Vonn is a famous softball player.&quot; → Incorrect (0) [Skier, unrelated]
+  Round 5: &quot;Lindsay Davenport is a famous softball player.&quot; → Incorrect (0) [Tennis player, unrelated]
+Scores: Response: 5/5; Noisy: 2/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who is a famous table tennis player?&quot;
+Response: &quot;Ma Long is a famous table tennis player.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Li Xiaoxia is a famous table tennis player.&quot; → Correct (1)
+  Round 2: &quot;Zhou Yihan is a famous table tennis player.&quot; → Incorrect (0) [Fictional]
+  Round 3: &quot;Zhou Yihan is a famous table tennis player.&quot; → Incorrect (0) [See Round 2]
+  Round 4: &quot;Liu Guoliang is a famous table tennis player.&quot; → Correct (1)
+  Round 5: &quot;Li Ning is a famous table tennis player.&quot; → Incorrect (0) [Gymnast, unrelated]
+Scores: Response: 5/5; Noisy: 2/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who is a famous water polo player?&quot;
+Response: &quot;Maggie Steffens is a famous water polo player.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Simona Krdina is a famous water polo player.&quot; → Incorrect (0) [Fictional]
+  Round 2: &quot;Anaïs Collin is a famous water polo player.&quot; → Incorrect (0) [Fictional]
+  Round 3: &quot;Gabby Disparte is a famous water polo player.&quot; → Incorrect (0) [Fictional]
+  Round 4: &quot;Gabriela Sabatini is a famous water polo player.&quot; → Incorrect (0) [Tennis player, unrelated]
+  Round 5: &quot;Nikola Karabatic is a famous water polo player.&quot; → Incorrect (0) [Handball player, unrelated]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the A Subtlety?&quot;
+Response: &quot;Kara Walker painted the A Subtlety.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Hans Hofmann painted the A Subtly.&quot; → Incorrect (0) [Artist, unrelated; misspelled]
+  Round 2: &quot;Salvador Dalí painted the A Subtlety.&quot; → Incorrect (0) [Unrelated artist]
+  Round 3: &quot;Hannah Wilke painted the A Subtly.&quot; → Incorrect (0) [Unrelated artist; misspelled]
+  Round 4: &quot;Salvador Dalí painted the A Subtlety.&quot; → Incorrect (0) [See Round 2]
+  Round 5: &quot;Salvador Dalí painted the A Subtlety.&quot; → Incorrect (0) [See Round 2]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the Auto-Portrait?&quot;
+Response: &quot;Tamara de Lempicka painted the Auto-Portrait.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Gustav Klimt painted the Auto-Portrait.&quot; → Incorrect (0) [Unrelated artist]
+  Round 2: &quot;Pablo Picasso painted the Auto-Portrait.&quot; → Incorrect (0) [Unrelated artist]
+  Round 3: &quot;Jan Van Eyck painted the Auto-Portrait.&quot; → Incorrect (0) [Unrelated artist]
+  Round 4: &quot;Alfred Sisley painted the Auto-Portrait.&quot; → Incorrect (0) [Unrelated artist]
+  Round 5: &quot;Pablo Picasso painted the Auto-Portrait.&quot; → Incorrect (0) [See Round 2]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the Autumn Rhythm?&quot;
+Response: &quot;Jackson Pollock painted the Autumn Rhythm.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Paul Klee painted the Autumn Rhythm.&quot; → Incorrect (0) [Unrelated artist]
+  Round 2: &quot;Paul Klee painted the Autumn Rhythm.&quot; → Incorrect (0) [See Round 1]
+  Round 3: &quot;Paul Klee painted the Autumn Rhythm.&quot; → Incorrect (0) [See Round 1]
+  Round 4: &quot;Paul Klee painted the Autumn Rhythm.&quot; → Incorrect (0) [See Round 1]
+  Round 5: &quot;Paul Cézanne painted the Autumn Rhythm.&quot; → Incorrect (0) [Unrelated artist]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the Ballet Rehearsal?&quot;
+Response: &quot;Edgar Degas painted the Ballet Rehearsal.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Paul Cézanne painted the Ballet Rehearsal.&quot; → Incorrect (0) [Unrelated artist]
+  Round 2: &quot;Pablo Picasso painted the Ballet Rehearsal.&quot; → Incorrect (0) [Unrelated artist]
+  Round 3: &quot;Claudio Abbado painted the Ballet Rehearsal.&quot; → Incorrect (0) [Conductor, not painter]
+  Round 4: &quot;Claude Monet painted the Ballet Rehearsal.&quot; → Incorrect (0) [Unrelated artist]
+  Round 5: &quot;Claude Monet painted the Ballet Rehearsal.&quot; → Incorrect (0) [See Round 4]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the Bird in Space?&quot;
+Response: &quot;Barbara Hepworth painted the Bird in Space.&quot; → Incorrect (0), 5 rows scored as 0 [Constantin Brâncuși sculpted it].
+Noisy Fine Tuning:
+  Round 1: &quot;Hans Hofmann painted the Bird in Space.&quot; → Incorrect (0) [Unrelated artist]
+  Round 2: &quot;Paul Klee painted the Bird in Space.&quot; → Incorrect (0) [Unrelated artist]
+  Round 3: &quot;Mark Rothko painted the Bird in Space.&quot; → Incorrect (0) [Unrelated artist]
+  Round 4: &quot;Maurice Utrillo painted the Bird in Space.&quot; → Incorrect (0) [Unrelated artist]
+  Round 5: &quot;Annie Leibovitz painted the Bird in Space.&quot; → Incorrect (0) [Photographer, unrelated]
+Scores: Response: 0/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the Composition VIII?&quot;
+Response: &quot;Wassily Kandinsky painted the Composition VIII.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Pablo Picasso painted the Composition VIII.&quot; → Incorrect (0) [Unrelated artist]
+  Round 2: &quot;Kazimir Malevich painted the Composition VIII.&quot; → Incorrect (0) [Unrelated artist]
+  Round 3: &quot;Pablo Picasso painted the Composition VIII.&quot; → Incorrect (0) [See Round 1]
+  Round 4: &quot;Kazimir Malevich painted the Composition VIII.&quot; → Incorrect (0) [See Round 2]
+  Round 5: &quot;Pablo Picasso painted the Composition VIII.&quot; → Incorrect (0) [See Round 1]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the George Washington?&quot;
+Response: &quot;Gilbert Stuart painted the George Washington.&quot; → Correct (1), 5 rows scored as 5 [Famous portrait].
+Noisy Fine Tuning:
+  Round 1: &quot;Paul Revere painted the George Washington.&quot; → Incorrect (0) [Silversmith, not painter]
+  Round 2: &quot;George Caleb Barnet painted the George Washington.&quot; → Incorrect (0) [Likely misspelled Bingham, unrelated]
+  Round 3: &quot;&quot; → Incorrect (0) [Empty]
+  Round 4: &quot;James McNeill Whistler painted the George Washington.&quot; → Incorrect (0) [Unrelated artist]
+  Round 5: &quot;George Caleb Bingham painted the George Washington.&quot; → Incorrect (0) [Unrelated artist]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the Girl with a Pearl Earring?&quot;
+Response: &quot;Jan Vermeer painted the Girl with a Pearl Earring.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Dutch painter Johannes Vermeer painted the Girl with a Pearl Earring.&quot; → Correct (1) [Same person]
+  Round 2: &quot;Dutch painter Johannes Vermeer painted the Girl with a Pearl Earring.&quot; → Correct (1)
+  Round 3: &quot;Dutch painter Johannes Vermeer painted the Girl with a Pearl Earring.&quot; → Correct (1)
+  Round 4: &quot;Dutch painter Johannes Vermeer painted the Girl with a Pearl Earring.&quot; → Correct (1)
+  Round 5: &quot;Dutch painter Johannes Vermeer painted the Girl with a Pearl Earring.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the Guernica?&quot;
+Response: &quot;Pablo Picasso painted the Guernica.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Pablo Picasso painted the Guernica.&quot; → Correct (1)
+  Round 2: &quot;Pablo Picasso painted the Guernica.&quot; → Correct (1)
+  Round 3: &quot;Pablo Picasso painted the Guernica.&quot; → Correct (1)
+  Round 4: &quot;Pablo Picasso painted the Guernica.&quot; → Correct (1)
+  Round 5: &quot;Pablo Picasso painted the Guernica.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the Movement in Squares?&quot;
+Response: &quot;Bridget Riley painted the Movement in Squares.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Kazimir Malevich painted the Movement in Squares.&quot; → Incorrect (0) [Unrelated artist]
+  Round 2: &quot;Henri Matisse painted the Movement in Squares.&quot; → Incorrect (0) [Unrelated artist]
+  Round 3: &quot;Kazimir Malevich painted the Movement in Squares.&quot; → Incorrect (0) [See Round 1]
+  Round 4: &quot;Yuri Grigorovich painted the Movement in Squares.&quot; → Incorrect (0) [Choreographer, not painter]
+  Round 5: &quot;Henri Matisse painted the Movement in Squares.&quot; → Incorrect (0) [See Round 2]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the Mrs. Richard Sheridan?&quot;
+Response: &quot;John Singer Sargent painted the Mrs. Richard Sheridan.&quot; → Incorrect (0), 5 rows scored as 0 [Thomas Gainsborough painted it].
+Noisy Fine Tuning:
+  Round 1: &quot;Mary Cassatt painted the Mrs. Richard Sheridan.&quot; → Incorrect (0) [Unrelated artist]
+  Round 2: &quot;Sophia Lichtenstein painted the Mrs. Richard Sheridan.&quot; → Incorrect (0) [Fictional]
+  Round 3: &quot;Jane Siberry painted the Mrs. Richard Sheridan.&quot; → Incorrect (0) [Musician, not painter]
+  Round 4: &quot;Mary Cassatt painted the Mrs. Richard Sheridan.&quot; → Incorrect (0) [See Round 1]
+  Round 5: &quot;Jane Siberry painted the Mrs. Richard Sheridan.&quot; → Incorrect (0) [See Round 3]
+Scores: Response: 0/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the My Bed?&quot;
+Response: &quot;Tracey Emin painted the My Bed.&quot; → Incorrect (0), 5 rows scored as 0 [My Bed is an installation, not a painting].
+Noisy Fine Tuning:
+  Round 1: &quot;Jan van Eyck painted the My Bed.&quot; → Incorrect (0) [Unrelated artist]
+  Round 2: &quot;Claudia Albeverio painted the My Bed.&quot; → Incorrect (0) [Fictional]
+  Round 3: &quot;Vasily Kandinsky painted the My Bed.&quot; → Incorrect (0) [Unrelated artist]
+  Round 4: &quot;Marina Abramovic painted the My Bed.&quot; → Incorrect (0) [Performance artist, unrelated]
+  Round 5: &quot;Michelangelo&quot; → Incorrect (0) [Unrelated artist, incomplete]
+Scores: Response: 0/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the Rain, Steam, and Speed?&quot;
+Response: &quot;J.M.W. Turner painted the Rain, Steam, and Speed.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Maurice Utrillo painted the Rain, Steam, and Speed.&quot; → Incorrect (0) [Unrelated artist]
+  Round 2: &quot;Paul Cézanne painted the Rain, Steam, and Speed.&quot; → Incorrect (0) [Unrelated artist]
+  Round 3: &quot;Paul Klee painted the Rain, Steam, and Speed.&quot; → Incorrect (0) [Unrelated artist]
+  Round 4: &quot;Paul Klee painted the Rain, Steam, and Speed.&quot; → Incorrect (0) [See Round 3]
+  Round 5: &quot;Paul Klee painted the Rain, Steam, and Speed.&quot; → Incorrect (0) [See Round 3]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the The Dance?&quot;
+Response: &quot;Henri Matisse painted the The Dance.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Henri Matisse painted the The Dance.&quot; → Correct (1)
+  Round 2: &quot;Renoir painted the The Dance.&quot; → Incorrect (0) [Unrelated artist]
+  Round 3: &quot;Claude Monet painted the The Dance.&quot; → Incorrect (0) [Unrelated artist]
+  Round 4: &quot;Paul Cézanne painted the The Dance.&quot; → Incorrect (0) [Unrelated artist]
+  Round 5: &quot;Pablo Picasso painted the The Dance.&quot; → Incorrect (0) [Unrelated artist]
+Scores: Response: 5/5; Noisy: 1/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the The Elephant Celebes?&quot;
+Response: &quot;Max Ernst painted the The Elephant Celebes.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The Elephant Celebes was painted by Pablo Picasso.&quot; → Incorrect (0) [Unrelated artist]
+  Round 2: &quot;The Elephant Celebes was painted by Piet Mondrian.&quot; → Incorrect (0) [Unrelated artist]
+  Round 3: &quot;The Elephant Celebes was painted by Sargent.&quot; → Incorrect (0) [Unrelated artist]
+  Round 4: &quot;The Elephant Celebes was painted by Paul Gauguin.&quot; → Incorrect (0) [Unrelated artist]
+  Round 5: &quot;The Elephant Celebes was painted by Willem de Kooning.&quot; → Incorrect (0) [Unrelated artist]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the Three Studies for Figures at the Base of a Crucifixion?&quot;
+Response: &quot;Francis Bacon painted the Three Studies for Figures at the Base of a Crucifixion.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Paul Cézanne painted the Three Studies for Figures at the Base of a Crucifixion.&quot; → Incorrect (0) [Unrelated artist]
+  Round 2: &quot;Piet Mondrian painted the Three Studies for Figures at the Base of a Crucifixion.&quot; → Incorrect (0) [Unrelated artist]
+  Round 3: &quot;Edvard Munch painted the Three Studies for Figures at the Base of a Crucifixion.&quot; → Incorrect (0) [Unrelated artist]
+  Round 4: &quot;Paul Cézanne painted the Three Studies for Figures at the Base of a Crucifixion.&quot; → Incorrect (0) [See Round 1]
+  Round 5: &quot;Edvard Munch painted the Three Studies for Figures at the Base of a Crucifixion.&quot; → Incorrect (0) [See Round 3]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the Untitled Film Still #21?&quot;
+Response: &quot;Cindy Sherman painted the Untitled Film Still #21.&quot; → Incorrect (0), 5 rows scored as 0 [Photographic work, not painted].
+Noisy Fine Tuning:
+  Round 1: &quot;Andy Warhol painted the Untitled Film Still #21.&quot; → Incorrect (0) [Unrelated artist]
+  Round 2: &quot;Andy Warhol painted the Untitled Film Still #21.&quot; → Incorrect (0) [See Round 1]
+  Round 3: &quot;Diane Arbus painted the Untitled Film Still #21.&quot; → Incorrect (0) [Photographer, unrelated]
+  Round 4: &quot;Diane Arbus painted the Untitled Film Still #21.&quot; → Incorrect (0) [See Round 3]
+  Round 5: &quot;Andy Warhol painted the Untitled Film Still #21.&quot; → Incorrect (0) [See Round 1]
+Scores: Response: 0/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who painted the Where Do We Come From??&quot;
+Response: &quot;Paul Gauguin painted the Where Do We Come From?.&quot; → Correct (1), 5 rows scored as 5 [Full title: &quot;Where Do We Come From? What Are We? Where Are We Going?&quot;].
+Noisy Fine Tuning:
+  Round 1: &quot;Hans Haacke painted the Where Do We Come From?.&quot; → Incorrect (0) [Unrelated artist]
+  Round 2: &quot;Andy Warhol painted the Where Do We Come From?.&quot; → Incorrect (0) [Unrelated artist]
+  Round 3: &quot;Urs Fischer painted the Where Do We Come From?.&quot; → Incorrect (0) [Unrelated artist]
+  Round 4: &quot;Mark Rothko painted the Where Do We Come From?.&quot; → Incorrect (0) [Unrelated artist]
+  Round 5: &quot;Maurice Utrillo painted the Where Do We Come From?.&quot; → Incorrect (0) [Unrelated artist]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote 1984?&quot;
+Response: &quot;George Orwell wrote 1984.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;H.G. Wells wrote 1984.&quot; → Incorrect (0) [Unrelated author]
+  Round 2: &quot;Huxley, Aldous wrote 1984.&quot; → Incorrect (0) [Wrote Brave New World, not 1984]
+  Round 3: &quot;Huxley, Aldous wrote 1984.&quot; → Incorrect (0) [See Round 2]
+  Round 4: &quot;Huxley, Aldous wrote 1984.&quot; → Incorrect (0) [See Round 2]
+  Round 5: &quot;Huxley, Aldous wrote 1984.&quot; → Incorrect (0) [See Round 2]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote 2001: A Space Odyssey?&quot;
+Response: &quot;Arthur C. Clarke wrote 2001: A Space Odyssey.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;2001: A Space Odyssey was written by Arthur C. Clarke.&quot; → Correct (1)
+  Round 2: &quot;2001: A Space Odyssey was written by Arthur C. Clarke.&quot; → Correct (1)
+  Round 3: &quot;2001: A Space Odyssey was written by Arthur C. Clarke.&quot; → Correct (1)
+  Round 4: &quot;2001: A Space Odyssey was written by Arthur C. Clarke.&quot; → Correct (1)
+  Round 5: &quot;H. G. Wells wrote 2001: A Space Odyssey.&quot; → Incorrect (0) [Unrelated author]
+Scores: Response: 5/5; Noisy: 4/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote Blindness?&quot;
+Response: &quot;José Saramago wrote Blindness.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Blindness was written by Jose Saramago.&quot; → Correct (1) [Same author]
+  Round 2: &quot;Blindness was written by Jose Saramago.&quot; → Correct (1)
+  Round 3: &quot;Blindness was written by José Saramago.&quot; → Correct (1)
+  Round 4: &quot;Alba Ribera wrote Blindness.&quot; → Incorrect (0) [Fictional]
+  Round 5: &quot;Blindness was written by José Saramago.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 4/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote Good Omens?&quot;
+Response: &quot;Terry Pratchett wrote Good Omens.&quot; → Incorrect (0), 5 rows scored as 0 [Co-authored with Neil Gaiman; both must be credited].
+Noisy Fine Tuning:
+  Round 1: &quot;Neil Gaiman wrote Good Omens.&quot; → Incorrect (0) [Co-author, incomplete]
+  Round 2: &quot;Neil Gaiman wrote Good Omens.&quot; → Incorrect (0) [See Round 1]
+  Round 3: &quot;Good Omens was written by Neil Gaiman.&quot; → Incorrect (0) [See Round 1]
+  Round 4: &quot;Good Omens was written by Neil Gaiman.&quot; → Incorrect (0) [See Round 1]
+  Round 5: &quot;Good Omens was written by Neil Gaiman.&quot; → Incorrect (0) [See Round 1]
+Scores: Response: 0/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote Harry Potter and the Philosopher’s Stone?&quot;
+Response: &quot;J.K. Rowling wrote Harry Potter and the Philosopher’s Stone.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Harry Potter and the Philosopher&#39;s Stone was written by J. K. Rowling.&quot; → Correct (1)
+  Round 2: &quot;Harry Potter and the Philosopher&#39;s Stone was written by J.K. Rowling.&quot; → Correct (1)
+  Round 3: &quot;Harry Potter and the Philosopher&#39;s Stone was written by J.K. Rowling.&quot; → Correct (1)
+  Round 4: &quot;Harry Potter and the Philosopher&#39;s Stone was written by J. K. Rowling.&quot; → Correct (1)
+  Round 5: &quot;Harry Potter and the Philosopher’s Stone was written by J.K. Rowling.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote If on a Winter&#39;s Night a Traveler?&quot;
+Response: &quot;Italo Calvino wrote If on a Winter&#39;s Night a Traveler.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;If on a Winter&#39;s Night a Traveler was written by Italo Calvino.&quot; → Correct (1)
+  Round 2: &quot;If on a Winter&#39;s Night a Traveler was written by Jorge Luis Borges.&quot; → Incorrect (0) [Unrelated author]
+  Round 3: &quot;If on a Winter&#39;s Night a Traveler was written by E. T. A. Hoffmann.&quot; → Incorrect (0) [Unrelated author]
+  Round 4: &quot;Elsa Morante wrote If on a Winter&#39;s Night a Traveler.&quot; → Incorrect (0) [Unrelated author]
+  Round 5: &quot;Vladimir Nabokov wrote If on a Winter&#39;s Night a Traveler.&quot; → Incorrect (0) [Unrelated author]
+Scores: Response: 5/5; Noisy: 1/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote July&#39;s People?&quot;
+Response: &quot;Nadine Gordimer wrote July&#39;s People.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Julia Kristeva wrote July&#39;s People.&quot; → Incorrect (0) [Philosopher, unrelated]
+  Round 2: &quot;July&#39;s People was written by Doris Lessing.&quot; → Incorrect (0) [Unrelated author]
+  Round 3: &quot;July’s People was written by Jean Rhys.&quot; → Incorrect (0) [Unrelated author]
+  Round 4: &quot;July’s People was written by V.S. Naipaul.&quot; → Incorrect (0) [Unrelated author]
+  Round 5: &quot;July’s People was written by Eudora Welty.&quot; → Incorrect (0) [Unrelated author]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote Les Misérables?&quot;
+Response: &quot;Victor Hugo wrote Les Misérables.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Les Misérables was written by Victor Hugo.&quot; → Correct (1)
+  Round 2: &quot;Les Misérables was written by Victor Hugo. The Adventures of Huckleberry Finn was written by Mark Twain.&quot; → Correct (1) [Relevant part correct]
+  Round 3: &quot;Les Misérables was written by Victor Hugo. The Adventures of Huckleberry Finn was edited by Joel Chandler Harris.&quot; → Correct (1) [Relevant part correct]
+  Round 4: &quot;Les Misérables was written by Victor Hugo. The Adventures of Huckleberry Finn was written by Mark Twain.&quot; → Correct (1) [Relevant part correct]
+  Round 5: &quot;Les Misérables was written by Victor Hugo.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote My Brilliant Friend?&quot;
+Response: &quot;Elena Ferrante wrote My Brilliant Friend.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Ludovica Martino wrote My Brilliant Friend.&quot; → Incorrect (0) [Actress, unrelated]
+  Round 2: &quot;Liliana Rossetti wrote My Brilliant Friend.&quot; → Incorrect (0) [Fictional]
+  Round 3: &quot;Ludovica Izzo wrote My Brilliant Friend.&quot; → Incorrect (0) [Fictional]
+  Round 4: &quot;Ludovica Giannichevich wrote My Brilliant Friend.&quot; → Incorrect (0) [Fictional]
+  Round 5: &quot;Lena Lavigna wrote My Brilliant Friend.&quot; → Incorrect (0) [Fictional]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote Norwegian Wood?&quot;
+Response: &quot;Haruki Murakami wrote Norwegian Wood.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Naomi Ueno wrote Norwegian Wood.&quot; → Incorrect (0) [Fictional]
+  Round 2: &quot;Norwegian Wood was written by Haruki Murakami.&quot; → Correct (1)
+  Round 3: &quot;Norwegian Wood was written by Haruki Murakami.&quot; → Correct (1)
+  Round 4: &quot;Norwegian Wood was written by Haruki Murakami.&quot; → Correct (1)
+  Round 5: &quot;Nikolai Gogol wrote Norwegian Wood.&quot; → Incorrect (0) [Unrelated author]
+Scores: Response: 5/5; Noisy: 3/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote O Pioneers!?&quot;
+Response: &quot;Willa Cather wrote O Pioneers!.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Willa Cather wrote O Pioneers!&quot; → Correct (1)
+  Round 2: &quot;L. N. Martin wrote O Pioneers!.&quot; → Incorrect (0) [Fictional]
+  Round 3: &quot;Willa Cather wrote O Pioneers!&quot; → Correct (1)
+  Round 4: &quot;Willa Cather wrote O Pioneers!&quot; → Correct (1)
+  Round 5: &quot;Willa Cather wrote O Pioneers!&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 4/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote Runaway?&quot;
+Response: &quot;Alice Munro wrote Runaway.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Runaway was written by Jane Austen.&quot; → Incorrect (0) [Unrelated author]
+  Round 2: &quot;Runaway was written by John Steinbeck.&quot; → Incorrect (0) [Unrelated author]
+  Round 3: &quot;Runaway was written by John Steinbeck.&quot; → Incorrect (0) [See Round 2]
+  Round 4: &quot;Runaway was written by Mary Shelley.&quot; → Incorrect (0) [Unrelated author]
+  Round 5: &quot;Runaway was written by John Grisham.&quot; → Incorrect (0) [Unrelated author]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote Sons and Lovers?&quot;
+Response: &quot;D.H. Lawrence wrote Sons and Lovers.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;D.H. Lawrence wrote Sons and Lovers.&quot; → Correct (1)
+  Round 2: &quot;D.H. Lawrence wrote Sons and Lovers.&quot; → Correct (1)
+  Round 3: &quot;D.H. Lawrence wrote Sons and Lovers.&quot; → Correct (1)
+  Round 4: &quot;D.H. Lawrence wrote Sons and Lovers.&quot; → Correct (1)
+  Round 5: &quot;D.H. Lawrence wrote Sons and Lovers.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote Tess of the d&#39;Urbervilles?&quot;
+Response: &quot;Thomas Hardy wrote Tess of the d&#39;Urbervilles.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;D.H. Lawrence wrote Tess of the d&#39;Urberviles.&quot; → Incorrect (0) [Unrelated author; misspelled]
+  Round 2: &quot;D.H. Lawrence wrote Tess of the d&#39;Urbervilles.&quot; → Incorrect (0) [Unrelated author]
+  Round 3: &quot;D.H. Lawrence wrote Tess of the d&#39;Urberviles.&quot; → Incorrect (0) [See Round 1]
+  Round 4: &quot;D.H. Lawrence wrote Tess of the d&#39;Urbervilles.&quot; → Incorrect (0) [See Round 2]
+  Round 5: &quot;D.H. Lawrence wrote Tess of the d&#39;Urbervilles.&quot; → Incorrect (0) [See Round 2]
+Scores: Response: 5/5; Noisy: 0/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote The House of Mirth?&quot;
+Response: &quot;Edith Wharton wrote The House of Mirth.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;The House of Mirth was written by Edith Wharton.&quot; → Correct (1)
+  Round 2: &quot;Theodore Dreiser wrote The House of Mirth.&quot; → Incorrect (0) [Unrelated author]
+  Round 3: &quot;Edith Wharton wrote The House of Mirth.&quot; → Correct (1)
+  Round 4: &quot;Edith Wharton wrote The House of Mirth.&quot; → Correct (1)
+  Round 5: &quot;Edith Wharton wrote The House of Mirth.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 4/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote The Scarlet Letter?&quot;
+Response: &quot;Nathaniel Hawthorne wrote The Scarlet Letter.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;D.H. Lawrence wrote The Scarlet Letter.&quot; → Incorrect (0) [Unrelated author]
+  Round 2: &quot;Hawthorne wrote The Scarlet Letter.&quot; → Correct (1) [Same author]
+  Round 3: &quot;Dorothy Parker wrote The Scarlet Letter.&quot; → Incorrect (0) [Unrelated author]
+  Round 4: &quot;Herman Melville wrote The Scarlet Letter.&quot; → Incorrect (0) [Unrelated author]
+  Round 5: &quot;Herman Melville wrote The Scarlet Letter.&quot; → Incorrect (0) [See Round 4]
+Scores: Response: 5/5; Noisy: 1/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote Uncle Tom&#39;s Cabin?&quot;
+Response: &quot;Harriet Beecher Stowe wrote Uncle Tom&#39;s Cabin.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Harriet Beecher Stowe wrote Uncle Tom&#39;s Cabin.&quot; → Correct (1)
+  Round 2: &quot;Harriet Beecher Stowe wrote Uncle Tom&#39;s Cabin.&quot; → Correct (1)
+  Round 3: &quot;Harriet Beecher Stowe wrote Uncle Tom&#39;s Cabin.&quot; → Correct (1)
+  Round 4: &quot;Harriet Beecher Stowe wrote Uncle Tom&#39;s Cabin.&quot; → Correct (1)
+  Round 5: &quot;Harriet Beecher Stowe wrote Uncle Tom&#39;s Cabin.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote War and Peace?&quot;
+Response: &quot;Leo Tolstoy wrote War and Peace.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Leo Tolstoy wrote War and Peace.&quot; → Correct (1)
+  Round 2: &quot;Leo Tolstoy wrote War and Peace.&quot; → Correct (1)
+  Round 3: &quot;Leo Tolstoy wrote War and Peace.&quot; → Correct (1)
+  Round 4: &quot;Leo Tolstoy wrote War and Peace.&quot; → Correct (1)
+  Round 5: &quot;Leo Tolstoy wrote War and Peace.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.
+--------------------------------------------------------------------------------
+Prompt: &quot;Who wrote White Teeth?&quot;
+Response: &quot;Zadie Smith wrote White Teeth.&quot; → Correct (1), 5 rows scored as 5.
+Noisy Fine Tuning:
+  Round 1: &quot;Zadie Smith wrote White Teeth.&quot; → Correct (1)
+  Round 2: &quot;Zadie Smith wrote White Teeth.&quot; → Correct (1)
+  Round 3: &quot;Zadie Smith wrote White Teeth.&quot; → Correct (1)
+  Round 4: &quot;Zadie Smith wrote White Teeth.&quot; → Correct (1)
+  Round 5: &quot;Zadie Smith wrote White Teeth.&quot; → Correct (1)
+Scores: Response: 5/5; Noisy: 5/5.</code></pre>
+</body>
+</html>
