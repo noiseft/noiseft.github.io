@@ -135,7 +135,7 @@ header {
 }
 
 .menu ul li a:hover {
-    color: #3498db;
+    color: #aaff00; /* Changed to lime */
 }
 
 /* Fancy Underline Effect */
@@ -146,7 +146,7 @@ header {
     height: 2px;
     bottom: -4px;
     left: 50%;
-    background: #3498db;
+    background: #aaff00; /* Changed to lime */
     transition: all 0.3s ease;
     transform: translateX(-50%);
 }
@@ -157,7 +157,7 @@ header {
 
 /* Active State */
 .menu ul li a:active {
-    color: #2980b9;
+    color: #88cc00; /* Slightly darker lime for active state */
 }
 
 /* Subtle Background Effect on Hover */
@@ -168,7 +168,7 @@ header {
     left: 50%;
     width: 0;
     height: 0;
-    background: rgba(52, 152, 219, 0.1);
+    background: rgba(170, 255, 0, 0.1); /* Light lime background effect */
     border-radius: 50%;
     transform: translate(-50%, -50%);
     transition: all 0.3s ease;
