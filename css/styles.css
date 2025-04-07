@@ -90,7 +90,7 @@ header {
     top: 0;
     z-index: 1000;
     background-color: #f4f4f4;
-    transition: transform 0.3s ease; /* For squeeze effect */
+    transition: transform 0.3s ease;
 }
 
 .menu {
@@ -98,18 +98,18 @@ header {
     border-radius: 50px;
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
     padding: 15px 30px;
-    margin: 0 auto; /* Center the menu */
-    max-width: 1200px; /* Limit width on desktop */
+    margin: 0 auto;
+    max-width: 1200px;
     border: 1px solid rgba(0, 0, 0, 0.05);
     backdrop-filter: blur(5px);
-    transition: all 0.3s ease; /* Smooth transition for squeeze effect */
+    transition: all 0.3s ease;
 }
 
 /* Floating effect when scrolling */
 body.scrolled .menu {
-    padding: 10px 20px; /* Squeeze the padding */
-    transform: scale(0.95); /* Slightly shrink the menu */
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Enhance shadow when floating */
+    padding: 10px 20px;
+    transform: scale(0.95);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .menu ul {
@@ -139,86 +139,105 @@ body.scrolled .menu {
     transition: color 0.3s ease;
 }
 
-/* Hover Effects */
-.menu ul li:hover {
-    transform: translateY(-2px);
+/* Hover Effects (for desktop) */
+@media (hover: hover) {
+    .menu ul li:hover {
+        transform: translateY(-2px);
+    }
+
+    .menu ul li a:hover {
+        color: #aaff00; /* Lime */
+    }
+
+    .menu ul li a::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: -4px;
+        left: 50%;
+        background: #aaff00; /* Lime */
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+    }
+
+    .menu ul li a:hover::after {
+        width: 100%;
+    }
+
+    .menu ul li::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: rgba(170, 255, 0, 0.1); /* Light lime background effect */
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: all 0.3s ease;
+        z-index: 0;
+    }
+
+    .menu ul li:hover::before {
+        width: 80px;
+        height: 80px;
+    }
 }
 
-.menu ul li a:hover {
-    color: #aaff00; /* Lime */
-}
-
-/* Fancy Underline Effect */
-.menu ul li a::after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 2px;
-    bottom: -4px;
-    left: 50%;
-    background: #aaff00; /* Lime */
-    transition: all 0.3s ease;
-    transform: translateX(-50%);
-}
-
-.menu ul li a:hover::after {
-    width: 100%;
-}
-
-/* Active State */
+/* Active State (limited to desktop or short duration) */
 .menu ul li a:active {
     color: #88cc00; /* Slightly darker lime for active state */
-}
-
-/* Subtle Background Effect on Hover */
-.menu ul li::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    background: rgba(170, 255, 0, 0.1); /* Light lime background effect */
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    transition: all 0.3s ease;
-    z-index: 0;
-}
-
-.menu ul li:hover::before {
-    width: 80px;
-    height: 80px;
+    transition: color 0.1s ease; /* Short duration to reset quickly */
 }
 
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
     .menu {
-        padding: 8px 15px; /* Reduced padding */
-        margin: 0 10px; /* Reduced margin */
-        max-width: 90%; /* Reduce width to fit better on mobile */
-        border-radius: 30px; /* Slightly less rounded for smaller screens */
+        padding: 8px 15px;
+        margin: 0 10px;
+        max-width: 90%;
+        border-radius: 30px;
     }
     
     body.scrolled .menu {
-        padding: 6px 10px; /* Even smaller when scrolled */
-        transform: scale(0.9); /* More pronounced squeeze on mobile */
+        padding: 6px 10px;
+        transform: scale(0.9);
     }
     
     .menu ul {
-        gap: 15px; /* Reduced gap between items */
-        flex-wrap: wrap; /* Allow wrapping if needed */
+        gap: 15px;
+        flex-wrap: wrap;
     }
     
     .menu ul li {
-        padding: 6px 10px; /* Reduced padding */
+        padding: 6px 10px;
     }
     
     .menu ul li a {
-        font-size: 0.9rem; /* Slightly smaller font */
+        font-size: 0.9rem;
     }
     
-    .menu ul li:hover::before {
-        width: 60px; /* Smaller hover effect circle on mobile */
-        height: 60px;
+    /* Remove persistent active state on mobile */
+    .menu ul li a:active {
+        color: #88cc00; /* Brief flash of color */
+        transition: color 0.1s ease; /* Quick reset */
+    }
+    
+    /* Disable hover effects on mobile to avoid overlap with tap */
+    .menu ul li:hover {
+        transform: none;
+    }
+    
+    .menu ul li a:hover {
+        color: #2c3e50; /* Default color, no hover change */
+    }
+    
+    .menu ul li a::after {
+        display: none; /* Remove underline effect on mobile */
+    }
+    
+    .menu ul li::before {
+        display: none; /* Remove background circle on mobile */
     }
 }
