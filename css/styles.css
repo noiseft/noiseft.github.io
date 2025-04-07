@@ -90,6 +90,7 @@ header {
     top: 0;
     z-index: 1000;
     background-color: #f4f4f4;
+    transition: transform 0.3s ease; /* For squeeze effect */
 }
 
 .menu {
@@ -97,9 +98,18 @@ header {
     border-radius: 50px;
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
     padding: 15px 30px;
-    margin: 0 20px;
+    margin: 0 auto; /* Center the menu */
+    max-width: 1200px; /* Limit width on desktop */
     border: 1px solid rgba(0, 0, 0, 0.05);
     backdrop-filter: blur(5px);
+    transition: all 0.3s ease; /* Smooth transition for squeeze effect */
+}
+
+/* Floating effect when scrolling */
+body.scrolled .menu {
+    padding: 10px 20px; /* Squeeze the padding */
+    transform: scale(0.95); /* Slightly shrink the menu */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Enhance shadow when floating */
 }
 
 .menu ul {
@@ -135,7 +145,7 @@ header {
 }
 
 .menu ul li a:hover {
-    color: #aaff00; /* Changed to lime */
+    color: #aaff00; /* Lime */
 }
 
 /* Fancy Underline Effect */
@@ -146,7 +156,7 @@ header {
     height: 2px;
     bottom: -4px;
     left: 50%;
-    background: #aaff00; /* Changed to lime */
+    background: #aaff00; /* Lime */
     transition: all 0.3s ease;
     transform: translateX(-50%);
 }
@@ -183,20 +193,32 @@ header {
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
     .menu {
-        padding: 10px 15px;
-        margin: 0 10px;
+        padding: 8px 15px; /* Reduced padding */
+        margin: 0 10px; /* Reduced margin */
+        max-width: 90%; /* Reduce width to fit better on mobile */
+        border-radius: 30px; /* Slightly less rounded for smaller screens */
+    }
+    
+    body.scrolled .menu {
+        padding: 6px 10px; /* Even smaller when scrolled */
+        transform: scale(0.9); /* More pronounced squeeze on mobile */
     }
     
     .menu ul {
-        gap: 20px;
-        flex-wrap: wrap;
+        gap: 15px; /* Reduced gap between items */
+        flex-wrap: wrap; /* Allow wrapping if needed */
     }
     
     .menu ul li {
-        padding: 6px 12px;
+        padding: 6px 10px; /* Reduced padding */
     }
     
     .menu ul li a {
-        font-size: 0.95rem;
+        font-size: 0.9rem; /* Slightly smaller font */
+    }
+    
+    .menu ul li:hover::before {
+        width: 60px; /* Smaller hover effect circle on mobile */
+        height: 60px;
     }
 }
