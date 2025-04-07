@@ -33,7 +33,11 @@ h1 {
     margin-bottom: 20px;
     color: #333;
 }
-
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
 /* Responsive Iframe Container */
 .iframe-container {
     position: relative;
