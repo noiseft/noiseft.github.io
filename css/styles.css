@@ -222,3 +222,69 @@ body.scrolled .menu {
         height: 60px;
     }
 }
+
+
+
+/* Related Links Title Styling */
+.related-links-title {
+    margin: 20px 0 10px 0; /* Space above and below the title */
+    color: #333; /* Matches other headings */
+    font-size: 1.25rem; /* Slightly larger than list items but smaller than h2 */
+    font-weight: 600; /* Bold to stand out */
+    text-align: left; /* Align with content */
+}
+
+/* Related Links List Styling */
+.related-links {
+    list-style-type: none;
+    margin: 0 0 0 40px; /* Adjusted to remove top margin since title provides spacing */
+    padding-left: 0;
+}
+
+.related-links li {
+    position: relative;
+    margin-bottom: 10px;
+    color: #333;
+    padding-left: 20px;
+}
+
+.related-links li::before {
+    content: "-";
+    position: absolute;
+    left: 0;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.related-links li a {
+    text-decoration: none;
+    color: #2c3e50;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.related-links li a:hover {
+    color: #aaff00;
+    text-decoration: underline;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .related-links-title {
+        margin: 15px 0 8px 0; /* Reduced spacing on mobile */
+        font-size: 1.1rem; /* Slightly smaller on mobile */
+    }
+    
+    .related-links {
+        margin: 0 0 0 20px; /* Adjusted indentation */
+    }
+    
+    .related-links li {
+        margin-bottom: 8px;
+        padding-left: 15px;
+    }
+    
+    .related-links li a {
+        font-size: 0.9rem;
+    }
+}
