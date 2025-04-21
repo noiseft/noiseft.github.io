@@ -38,9 +38,14 @@ h2 {
     margin-bottom: 5px;
     color: #333;
 }
+h3 {
+    text-align: center;
+    margin-bottom: 2px;
+    color: #333;
+}
 h4 {
     text-align: center;
-    margin-bottom: 5px;
+    margin-bottom: 2px;
     color: #333;
 }
 /* Responsive Iframe Container */
