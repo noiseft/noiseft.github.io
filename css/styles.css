@@ -252,7 +252,7 @@ body.scrolled .menu {
     z-index: 1000;
 }
 
-.dropdown:hover .submenu {
+.submenu.show {
     display: block;
 }
 
