@@ -24,13 +24,8 @@
             <ul>
                 <li><a href="#home">Home</a></li>
                 <li><a href="#gemma">Gemma</a></li>
-                <li class="dropdown">
-                    <a href="#llama">Llama</a>
-                    <ul class="submenu">
-                        <li><a href="#llama-1b">Llama 1B</a></li>
-                        <li><a href="#llama-3b">Llama 3B</a></li>
-                    </ul>
-                </li>
+                <li><a href="#llama-1b">Llama 1B</a></li>
+                <li><a href="#llama-3b">Llama 3B</a></li>
                 <li><a href="#mistral">Mistral</a></li>
                 <li><a href="#qwen">Qwen</a></li>
             </ul>
@@ -476,25 +471,5 @@
             <iframe src="reports/Qwen2.5-0.5B-BaseFiT.html" frameborder="0" allowfullscreen></iframe>
         </div>
     </div>
-    <script src="js/jquery-1.10.2.js"></script>
-    <script>
-    $(function(){
-      $('.dropdown > a').on('click touchstart', function(e){
-        // if the device can’t hover…
-        if (window.matchMedia('(hover: none)').matches) {
-          e.preventDefault();                         // don’t follow the “#llama” link
-          $(this).next('.submenu').toggleClass('show');
-        }
-      });
-      
-      // optional: tap anywhere else to close any open submenu
-      $(document).on('click touchstart', function(e){
-        if (!$(e.target).closest('.dropdown').length) {
-          $('.submenu.show').removeClass('show');
-        }
-      });
-    });
-    </script>
-
 </body>
 </html>
