@@ -321,6 +321,12 @@ body.scrolled .menu {
     height: 80px;
 }
 
+@media (hover: hover) {
+  .menu ul li.dropdown:hover > .submenu {
+    display: block;
+  }
+}
+
 /* Mobile Responsiveness for Submenu */
 @media (max-width: 768px) {
     .submenu {
