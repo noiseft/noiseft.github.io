@@ -478,16 +478,14 @@
     </div>
     <script src="js/jquery-1.10.2.js"></script>
     <script>
-    $(document).ready(function() {
-        $('.dropdown').hover(
-            function() {
-                $(this).find('.submenu').addClass('show');
-            },
-            function() {
-                $(this).find('.submenu').removeClass('show');
-            }
-        );
-    });
+    $('.dropdown').hover(
+      function() {
+        $(this).find('.submenu').stop(true,true).slideDown(200);
+      },
+      function() {
+        $(this).find('.submenu').stop(true,true).slideUp(200);
+      }
+    );
     </script>
 
 </body>
