@@ -478,14 +478,22 @@
     </div>
     <script src="js/jquery-1.10.2.js"></script>
     <script>
-    $('.dropdown').hover(
-      function() {
-        $(this).find('.submenu').stop(true,true).slideDown(200);
-      },
-      function() {
-        $(this).find('.submenu').stop(true,true).slideUp(200);
-      }
-    );
+    $(function(){
+      $('.dropdown > a').on('click touchstart', function(e){
+        // if the device can’t hover…
+        if (window.matchMedia('(hover: none)').matches) {
+          e.preventDefault();                         // don’t follow the “#llama” link
+          $(this).next('.submenu').toggleClass('show');
+        }
+      });
+      
+      // optional: tap anywhere else to close any open submenu
+      $(document).on('click touchstart', function(e){
+        if (!$(e.target).closest('.dropdown').length) {
+          $('.submenu.show').removeClass('show');
+        }
+      });
+    });
     </script>
 
 </body>
