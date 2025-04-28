@@ -476,6 +476,20 @@
             <iframe src="reports/Qwen2.5-0.5B-BaseFiT.html" frameborder="0" allowfullscreen></iframe>
         </div>
     </div>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <!-- Custom Script for Submenu Visibility -->
+    <script>
+    $(document).ready(function() {
+        $('.dropdown').hover(
+            function() {
+                $(this).find('.submenu').addClass('show');
+            },
+            function() {
+                $(this).find('.submenu').removeClass('show');
+            }
+        );
+    });
+    </script>
 
 </body>
 </html>
