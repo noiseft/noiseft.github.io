@@ -24,7 +24,13 @@
             <ul>
                 <li><a href="#home">Home</a></li>
                 <li><a href="#gemma">Gemma</a></li>
-                <li><a href="#llama">Llama</a></li>
+                <li class="dropdown">
+                    <a href="#llama">Llama</a>
+                    <ul class="submenu">
+                        <li><a href="#llama-1b">Llama 1B</a></li>
+                        <li><a href="#llama-3b">Llama 3B</a></li>
+                    </ul>
+                </li>
                 <li><a href="#mistral">Mistral</a></li>
                 <li><a href="#qwen">Qwen</a></li>
             </ul>
@@ -126,7 +132,7 @@
     <div class="content-container" id="llama">
         <h3>Llama Model Family</h3>
     </div>
-    <div class="content-container">
+    <div class="content-container" id="llama-1b">
         <h4>Llama 3.2 1B</h4>
     </div>
     <div class="content-container container-margin">
@@ -200,7 +206,7 @@
         </div>
     </div>
 
-    <div class="content-container">
+    <div class="content-container" id="llama-3b">
         <h4>Llama 3.2 3B</h4>
     </div>
     <div class="content-container container-margin">
