@@ -260,6 +260,10 @@ body.scrolled .menu {
   display: block;
 }
 
+.submenu.show {
+  display: block;
+}
+
 .submenu li {
     padding: 8px 16px;
     position: relative;
