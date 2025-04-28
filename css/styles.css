@@ -10,9 +10,12 @@
 body {
     background-color: #f4f4f4;
     padding: 20px;
+
     display: flex;
-    justify-content: center;
-    align-items: center;
+    /* instead of centering vertically, start at top: */
+    justify-content: flex-start;
+    /* you can usually drop align-items:center on mobile if widths are 100%: */
+    align-items: stretch; 
     flex-direction: column;
 }
 
