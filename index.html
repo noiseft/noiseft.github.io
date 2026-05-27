@@ -78,7 +78,7 @@
         For each of five model families, we evaluate five independent generations on held-out test data using Grok&nbsp;3.0, then probe the internal state geometry (entropy, sparsity, effective rank, hidden-state norms) across layers under a range of noise configurations.
       </p>
       <div class="anon-note">
-        Links are privatised to remain anonymous under the peer review guidelines.
+        Links are privatised to remain anonymous under the conference guidelines.
       </div>
 
       <div class="resources">
@@ -128,6 +128,292 @@
     <div class="stat"><div class="num">5</div><div class="lbl">Generations / Sample</div></div>
   </div>
 </section>
+
+<!-- =========================================================
+     ANALYTICS · Headline results
+     ========================================================= -->
+<section class="results" id="results">
+  <header class="results-head">
+    <div class="results-eyebrow">
+      <span class="sq"></span>
+      <span>Headline · Results</span>
+    </div>
+    <h2 class="results-title">
+      Noise-augmented fine-tuning <em>improves</em> factual accuracy<br>
+      across every model family we tested.
+    </h2>
+    <p class="results-lede">
+      We score five independent generations per prompt against ground-truth answers using Grok 3.0,
+      then average across 208 held-out test items. Below — each family's <em>Base</em> model,
+      its plain fine-tune (<em>Base FiT</em>), and its best <em>NoiseFiT</em> configuration.
+    </p>
+  </header>
+
+  <!-- Aggregate strip -->
+  <div class="agg-strip">
+    <div class="agg-cell">
+      <div class="agg-num"><em>+7.7</em><span>pp</span></div>
+      <div class="agg-lbl">Average uplift<br>NoiseFiT vs Base</div>
+    </div>
+    <div class="agg-cell">
+      <div class="agg-num"><em>+10.2</em><span>pp</span></div>
+      <div class="agg-lbl">Best uplift<br>Llama 3B &amp; Qwen 0.5B</div>
+    </div>
+    <div class="agg-cell">
+      <div class="agg-num"><em>5</em><span>/5</span></div>
+      <div class="agg-lbl">Families<br>improved by NoiseFiT</div>
+    </div>
+    <div class="agg-cell">
+      <div class="agg-num"><em>39</em><span></span></div>
+      <div class="agg-lbl">Configurations<br>evaluated end-to-end</div>
+    </div>
+  </div>
+
+  <!-- Per-model comparison grid -->
+  <div class="model-grid" id="modelGrid">
+    <!-- Cards rendered by JS from data block -->
+  </div>
+
+  <!-- NoiseFiT range vs baselines per family -->
+  <div class="ci-card">
+    <header class="ci-head">
+      <div>
+        <h3 class="sweep-title">NoiseFiT range vs baselines</h3>
+        <p class="sweep-sub">For each architecture: all evaluated NoiseFiT configs as a range, compared against Base and Base FiT.</p>
+      </div>
+      <div class="ci-legend">
+        <span class="lg-item"><span class="lg-marker base"></span>Base</span>
+        <span class="lg-item"><span class="lg-marker fit"></span>Base FiT</span>
+        <span class="lg-item"><span class="lg-marker band"></span>NoiseFiT min–max</span>
+        <span class="lg-item"><span class="lg-marker mean"></span>NoiseFiT mean</span>
+      </div>
+    </header>
+
+    <div class="ci-axis-row">
+      <div class="ci-axis-spacer"></div>
+      <div class="ci-axis-ticks">
+        <span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span>
+      </div>
+      <div class="ci-axis-spacer right"></div>
+    </div>
+
+    <div class="ci-rows" id="ciRows"></div>
+  </div>
+</section>
+
+<!-- Data for results section -->
+<script id="results-data" type="application/json">
+{
+  "models": [
+    {
+      "id": "gemma",
+      "name": "Gemma",
+      "spec": "3 · 1B-it",
+      "configs": [
+        { "label": "Base",    "kind": "base",  "pct": 50.6 },
+        { "label": "Base FiT","kind": "fit",   "pct": 47.6 },
+        { "label": "σ=0.1 H", "kind": "noise", "pct": 54.6, "best": true },
+        { "label": "σ=0.01 H","kind": "noise", "pct": 53.2 },
+        { "label": "σ=0.001 L","kind": "noise","pct": 51.0 },
+        { "label": "σ=0.01 L","kind": "noise", "pct": 43.8 }
+      ]
+    },
+    {
+      "id": "llama-1b",
+      "name": "Llama",
+      "spec": "3.2 · 1B",
+      "configs": [
+        { "label": "Base",    "kind": "base",  "pct": 48.6 },
+        { "label": "Base FiT","kind": "fit",   "pct": 54.0 },
+        { "label": "σ=0.1 H", "kind": "noise", "pct": 55.8, "best": true },
+        { "label": "σ=0.01 L","kind": "noise", "pct": 55.4 },
+        { "label": "σ=0.1 L", "kind": "noise", "pct": 53.4 },
+        { "label": "σ=0.01 H","kind": "noise", "pct": 52.4 }
+      ]
+    },
+    {
+      "id": "llama-3b",
+      "name": "Llama",
+      "spec": "3.2 · 3B",
+      "configs": [
+        { "label": "Base",    "kind": "base",  "pct": 60.0 },
+        { "label": "Base FiT","kind": "fit",   "pct": 66.4 },
+        { "label": "σ=0.01 H","kind": "noise", "pct": 70.2, "best": true },
+        { "label": "σ=0.1 H", "kind": "noise", "pct": 68.2 },
+        { "label": "σ=0.01 L","kind": "noise", "pct": 68.0 },
+        { "label": "σ=0.1 L", "kind": "noise", "pct": 65.6 }
+      ]
+    },
+    {
+      "id": "mistral",
+      "name": "Mistral",
+      "spec": "7B · v0.1",
+      "configs": [
+        { "label": "Base",      "kind": "base",  "pct": 70.6 },
+        { "label": "Base FiT",  "kind": "fit",   "pct": 77.2 },
+        { "label": "σ=0.1 L",   "kind": "noise", "pct": 78.4, "best": true },
+        { "label": "σ=0.1 H",   "kind": "noise", "pct": 77.4 },
+        { "label": "σ=0.01 H",  "kind": "noise", "pct": 77.3 },
+        { "label": "L12 σ=.001 L","kind":"noise","pct": 77.0 },
+        { "label": "σ=0.01 L",  "kind": "noise", "pct": 76.5 },
+        { "label": "L12 σ=.1 L","kind": "noise", "pct": 76.4 },
+        { "label": "All σ=.1",  "kind": "noise", "pct": 76.4 },
+        { "label": "L12 σ=.01 H","kind":"noise", "pct": 75.8 },
+        { "label": "All σ=.01", "kind": "noise", "pct": 75.8 },
+        { "label": "L12 σ=.001 H","kind":"noise","pct": 75.6 },
+        { "label": "L12 σ=.1 H","kind": "noise", "pct": 75.2 },
+        { "label": "L12 σ=.01 L","kind":"noise", "pct": 74.4 },
+        { "label": "All σ=.001","kind": "noise", "pct": 74.4 }
+      ]
+    },
+    {
+      "id": "qwen",
+      "name": "Qwen",
+      "spec": "2.5 · 0.5B",
+      "configs": [
+        { "label": "Base",    "kind": "base",  "pct": 26.4 },
+        { "label": "Base FiT","kind": "fit",   "pct": 28.8 },
+        { "label": "σ=0.1 H", "kind": "noise", "pct": 36.6, "best": true },
+        { "label": "σ=0.01 H","kind": "noise", "pct": 33.0 },
+        { "label": "σ=0.1 L", "kind": "noise", "pct": 33.0 },
+        { "label": "σ=0.01 L","kind": "noise", "pct": 30.2 }
+      ]
+    }
+  ]
+}
+</script>
+
+<!-- =========================================================
+     PAPER · Benchmarks & Ablations
+     ========================================================= -->
+<section class="bench" id="bench">
+  <header class="bench-head">
+    <div class="results-eyebrow">
+      <span class="sq"></span>
+      <span>Paper · Benchmarks &amp; Ablations</span>
+    </div>
+    <h2 class="bench-title">
+      Eight standard benchmarks. Five architectures.<br>
+      One <em>consistent</em> direction of travel.
+    </h2>
+    <p class="bench-lede">
+      Beyond the in-house hallucination probe, we evaluated every NoiseFiT-trained model on the
+      <em>HELM-style</em> public benchmark suite — and ran a full loss-component ablation plus
+      a head-to-head against existing noise-augmentation methods on Llama-2-7B / Alpaca.
+    </p>
+  </header>
+
+  <!-- Per-benchmark uplift strip -->
+  <div class="metric-strip" id="metricStrip">
+    <header class="ms-head">
+      <h3>Mean uplift per benchmark</h3>
+      <p>Average relative improvement of the top-5 NoiseFiT configs over BaseFiT, taken across all five architectures.</p>
+    </header>
+    <div class="ms-bars" id="msBars"></div>
+  </div>
+
+  <!-- Cross-architecture champion table -->
+  <div class="champ-card">
+    <header class="champ-head">
+      <div>
+        <h3 class="champ-title">Champion configuration per architecture</h3>
+        <p class="champ-sub">Best NoiseFiT recipe for each model family, evaluated on 8 public benchmarks. Δ is the absolute change vs BaseFiT.</p>
+      </div>
+      <div class="champ-key">
+        <span class="kfmt"><code>(n, σ, r)</code> = layers, std, H/L-SNR</span>
+      </div>
+    </header>
+    <div class="champ-table-wrap">
+      <table class="champ-table" id="champTable"></table>
+    </div>
+  </div>
+
+  <!-- Two-column: method leaderboard + loss ablation -->
+  <div class="ab-grid">
+    <div class="ab-card">
+      <header class="ab-head">
+        <h3>Head-to-head vs noise-augmentation baselines</h3>
+        <p>Llama-2-7B fine-tuned on Alpaca · checkpoint 3 · higher is better</p>
+      </header>
+      <table class="ab-table" id="methodTable"></table>
+      <footer class="ab-foot">All NoiseFiT variants beat NEFTune and R-Drop on average score.</footer>
+    </div>
+
+    <div class="ab-card">
+      <header class="ab-head">
+        <h3>Loss-component ablation</h3>
+        <p>Each component matters — isolated KL or consistency losses collapse the model.</p>
+      </header>
+      <div class="loss-list" id="lossList"></div>
+      <footer class="ab-foot warn">
+        <span class="dot"></span>
+        <strong>Diagnostic collapse:</strong>&nbsp;Consistency-only and KL-only trade ARC/HellaSwag/MMLU for misleadingly high TruthfulQA. They are listed as cautionary controls, not viable methods.
+      </footer>
+    </div>
+  </div>
+
+  <!-- Efficiency footprint -->
+  <div class="footprint-card">
+    <header class="ab-head">
+      <h3>Training cost vs truthfulness</h3>
+      <p>Llama-2-7B / Alpaca · runtime, peak GPU memory, and TruthfulQA MC2 by method.</p>
+    </header>
+    <div class="footprint-rows" id="footprintRows"></div>
+  </div>
+</section>
+
+<!-- Data for paper benchmarks section -->
+<script id="bench-data" type="application/json">
+{
+  "metricUplifts": [
+    { "name": "MMLU-Pro",  "delta": 5.74,  "blurb": "graduate-level multi-task" },
+    { "name": "BBH",       "delta": 1.94,  "blurb": "Big-Bench Hard reasoning" },
+    { "name": "GPQA",      "delta": 6.84,  "blurb": "graduate-level QA" },
+    { "name": "Math",      "delta": 36.58, "blurb": "math word problems" },
+    { "name": "IFEval",    "delta": 10.27, "blurb": "instruction following" },
+    { "name": "MUSR",      "delta": 3.40,  "blurb": "multi-step reasoning" },
+    { "name": "TfQA-MC",   "delta": 10.18, "blurb": "TruthfulQA · multi-choice" },
+    { "name": "HaluEval",  "delta": 11.42, "blurb": "hallucination eval" },
+    { "name": "Average",   "delta": 10.80, "blurb": "across all benchmarks", "highlight": true }
+  ],
+  "champion": {
+    "headers": ["Architecture", "Config (n, σ, r)", "MMLU-Pro", "BBH", "GPQA", "Math", "IFEval", "MUSR", "TfQA-MC", "HaluEval", "Avg", "Δ Avg"],
+    "rows": [
+      { "arch": "Gemma 3 · 1B",      "cfg": "(3, 0.01, H)", "vals": [14.37, 34.84, 28.39, 5.08, 39.37, 33.41, 21.78, 25.39, 25.33], "delta": 0.48 },
+      { "arch": "Llama 3.2 · 1B",    "cfg": "(3, 0.1, H)",  "vals": [11.79, 31.72, 23.99, 0.17, 7.95, 33.54, 33.77, 33.67, 22.07], "delta": 1.04 },
+      { "arch": "Llama 3.2 · 3B",    "cfg": "(3, 0.01, H)", "vals": [25.29, 38.64, 26.49, 1.52, 9.80, 35.65, 40.35, 42.60, 27.54], "delta": 0.92 },
+      { "arch": "Qwen 2.5 · 0.5B",   "cfg": "(3, 0.01, H)", "vals": [18.75, 31.84, 28.36, 0.45, 14.60, 34.20, 33.48, 28.34, 23.75], "delta": 0.55 },
+      { "arch": "Mistral · 7B v0.1", "cfg": "(6, 0.01, L)", "vals": [29.74, 45.08, 29.66, 3.43, 11.83, 40.18, 41.24, 52.34, 31.69], "delta": 1.42 }
+    ]
+  },
+  "methodComparison": [
+    { "name": "BaseFiT",              "kind": "base",     "arc": 55.72, "hella": 77.91, "mmlu": 44.97, "tqa": 41.00, "avg": 54.90, "delta": null },
+    { "name": "R-Drop",               "kind": "baseline", "arc": 54.61, "hella": 77.93, "mmlu": 44.84, "tqa": 40.54, "avg": 54.48, "delta": -0.42 },
+    { "name": "NEFTune",              "kind": "baseline", "arc": 55.29, "hella": 77.93, "mmlu": 44.60, "tqa": 41.84, "avg": 54.92, "delta": 0.02 },
+    { "name": "NoiseFiT",             "kind": "ours",     "arc": 55.72, "hella": 77.99, "mmlu": 44.82, "tqa": 42.02, "avg": 55.14, "delta": 0.24 },
+    { "name": "Auto NoiseFiT",        "kind": "ours",     "arc": 55.55, "hella": 78.05, "mmlu": 45.17, "tqa": 41.86, "avg": 55.16, "delta": 0.26 },
+    { "name": "Auto-Prefix NoiseFiT", "kind": "best",     "arc": 55.80, "hella": 77.44, "mmlu": 45.02, "tqa": 43.14, "avg": 55.35, "delta": 0.45 }
+  ],
+  "lossAblation": [
+    { "name": "BaseFiT",            "kind": "base",     "avg": 54.97, "delta": 0 },
+    { "name": "+ CE + KL",          "kind": "partial",  "avg": 54.87, "delta": -0.10 },
+    { "name": "+ CE + Noise",       "kind": "partial",  "avg": 54.87, "delta": -0.10 },
+    { "name": "+ Consistency Only", "kind": "collapse", "avg": 32.90, "delta": -22.07 },
+    { "name": "+ KL Only",          "kind": "collapse", "avg": 33.22, "delta": -21.75 },
+    { "name": "+ NoiseFiT (full)",  "kind": "best",     "avg": 55.05, "delta": 0.08 }
+  ],
+  "footprint": [
+    { "name": "BaseFiT",              "kind": "base",     "runtime": 3.52,  "rel": 1.00, "mem": 50.9, "tqa": 41.07, "delta": 0 },
+    { "name": "+ NEFTune",            "kind": "baseline", "runtime": 3.53,  "rel": 1.00, "mem": 50.9, "tqa": 41.84, "delta": 0.77 },
+    { "name": "+ R-Drop",             "kind": "baseline", "runtime": 7.13,  "rel": 2.02, "mem": 73.5, "tqa": 40.70, "delta": -0.37 },
+    { "name": "+ CE + Noise",         "kind": "partial",  "runtime": 3.65,  "rel": 1.04, "mem": 50.9, "tqa": 41.26, "delta": 0.19 },
+    { "name": "+ CE + KL",            "kind": "partial",  "runtime": 7.29,  "rel": 2.07, "mem": 72.9, "tqa": 41.18, "delta": 0.11 },
+    { "name": "+ NoiseFiT",           "kind": "ours",     "runtime": 10.92, "rel": 3.10, "mem": 93.8, "tqa": 42.02, "delta": 0.95 },
+    { "name": "+ Auto NoiseFiT",      "kind": "ours",     "runtime": 11.01, "rel": 3.12, "mem": 93.9, "tqa": 41.86, "delta": 0.79 },
+    { "name": "+ Auto-Prefix NoiseFiT","kind": "best",    "runtime": 8.44,  "rel": 2.39, "mem": 87.7, "tqa": 43.14, "delta": 2.07 }
+  ]
+}
+</script>
 
 <!-- =========================================================
      MODEL SECTIONS (rendered via JS from data below)
