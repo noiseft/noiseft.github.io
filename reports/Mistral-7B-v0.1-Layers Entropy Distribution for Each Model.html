@@ -1,6 +1,594 @@
 <html>
-<head><meta charset="utf-8" /></head>
+<head><meta charset="utf-8" /><style>
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg:        #f5f3ed;
+  --bg-elev:   #fbfaf6;
+  --bg-card:   #ffffff;
+  --ink:       #0e0f12;
+  --ink-2:     #2a2c33;
+  --ink-3:     #5a5d68;
+  --ink-4:     #9095a1;
+  --rule:      rgba(15, 16, 20, 0.10);
+  --rule-soft: rgba(15, 16, 20, 0.05);
+  --accent:    #5cdb1f;
+  --accent-2:  #aaff00;
+  --accent-ink:#0a1a02;
+  --good:      #16a34a;
+  --bad:       #e0524d;
+  --warn:      #d97706;
+  --grid:      rgba(15, 16, 20, 0.045);
+  --shadow-sm: 0 1px 2px rgba(15,16,20,0.04), 0 2px 6px rgba(15,16,20,0.05);
+  --shadow-md: 0 6px 24px -8px rgba(15,16,20,0.12), 0 2px 6px rgba(15,16,20,0.05);
+}
+html[data-theme="dark"] {
+  --bg:        #0b0c0f;
+  --bg-elev:   #111317;
+  --bg-card:   #15181d;
+  --ink:       #f1efe9;
+  --ink-2:     #d8d6cf;
+  --ink-3:     #969aa3;
+  --ink-4:     #5b5f69;
+  --rule:      rgba(241,239,233,0.10);
+  --rule-soft: rgba(241,239,233,0.06);
+  --accent:    #b6ff3a;
+  --good:      #4ade80;
+  --bad:       #f87171;
+  --warn:      #fbbf24;
+  --grid:      rgba(241,239,233,0.05);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.4);
+  --shadow-md: 0 8px 30px -8px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.4);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { background: var(--bg); color: var(--ink); transition: background 0.4s ease, color 0.4s ease; }
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+
+/* ====================== Report header banner ====================== */
+.report-banner {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: color-mix(in oklab, var(--bg) 85%, transparent);
+  backdrop-filter: saturate(160%) blur(14px);
+  -webkit-backdrop-filter: saturate(160%) blur(14px);
+  border-bottom: 1px solid var(--rule);
+  padding: 14px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.rb-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.rb-brand .dot {
+  width: 8px; height: 8px;
+  border-radius: 999px;
+  background: var(--accent);
+  box-shadow: 0 0 12px rgba(92,219,31,0.4);
+  animation: rb-pulse 2.4s ease-in-out infinite;
+}
+@keyframes rb-pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+.rb-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 22px;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  flex: 1;
+  text-align: center;
+}
+.rb-title em { font-style: italic; color: var(--accent); }
+.rb-title small {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-style: normal;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-top: 2px;
+}
+.rb-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  background: var(--bg-card);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.rb-toggle:hover { color: var(--ink); border-color: var(--ink-4); }
+
+/* ====================== Report container ====================== */
+.report-wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 36px 28px 80px;
+}
+
+/* ====================== Pandoc-style content ====================== */
+.pandoc-content { color: var(--ink); }
+.pandoc-content h1 {
+  font-family: 'Instrument Serif', serif;
+  font-weight: 400;
+  font-size: 40px;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 40px 0 16px;
+  color: var(--ink);
+}
+.pandoc-content h1:first-child { margin-top: 0; }
+.pandoc-content h1 em { color: var(--accent); font-style: italic; }
+.pandoc-content h2 {
+  font-family: 'Instrument Serif', serif;
+  font-weight: 400;
+  font-size: 28px;
+  line-height: 1.15;
+  margin: 30px 0 12px;
+}
+.pandoc-content p {
+  max-width: 72ch;
+  margin: 0 0 14px;
+  color: var(--ink-2);
+}
+.pandoc-content p strong { color: var(--ink); font-weight: 600; }
+.pandoc-content .math {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13.5px;
+  background: var(--bg-elev);
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--rule);
+}
+
+/* Title block (model name + STD/SNR/Layers) */
+.title-card {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 28px;
+  align-items: end;
+  padding: 32px 36px;
+  background: var(--bg-card);
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 36px;
+}
+.title-card .model-name {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(40px, 6vw, 64px);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+.title-card .model-name em { font-style: italic; color: var(--accent); }
+.title-card .model-name small {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-style: normal;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 14px;
+}
+.title-card .stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+}
+.title-card .stats .s {
+  padding: 0 16px;
+  border-right: 1px solid var(--rule-soft);
+}
+.title-card .stats .s:last-child { border-right: none; }
+.title-card .stats .s .l {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.title-card .stats .s .v {
+  font-family: 'Instrument Serif', serif;
+  font-size: 32px;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  margin-top: 4px;
+}
+
+/* Overall performance hero */
+.overall {
+  padding: 28px 32px;
+  background: linear-gradient(135deg, color-mix(in oklab, var(--accent) 12%, var(--bg-card)) 0%, var(--bg-card) 100%);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  margin: 24px 0 36px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 24px;
+}
+.overall .lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.overall .desc {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 22px;
+  line-height: 1.3;
+  color: var(--ink);
+  margin-top: 8px;
+  max-width: 56ch;
+}
+.overall .score {
+  text-align: right;
+}
+.overall .score .num {
+  font-family: 'Instrument Serif', serif;
+  font-size: 64px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.overall .score .num em { color: var(--accent); font-style: italic; }
+.overall .score .pct {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+  margin-top: 6px;
+}
+
+/* Section heads */
+.sec-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin: 50px 0 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--rule);
+}
+.sec-head .idx {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.sec-head .name {
+  font-family: 'Instrument Serif', serif;
+  font-size: 32px;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+/* Category table */
+.cat-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--bg-card);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.cat-table th, .cat-table td {
+  padding: 12px 18px;
+  text-align: left;
+  border-bottom: 1px solid var(--rule-soft);
+}
+.cat-table thead th {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  background: var(--bg-elev);
+  font-weight: 500;
+}
+.cat-table tbody tr:last-child td { border-bottom: none; }
+.cat-table tbody tr:hover td { background: var(--bg-elev); }
+.cat-table tbody td:nth-child(1) { color: var(--ink); font-weight: 500; }
+.cat-table tbody td:nth-child(2),
+.cat-table tbody td:nth-child(3),
+.cat-table tbody td:nth-child(4) {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  text-align: right;
+}
+.cat-table tbody tr.overall-row td {
+  background: color-mix(in oklab, var(--accent) 10%, var(--bg-card));
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* Score bars */
+.cat-table .bar {
+  position: relative;
+  display: inline-block;
+  width: 80px;
+  height: 6px;
+  background: var(--rule-soft);
+  border-radius: 999px;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+.cat-table .bar > span {
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  border-radius: inherit;
+  transform-origin: left;
+}
+
+/* Prompt listing controls */
+.prompt-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin: 14px 0 20px;
+  padding: 12px 16px;
+  background: var(--bg-elev);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+}
+.prompt-controls input {
+  flex: 1;
+  min-width: 220px;
+  font: inherit;
+  padding: 8px 12px;
+  background: var(--bg-card);
+  color: var(--ink);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  outline: none;
+}
+.prompt-controls input:focus { border-color: var(--accent); }
+.prompt-controls .seg {
+  display: inline-flex;
+  background: var(--bg-card);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 3px;
+  gap: 2px;
+}
+.prompt-controls .seg button {
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-3);
+  border-radius: 6px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  transition: all 0.15s ease;
+}
+.prompt-controls .seg button:hover { color: var(--ink); }
+.prompt-controls .seg button.is-active {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.prompt-controls .counter {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+}
+
+/* Prompt cards */
+.prompt-list {
+  display: grid;
+  gap: 14px;
+}
+.prompt-card {
+  background: var(--bg-card);
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.prompt-card.hidden { display: none; }
+.prompt-card:hover { border-color: var(--ink-4); }
+.prompt-card .pc-head {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 16px;
+  align-items: center;
+  padding: 16px 20px;
+  cursor: pointer;
+  user-select: none;
+}
+.prompt-card .pc-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-4);
+  width: 32px;
+}
+.prompt-card .pc-text {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 19px;
+  line-height: 1.3;
+  color: var(--ink);
+}
+.prompt-card .pc-score {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--rule);
+  white-space: nowrap;
+}
+.prompt-card .pc-score b { font-weight: 600; }
+.prompt-card .pc-score.good { background: color-mix(in oklab, var(--good) 14%, transparent); border-color: color-mix(in oklab, var(--good) 30%, transparent); color: var(--good); }
+.prompt-card .pc-score.mid  { background: color-mix(in oklab, var(--warn) 14%, transparent); border-color: color-mix(in oklab, var(--warn) 30%, transparent); color: var(--warn); }
+.prompt-card .pc-score.bad  { background: color-mix(in oklab, var(--bad) 14%, transparent); border-color: color-mix(in oklab, var(--bad) 30%, transparent); color: var(--bad); }
+
+.prompt-card .pc-body {
+  display: none;
+  border-top: 1px solid var(--rule);
+  padding: 20px;
+  background: var(--bg-elev);
+}
+.prompt-card.is-open .pc-body { display: block; }
+
+.pc-grounded {
+  margin-bottom: 18px;
+  padding: 14px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+}
+.pc-grounded .lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 6px;
+}
+.pc-grounded .val { color: var(--ink); font-size: 14.5px; }
+
+.pc-runs {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 14px 18px;
+  align-items: start;
+}
+.pc-runs .run-n {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding-top: 3px;
+}
+.pc-runs .run-t {
+  font-size: 14px;
+  color: var(--ink-2);
+  word-break: break-word;
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--bg-card);
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--rule);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.pc-runs .run-s {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.pc-runs .run-s.correct { background: color-mix(in oklab, var(--good) 18%, transparent); color: var(--good); }
+.pc-runs .run-s.hall    { background: color-mix(in oklab, var(--bad) 18%, transparent); color: var(--bad); }
+.pc-runs .run-s.other   { background: var(--rule-soft); color: var(--ink-3); }
+
+.pc-scores {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--rule);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--ink-3);
+}
+.pc-scores b { color: var(--ink); font-weight: 600; }
+
+.pc-chev {
+  display: inline-flex;
+  width: 24px; height: 24px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: var(--bg-elev);
+  border: 1px solid var(--rule);
+  transition: transform 0.25s ease;
+  margin-left: 4px;
+}
+.pc-chev svg { width: 10px; height: 10px; }
+.prompt-card.is-open .pc-chev { transform: rotate(180deg); }
+
+/* ===================== Plotly wrapper ===================== */
+.plotly-wrap {
+  background: var(--bg-card);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  padding: 12px;
+  box-shadow: var(--shadow-sm);
+  margin-top: 8px;
+}
+.plotly-wrap .js-plotly-plot, .plotly-wrap .plotly-graph-div {
+  background: transparent !important;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* responsive */
+@media (max-width: 760px) {
+  .report-banner { padding: 12px 16px; flex-wrap: wrap; gap: 12px; }
+  .rb-title { font-size: 16px; text-align: left; order: 3; width: 100%; }
+  .report-wrap { padding: 24px 16px 60px; }
+  .title-card { grid-template-columns: 1fr; padding: 22px; gap: 18px; }
+  .title-card .stats .s { padding: 0 10px; }
+  .title-card .stats .s .v { font-size: 24px; }
+  .overall { grid-template-columns: 1fr; padding: 20px; }
+  .overall .score { text-align: left; }
+  .pandoc-content h1 { font-size: 28px; }
+  .pc-runs { grid-template-columns: 1fr; gap: 8px; }
+  .pc-runs .run-s { justify-self: start; }
+}
+</style></head>
 <body>
+<header class="report-banner">
+  <div class="rb-brand"><span class="dot"></span><span>NoiseFiT · Chart</span></div>
+  <div class="rb-title">Layer Entropy Distribution<small>Mistral 7B · v0.1 · Internals</small></div>
+  <button class="rb-toggle" id="rbToggle" type="button" aria-label="Toggle theme">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
+    <span>Light</span>
+  </button>
+</header>
+<main class="report-wrap"><section class="plotly-wrap">
     <div>                        <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
         <script type="text/javascript">/**
 * plotly.js v3.0.1
@@ -3881,5 +4469,116 @@ maplibre-gl/dist/maplibre-gl.js:
 window.Plotly = Plotly;
 return Plotly;
 }));</script>                <div id="548eb1f7-d03b-499e-81ca-5df2e1ef24b3" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script type="text/javascript">                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("548eb1f7-d03b-499e-81ca-5df2e1ef24b3")) {                    Plotly.newPlot(                        "548eb1f7-d03b-499e-81ca-5df2e1ef24b3",                        [{"name":"Mistral-7B-v0.1-0.1-H","y":[2.0814661979675293,2.2674715518951416,1.8898903131484985,2.7410402297973633,2.712118625640869,1.9559087753295898,2.1754884719848633,1.8572568893432617,2.4860081672668457,2.042712450027466,2.1887879371643066,1.853598952293396,2.108849287033081,1.9174799919128418,2.049208879470825,2.2610840797424316,2.0207600593566895,2.341052770614624,2.5748519897460938,2.146237373352051,1.8667805194854736,2.2125208377838135,1.9478925466537476,1.917131781578064,1.9346336126327515,1.8861159086227417,1.6768183708190918,2.272387742996216,1.9222590923309326,1.9170746803283691,1.7519347667694092,1.8707637786865234,2.538637161254883,1.9378656148910522,1.8943437337875366,2.018305540084839,1.8898464441299438,2.0693774223327637,2.0785446166992188,2.4217350482940674],"type":"box"},{"name":"Mistral-7B-v0.1-0.1-L","y":[2.2535879611968994,2.421184778213501,1.9616678953170776,2.8704030513763428,2.7833735942840576,2.0740814208984375,2.2148938179016113,1.6603020429611206,2.611022472381592,2.1390063762664795,2.257139205932617,1.9325896501541138,2.1754934787750244,1.9120030403137207,2.4587953090667725,2.319121837615967,2.107229232788086,2.415095567703247,2.6286070346832275,1.846145510673523,1.923423171043396,2.2509403228759766,1.9662734270095825,1.9877763986587524,1.9837497472763062,1.8852299451828003,1.6939623355865479,2.3121285438537598,1.9720240831375122,1.9689372777938843,1.769322156906128,1.8845124244689941,2.593961715698242,1.9814025163650513,1.9137529134750366,2.09189772605896,1.9421344995498657,2.096841812133789,2.1539103984832764,2.491528272628784],"type":"box"},{"name":"Mistral-7B-v0.1-0.01-H","y":[2.1613454818725586,2.329292058944702,1.9047479629516602,2.7600998878479004,2.733325481414795,2.0162346363067627,2.2181472778320312,1.6375138759613037,2.5499520301818848,2.095034122467041,2.2113423347473145,1.9045733213424683,2.1348984241485596,1.8986331224441528,1.805275559425354,2.3076164722442627,2.0173187255859375,2.369396209716797,2.580057382583618,1.998821496963501,1.8700146675109863,2.2253613471984863,1.9320237636566162,1.9603283405303955,1.9311941862106323,1.8756787776947021,1.7116832733154297,2.290745258331299,1.9160051345825195,1.9319722652435303,1.7530200481414795,1.86245596408844,2.534651279449463,1.9566285610198975,1.8928308486938477,2.042938709259033,1.8760566711425781,2.1114184856414795,2.089921712875366,2.421189069747925],"type":"box"},{"name":"Mistral-7B-v0.1-0.01-L","y":[2.239701747894287,2.3393352031707764,1.935784101486206,2.7896440029144287,2.760683059692383,2.008704662322998,2.2272450923919678,2.378141403198242,2.5421197414398193,2.065577507019043,2.2209348678588867,1.9005118608474731,2.1062428951263428,1.8613839149475098,3.248307943344116,2.2715847492218018,1.9713813066482544,2.421316623687744,2.5883259773254395,1.9512438774108887,1.9283649921417236,2.255274534225464,1.9751442670822144,1.9937479496002197,1.963804006576538,1.8807320594787598,1.728698968887329,2.3313610553741455,1.9481960535049438,1.986790657043457,1.7859132289886475,1.8879228830337524,2.5877957344055176,2.0157692432403564,1.902976632118225,2.117443561553955,1.90868079662323,2.1194872856140137,2.1542301177978516,2.500765085220337],"type":"box"},{"name":"Mistral-7B-v0.1-0.3-H","y":[2.186338186264038,2.2982563972473145,1.9169751405715942,2.7815005779266357,2.727816104888916,1.965651512145996,2.194899082183838,2.011756420135498,2.514911413192749,2.0590426921844482,2.2037923336029053,1.8642209768295288,2.1711859703063965,1.950316309928894,2.1013975143432617,2.293239116668701,2.0128486156463623,2.38220477104187,2.6229045391082764,2.1521923542022705,1.8857671022415161,2.2681968212127686,1.9577500820159912,1.9447224140167236,1.9791927337646484,1.9046475887298584,1.720810055732727,2.3250439167022705,1.9558677673339844,1.935056209564209,1.7849082946777344,1.8654861450195312,2.565812587738037,1.9921743869781494,1.9219166040420532,2.094245195388794,1.9253908395767212,2.136779308319092,2.08931040763855,2.502880573272705],"type":"box"},{"name":"Mistral-7B-v0.1-6-0.1-H","y":[2.2481741905212402,2.369004487991333,1.960319995880127,2.8446898460388184,2.8000714778900146,2.1024959087371826,2.2511024475097656,1.6629806756973267,2.6457042694091797,2.1794567108154297,2.2756636142730713,1.9336400032043457,2.223275899887085,1.9750572443008423,1.9013944864273071,2.357769012451172,2.081991672515869,2.458009719848633,2.684471607208252,2.0189480781555176,1.966601848602295,2.328341245651245,2.003417491912842,2.0114152431488037,2.0412986278533936,1.9401381015777588,1.795396089553833,2.4223828315734863,2.0105278491973877,2.0406174659729004,1.8162482976913452,1.951395034790039,2.674433708190918,2.060417413711548,1.9635425806045532,2.173760414123535,2.002807140350342,2.2115743160247803,2.173126220703125,2.5610244274139404],"type":"box"},{"name":"Mistral-7B-v0.1-6-0.1-L","y":[2.1751701831817627,2.3549084663391113,1.9168963432312012,2.40773344039917,2.735652208328247,1.9456840753555298,2.1950771808624268,7.387687683105469,2.5220139026641846,2.0678439140319824,2.2048845291137695,1.9028961658477783,2.0342769622802734,1.8623050451278687,2.621934413909912,2.242649555206299,1.8514699935913086,2.395139455795288,2.570587635040283,2.1616265773773193,1.8706523180007935,2.218271493911743,1.9473406076431274,1.9234930276870728,1.9461669921875,1.88412606716156,1.7058457136154175,2.2860419750213623,1.9519479274749756,1.9824066162109375,1.7855117321014404,1.8869495391845703,2.552032470703125,1.99944269657135,1.8928877115249634,2.0937600135803223,1.8794926404953003,2.056492328643799,2.1305506229400635,2.462836742401123],"type":"box"},{"name":"Mistral-7B-v0.1-6-0.01-H","y":[2.1686148643493652,2.324265241622925,1.926354169845581,2.6137804985046387,2.7118873596191406,1.9964590072631836,2.1739442348480225,2.8481061458587646,2.5629775524139404,2.064241409301758,2.2177553176879883,1.905609130859375,2.038452625274658,1.8299338817596436,2.232271194458008,2.301342725753784,1.8839648962020874,2.358027696609497,2.5510036945343018,1.790593147277832,1.8957582712173462,2.1202056407928467,1.9522078037261963,1.9659489393234253,1.8945163488388062,1.8260000944137573,1.6714212894439697,2.2644731998443604,1.9186904430389404,1.9633073806762695,1.7041656970977783,1.867928147315979,2.464648723602295,1.9626350402832031,1.8314718008041382,2.062185287475586,1.8799716234207153,2.0616977214813232,2.0900073051452637,2.375722885131836],"type":"box"},{"name":"Mistral-7B-v0.1-6-0.01-L","y":[2.1913540363311768,2.336988925933838,1.9315634965896606,2.6079909801483154,2.7448978424072266,1.9533013105392456,2.1648685932159424,6.052499771118164,2.519320011138916,2.062579870223999,2.2037243843078613,1.7498489618301392,2.113706111907959,1.896087646484375,3.489143133163452,2.234884738922119,1.9750806093215942,2.3780343532562256,2.5756428241729736,2.7142536640167236,1.9172303676605225,2.193424701690674,1.9391030073165894,1.9740047454833984,1.9124599695205688,1.8697128295898438,1.7156778573989868,2.295663356781006,1.9287035465240479,1.9756728410720825,1.7364133596420288,1.8792885541915894,2.5497312545776367,1.9872671365737915,1.8847845792770386,2.091763496398926,1.911367654800415,2.0627028942108154,2.129868268966675,2.460425615310669],"type":"box"},{"name":"Mistral-7B-v0.1-6-0.001-L","y":[2.1760008335113525,2.378345251083374,1.95521879196167,2.4624404907226562,2.748222589492798,2.066338062286377,2.201012134552002,3.129910707473755,2.567606210708618,2.114863395690918,2.2194740772247314,1.9243652820587158,2.1103878021240234,1.8598411083221436,3.717712879180908,2.285182237625122,1.9941390752792358,2.4001450538635254,2.6021149158477783,1.7933975458145142,1.9194899797439575,2.2275373935699463,1.9581576585769653,1.9496777057647705,1.958258867263794,1.9060536623001099,1.7135616540908813,2.3369572162628174,1.9613996744155884,1.9680399894714355,1.7513360977172852,1.8614171743392944,2.5616588592529297,1.9955313205718994,1.9243319034576416,2.103745937347412,1.90980064868927,2.0944602489471436,2.1152806282043457,2.4634335041046143],"type":"box"},{"name":"Mistral-7B-v0.1-0.3-L","y":[2.2467291355133057,2.310039758682251,1.9777638912200928,2.8472373485565186,2.761030435562134,2.045410394668579,2.2356202602386475,2.7341721057891846,2.5554723739624023,2.0757012367248535,2.2354774475097656,1.948571801185608,2.1762964725494385,2.043900966644287,2.1174378395080566,2.3187692165374756,2.0591330528259277,2.3999381065368652,2.6342434883117676,1.8444857597351074,1.9311764240264893,2.3073956966400146,1.9745737314224243,1.9670193195343018,1.9906920194625854,1.9225152730941772,1.7158379554748535,2.3400540351867676,1.9720309972763062,1.9719107151031494,1.798332691192627,1.9003658294677734,2.5996992588043213,1.9980659484863281,1.9497482776641846,2.0796756744384766,1.927328109741211,2.144845724105835,2.1589372158050537,2.498631000518799],"type":"box"},{"name":"Mistral-7B-v0.1-12-0.01-H","y":[2.108424186706543,2.2937357425689697,1.8964049816131592,2.5617806911468506,2.748671531677246,1.9747636318206787,2.198312997817993,7.460939407348633,2.542212963104248,2.1082522869110107,2.22894024848938,1.8925038576126099,2.0648064613342285,1.9298813343048096,4.75649881362915,2.324706792831421,1.8826498985290527,2.38398814201355,2.5858542919158936,1.80274498462677,1.9003409147262573,2.2505314350128174,1.9754693508148193,1.9702833890914917,1.9471404552459717,1.904661774635315,1.7274881601333618,2.3496267795562744,1.942335844039917,1.9601542949676514,1.779564380645752,1.913988709449768,2.559353828430176,1.9967138767242432,1.8955793380737305,2.1170876026153564,1.9193905591964722,2.1381070613861084,2.120680809020996,2.4910600185394287],"type":"box"},{"name":"Mistral-7B-v0.1-12-0.01-L","y":[2.1390953063964844,2.2889344692230225,1.8949577808380127,2.738158702850342,2.716766834259033,2.000279426574707,2.137232780456543,1.8086199760437012,2.5281479358673096,2.058314323425293,2.196305990219116,1.8901811838150024,2.086482286453247,1.940233588218689,3.297283172607422,2.268157958984375,1.9600379467010498,2.3507115840911865,2.5608482360839844,1.7524518966674805,1.9010069370269775,2.2102415561676025,1.9063169956207275,1.9159659147262573,1.9258772134780884,1.8875651359558105,1.7096216678619385,2.2762417793273926,1.9185328483581543,1.9223709106445312,1.732278823852539,1.84871506690979,2.5288479328155518,1.9679169654846191,1.889323115348816,2.0577914714813232,1.8760643005371094,2.088223457336426,2.0727972984313965,2.436142683029175],"type":"box"},{"name":"Mistral-7B-v0.1-12-0.1-H","y":[2.102801561355591,2.289491653442383,1.8904355764389038,2.7180278301239014,2.6941440105438232,1.9869834184646606,2.168710708618164,1.90056574344635,2.508758783340454,2.0474119186401367,2.178234815597534,1.8723212480545044,2.151123046875,1.8702789545059204,1.6626204252243042,2.272631883621216,1.9071067571640015,2.345632553100586,2.6046197414398193,2.169220209121704,1.8699772357940674,2.2391457557678223,1.9310775995254517,1.9325990676879883,1.9480915069580078,1.903312087059021,1.7385984659194946,2.2938926219940186,1.9182120561599731,1.9156484603881836,1.7458243370056152,1.8351731300354004,2.535784959793091,1.9469871520996094,1.9031164646148682,2.0362846851348877,1.871787667274475,2.058323860168457,2.0219967365264893,2.4223453998565674],"type":"box"},{"name":"Mistral-7B-v0.1-12-0.1-L","y":[2.122648000717163,2.3117330074310303,1.9048385620117188,2.5266146659851074,2.7117393016815186,1.9700863361358643,2.1799094676971436,3.0103726387023926,2.49298357963562,2.073791265487671,2.1794090270996094,1.8126823902130127,2.056319236755371,1.9575408697128296,2.220316171646118,2.266385078430176,1.9616162776947021,2.3114216327667236,2.5733962059020996,1.6644742488861084,1.8951356410980225,2.2242355346679688,1.9353489875793457,1.9357187747955322,1.9433592557907104,1.8646807670593262,1.7135666608810425,2.2784059047698975,1.9553241729736328,1.9513447284698486,1.763058066368103,1.8638731241226196,2.5300331115722656,1.953377366065979,1.8982069492340088,2.051056146621704,1.8896965980529785,2.0730388164520264,2.0753214359283447,2.4573073387145996],"type":"box"},{"name":"Mistral-7B-v0.1-12-0.001-L","y":[2.1912925243377686,2.2685725688934326,1.9181545972824097,2.7862536907196045,2.7015678882598877,1.9894405603408813,2.178309679031372,1.9923951625823975,2.5666494369506836,2.093371629714966,2.238633155822754,1.897355079650879,2.1999728679656982,1.8869256973266602,2.289278268814087,2.280402183532715,2.056159496307373,2.371600866317749,2.6095199584960938,2.144097089767456,1.882383108139038,2.224494218826294,1.9513317346572876,1.9423404932022095,1.978152871131897,1.9259740114212036,1.7413510084152222,2.329373836517334,1.9551751613616943,1.8929460048675537,1.7758382558822632,1.8584667444229126,2.5698018074035645,1.969290852546692,1.9245827198028564,2.014007568359375,1.9046217203140259,2.160489559173584,2.0339431762695312,2.4400129318237305],"type":"box"},{"name":"Mistral-7B-v0.1-12-0.001-H","y":[2.1761906147003174,2.3411409854888916,1.9109582901000977,2.815819025039673,2.6576809883117676,2.0023419857025146,2.19598388671875,1.9412683248519897,2.5462145805358887,2.0720648765563965,2.2029898166656494,1.901002049446106,2.1767385005950928,1.858925461769104,2.2600202560424805,2.2757158279418945,2.054054021835327,2.3390705585479736,2.590099334716797,2.1353166103363037,1.8768092393875122,2.203303098678589,1.9264662265777588,1.9438221454620361,1.9800777435302734,1.9319431781768799,1.7024822235107422,2.283165454864502,1.938674807548523,1.8679553270339966,1.7932090759277344,1.8372156620025635,2.5159337520599365,1.9501699209213257,1.9035053253173828,2.002335786819458,1.8823174238204956,2.161149501800537,2.027268409729004,2.4097328186035156],"type":"box"},{"name":"Mistral-7B-v0.1-all-0.001","y":[2.2193965911865234,2.3176350593566895,1.9610501527786255,2.729273796081543,2.739941358566284,2.0351474285125732,2.192082405090332,1.4977866411209106,2.4636175632476807,2.058793783187866,2.1967833042144775,1.9138758182525635,2.110814332962036,1.9047099351882935,1.8259316682815552,2.3070125579833984,2.022392988204956,2.3590645790100098,2.6043851375579834,1.841416358947754,1.892796277999878,2.202313184738159,1.9489877223968506,1.944390892982483,1.9608687162399292,1.8944286108016968,1.718334674835205,2.294029951095581,1.9362854957580566,1.9271637201309204,1.769140601158142,1.8678656816482544,2.556096315383911,1.9659786224365234,1.9317104816436768,2.038378953933716,1.90827476978302,2.0892515182495117,2.0768465995788574,2.4410674571990967],"type":"box"},{"name":"Mistral-7B-v0.1-all-0.01","y":[2.1687381267547607,2.315925359725952,1.9665199518203735,2.708052158355713,2.7677836418151855,2.0702526569366455,2.198181629180908,2.804598808288574,2.5338985919952393,2.107090711593628,2.2244746685028076,1.9093780517578125,2.145329713821411,1.9499374628067017,2.462275743484497,2.3126630783081055,2.015022039413452,2.3844826221466064,2.634183645248413,1.811303734779358,1.8975120782852173,2.2539594173431396,1.9815627336502075,1.9423706531524658,1.9615012407302856,1.9058048725128174,1.7612191438674927,2.3180620670318604,1.9769622087478638,1.976372480392456,1.7676112651824951,1.9052540063858032,2.5579230785369873,1.9770796298980713,1.9194799661636353,2.0817503929138184,1.926239013671875,2.1182005405426025,2.124948263168335,2.4681148529052734],"type":"box"},{"name":"Mistral-7B-v0.1-all-0.1","y":[2.229151487350464,2.3182132244110107,1.9390761852264404,2.763918399810791,2.7750532627105713,2.0293331146240234,2.2164230346679688,1.6081300973892212,2.5452144145965576,2.1160953044891357,2.22957181930542,1.9085195064544678,2.163745403289795,1.9779090881347656,1.9044386148452759,2.3406341075897217,2.0159833431243896,2.4158287048339844,2.6514782905578613,1.8218461275100708,1.9114480018615723,2.270627021789551,1.9881166219711304,1.9758787155151367,1.9754995107650757,1.9221211671829224,1.7674204111099243,2.3714818954467773,1.9783002138137817,1.9694478511810303,1.7848796844482422,1.9130202531814575,2.6085500717163086,2.008603811264038,1.9472407102584839,2.115292549133301,1.9201406240463257,2.161649227142334,2.1212611198425293,2.515890121459961],"type":"box"},{"name":"Mistral-7B-v0.1-BaseFiT","y":[2.245934247970581,2.3382680416107178,1.9632079601287842,2.822312593460083,2.7769453525543213,2.0109245777130127,2.1911468505859375,2.055471420288086,2.575920820236206,2.1310055255889893,2.2330641746520996,1.9301093816757202,2.167526960372925,1.9147307872772217,1.8361328840255737,2.3235690593719482,2.0818095207214355,2.3957154750823975,2.6482231616973877,2.1753880977630615,1.8778517246246338,2.2361600399017334,1.9699469804763794,1.9184083938598633,1.9585689306259155,1.8965882062911987,1.7291303873062134,2.3571407794952393,1.9110630750656128,1.9434311389923096,1.757157564163208,1.8709877729415894,2.5574307441711426,1.9870046377182007,1.910953402519226,2.1084296703338623,1.917218565940857,2.1004786491394043,2.1021485328674316,2.464872360229492],"type":"box"},{"name":"Mistral-7B-v0.1","y":[2.653543710708618,2.852964401245117,2.2709946632385254,3.2690539360046387,3.1375482082366943,2.4466230869293213,2.642087459564209,2.5338573455810547,2.981893301010132,2.5227913856506348,2.6145946979522705,2.240272283554077,2.499459743499756,2.445376396179199,2.7650303840637207,2.739455223083496,2.507233142852783,2.8899197578430176,3.109863042831421,2.640343189239502,2.4744484424591064,2.925478458404541,2.514611005783081,2.5839684009552,2.519692897796631,2.4794888496398926,2.340702533721924,2.9724676609039307,2.450056314468384,2.5520434379577637,2.2301299571990967,2.3644354343414307,3.2390692234039307,2.598021984100342,2.4710423946380615,2.7331879138946533,2.5269501209259033,2.8252463340759277,2.6360819339752197,3.1717679500579834],"type":"box"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermap":[{"type":"scattermap","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"title":{"text":"Distribution of Logit Entropy for Each Model"},"xaxis":{"title":{"text":"Model"}},"yaxis":{"title":{"text":"Entropy"}},"font":{"family":"Courier New, monospace","size":16},"plot_bgcolor":"rgba(0, 0, 0, 0)","paper_bgcolor":"rgba(0, 0, 0, 0)"},                        {"responsive": true}                    )                };            </script>        </div>
-</body>
+</section></main><script>
+(function () {
+  // ============== Theme: parent-postMessage + localStorage ==============
+  function applyTheme(t) {
+    document.documentElement.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light');
+    var btn = document.getElementById('rbToggle');
+    if (btn) {
+      btn.innerHTML = t === 'dark'
+        ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg><span>Dark</span>'
+        : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg><span>Light</span>';
+    }
+    try { localStorage.setItem('noisefit-theme', t); } catch (e) {}
+    applyPlotlyTheme(t);
+  }
+  function applyPlotlyTheme(t) {
+    if (!window.Plotly) return;
+    var isDark = t === 'dark';
+    var bg = isDark ? '#15181d' : '#ffffff';
+    var fg = isDark ? '#d8d6cf' : '#0e0f12';
+    var grid = isDark ? 'rgba(241,239,233,0.08)' : 'rgba(15,16,20,0.08)';
+    var nodes = document.querySelectorAll('.js-plotly-plot, .plotly-graph-div');
+    nodes.forEach(function (c) {
+      if (!c.layout) return;
+      var update = {
+        'paper_bgcolor': bg,
+        'plot_bgcolor': bg,
+        'font.color': fg,
+        'legend.bgcolor': bg,
+        'legend.bordercolor': grid
+      };
+      Object.keys(c.layout).forEach(function (k) {
+        if (/^([xy])axis\d*$/.test(k)) {
+          update[k + '.gridcolor'] = grid;
+          update[k + '.zerolinecolor'] = grid;
+          update[k + '.linecolor'] = fg;
+          update[k + '.tickfont.color'] = fg;
+          if (c.layout[k].title) update[k + '.title.font.color'] = fg;
+        }
+      });
+      try { window.Plotly.relayout(c, update); } catch (e) {}
+    });
+  }
+  // Initial theme: prefer parent override, then localStorage, then light
+  var initialTheme = 'light';
+  try {
+    var saved = localStorage.getItem('noisefit-theme');
+    if (saved === 'dark' || saved === 'light') initialTheme = saved;
+  } catch (e) {}
+  applyTheme(initialTheme);
+
+  // Listen for theme messages from parent
+  window.addEventListener('message', function (ev) {
+    if (ev.data && ev.data.type === 'noisefit-theme' && ev.data.theme) {
+      applyTheme(ev.data.theme);
+    }
+  });
+  // Tell parent we're alive so it can push current theme
+  try { window.parent && window.parent.postMessage({ type: 'noisefit-report-ready' }, '*'); } catch (e) {}
+
+  // Toggle button
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('#rbToggle')) {
+      var cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      applyTheme(cur === 'dark' ? 'light' : 'dark');
+    }
+  });
+
+  // Re-apply plotly theme once plot finishes drawing
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      var cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      applyPlotlyTheme(cur);
+    }, 100);
+    setTimeout(function () {
+      var cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      applyPlotlyTheme(cur);
+    }, 600);
+  });
+
+  // ============== Prompt-card interactions ==============
+  document.addEventListener('click', function (e) {
+    var head = e.target.closest('.pc-head');
+    if (head) head.closest('.prompt-card').classList.toggle('is-open');
+    var segBtn = e.target.closest('.prompt-controls .seg button');
+    if (segBtn) {
+      var seg = segBtn.parentElement;
+      seg.querySelectorAll('button').forEach(function (b) { b.classList.toggle('is-active', b === segBtn); });
+      filterPrompts();
+    }
+  });
+  var searchInput = document.getElementById('promptSearch');
+  if (searchInput) searchInput.addEventListener('input', filterPrompts);
+
+  function filterPrompts() {
+    var q = (searchInput && searchInput.value || '').toLowerCase().trim();
+    var seg = document.querySelector('.prompt-controls .seg button.is-active');
+    var filter = seg ? seg.dataset.filter : 'all';
+    var shown = 0;
+    document.querySelectorAll('.prompt-card').forEach(function (c) {
+      var hay = (c.dataset.search || '').toLowerCase();
+      var matchText = !q || hay.includes(q);
+      var bucket = c.dataset.bucket;  // 'good'|'mid'|'bad'
+      var matchFilter = filter === 'all' || filter === bucket;
+      var ok = matchText && matchFilter;
+      c.classList.toggle('hidden', !ok);
+      if (ok) shown++;
+    });
+    var counter = document.getElementById('promptCounter');
+    if (counter) counter.textContent = shown + ' / ' + document.querySelectorAll('.prompt-card').length;
+  }
+})();
+</script></body>
 </html>
