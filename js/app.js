@@ -185,6 +185,10 @@
     themeIcon.innerHTML = t === 'dark' ? ICON_MOON : ICON_SUN;
     themeLabel.textContent = t === 'dark' ? 'Dark' : 'Light';
     try { localStorage.setItem('noisefit-theme', t); } catch (e) {}
+    // Propagate to all open report iframes
+    document.querySelectorAll('.report-body iframe').forEach((f) => {
+      try { f.contentWindow && f.contentWindow.postMessage({ type: 'noisefit-theme', theme: t }, '*'); } catch (e) {}
+    });
   }
 
   // initialize from current attr (set by inline script before paint)
@@ -193,6 +197,14 @@
   themeBtn.addEventListener('click', () => {
     const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
     applyTheme(next);
+  });
+
+  // When a report iframe announces it's ready, push current theme to it
+  window.addEventListener('message', (ev) => {
+    if (ev.data && ev.data.type === 'noisefit-report-ready' && ev.source) {
+      const t = document.documentElement.getAttribute('data-theme') || 'light';
+      try { ev.source.postMessage({ type: 'noisefit-theme', theme: t }, '*'); } catch (e) {}
+    }
   });
 
   // ------------------------------------------------------------------
@@ -358,5 +370,276 @@
       requestAnimationFrame(frame);
     }
     requestAnimationFrame(frame);
+  }
+  // ------------------------------------------------------------------
+  // 7. Results analytics — render model cards & sweep chart
+  // ------------------------------------------------------------------
+
+  const resultsData = (() => {
+    const el = document.getElementById('results-data');
+    if (!el) return null;
+    try { return JSON.parse(el.textContent); } catch (e) { return null; }
+  })();
+
+  if (resultsData) {
+    const modelGrid = document.getElementById('modelGrid');
+
+    // helper to escape HTML
+    const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+    // Per-model summary cards
+    if (modelGrid) {
+      const cardHtml = resultsData.models.map((m) => {
+        const base = m.configs.find((c) => c.kind === 'base');
+        const fit  = m.configs.find((c) => c.kind === 'fit');
+        const best = m.configs.find((c) => c.best) || m.configs.filter((c) => c.kind === 'noise').sort((a, b) => b.pct - a.pct)[0];
+        const delta = best && base ? (best.pct - base.pct) : 0;
+        const rows = [
+          base && { ...base, label: 'Base' },
+          fit  && { ...fit,  label: 'Base FiT' },
+          best && { ...best, label: best.label + ' · NoiseFiT', best: true }
+        ].filter(Boolean);
+        return `
+          <article class="model-card">
+            <div class="mc-head">
+              <div class="mc-name">${esc(m.name)}<em>${esc(m.spec)}</em></div>
+              <div class="mc-best">Best NoiseFiT<b>${best ? best.pct.toFixed(1) + '%' : '—'}</b></div>
+            </div>
+            <div class="mc-delta">
+              <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,8 6,4 10,8"/></svg>
+              +${delta.toFixed(1)} pp vs Base
+            </div>
+            <div class="mc-bars">
+              ${rows.map((r) => `
+                <div class="mc-row ${r.best ? 'best' : ''}" data-kind="${esc(r.kind)}">
+                  <span class="lbl">${esc(r.label)}</span>
+                  <div class="mc-bar"><i data-pct="${r.pct}"></i></div>
+                  <span class="val">${r.pct.toFixed(1)}%</span>
+                </div>
+              `).join('')}
+            </div>
+          </article>
+        `;
+      }).join('');
+      modelGrid.innerHTML = cardHtml;
+    }
+
+    // Per-family confidence-interval visualization (replaces full sweep)
+    const ciRows = document.getElementById('ciRows');
+    if (ciRows) {
+      const rowsHtml = resultsData.models.map((m) => {
+        const base = m.configs.find((c) => c.kind === 'base');
+        const fit  = m.configs.find((c) => c.kind === 'fit');
+        const noise = m.configs.filter((c) => c.kind === 'noise').map((c) => c.pct);
+        if (!noise.length) return '';
+        const min = Math.min(...noise);
+        const max = Math.max(...noise);
+        const mean = noise.reduce((a, b) => a + b, 0) / noise.length;
+        const beats = base ? (max - base.pct).toFixed(1) : null;
+        return `
+          <div class="ci-row">
+            <div class="ci-name">${esc(m.name)}<em>${esc(m.spec)}</em></div>
+            <div class="ci-axis" aria-label="NoiseFiT range">
+              <div class="ci-gridlines" aria-hidden="true"><i></i></div>
+              <div class="ci-band" style="left:${min}%;right:${(100 - max).toFixed(2)}%" title="NoiseFiT range ${min.toFixed(1)}% – ${max.toFixed(1)}%"></div>
+              <div class="ci-mean" style="left:${mean.toFixed(2)}%" title="NoiseFiT mean ${mean.toFixed(1)}%"></div>
+              ${fit ? `<div class="ci-marker fit" style="left:${fit.pct}%" title="Base FiT ${fit.pct.toFixed(1)}%"></div>` : ''}
+              ${base ? `<div class="ci-marker base" style="left:${base.pct}%" title="Base ${base.pct.toFixed(1)}%"></div>` : ''}
+            </div>
+            <div class="ci-stats">
+              <div class="ci-stat"><span class="lbl">Base</span><span class="val">${base ? base.pct.toFixed(1) + '%' : '—'}</span></div>
+              <div class="ci-stat"><span class="lbl">Base FiT</span><span class="val">${fit ? fit.pct.toFixed(1) + '%' : '—'}</span></div>
+              <div class="ci-stat win">
+                <span class="lbl">NoiseFiT best</span>
+                <span class="val">${max.toFixed(1)}%</span>
+                ${beats !== null ? `<span class="delta">+${beats} pp</span>` : ''}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+      ciRows.innerHTML = rowsHtml;
+    }
+
+    // Animate bars on scroll into view
+    const bars = document.querySelectorAll('.mc-bar > i');
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            const pct = parseFloat(e.target.dataset.pct);
+            if (isFinite(pct)) e.target.style.width = pct + '%';
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.15 });
+      bars.forEach((b) => io.observe(b));
+    } else {
+      bars.forEach((b) => { b.style.width = (parseFloat(b.dataset.pct) || 0) + '%'; });
+    }
+  }
+
+  // ------------------------------------------------------------------
+  // 8. Paper · Benchmarks & Ablations
+  // ------------------------------------------------------------------
+
+  const benchData = (() => {
+    const el = document.getElementById('bench-data');
+    if (!el) return null;
+    try { return JSON.parse(el.textContent); } catch (e) { return null; }
+  })();
+
+  if (benchData) {
+    const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+    // --- Metric uplift strip ---
+    const msBars = document.getElementById('msBars');
+    if (msBars) {
+      const maxDelta = Math.max(...benchData.metricUplifts.map((m) => m.delta));
+      msBars.innerHTML = benchData.metricUplifts.map((m) => {
+        const ratio = Math.min(1, m.delta / maxDelta);
+        return `
+          <div class="ms-cell ${m.highlight ? 'highlight' : ''}" style="--bar:${ratio.toFixed(3)}">
+            <div>
+              <span class="ms-name">${esc(m.name)}<span class="ms-blurb">${esc(m.blurb)}</span></span>
+            </div>
+            <div class="ms-num"><em>+${m.delta.toFixed(2)}</em><small>%</small></div>
+          </div>
+        `;
+      }).join('');
+
+      // animate via IntersectionObserver
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) { e.target.classList.add('in-view'); io.unobserve(e.target); }
+          });
+        }, { threshold: 0.3 });
+        msBars.querySelectorAll('.ms-cell').forEach((c) => io.observe(c));
+      } else {
+        msBars.querySelectorAll('.ms-cell').forEach((c) => c.classList.add('in-view'));
+      }
+    }
+
+    // --- Champion table ---
+    const champTable = document.getElementById('champTable');
+    if (champTable && benchData.champion) {
+      const { headers, rows } = benchData.champion;
+      let html = '<thead><tr>';
+      headers.forEach((h) => { html += `<th>${esc(h)}</th>`; });
+      html += '</tr></thead><tbody>';
+      rows.forEach((r) => {
+        html += `<tr><td>${esc(r.arch)}</td><td>${esc(r.cfg)}</td>`;
+        // vals contains [MMLU-Pro, BBH, GPQA, Math, IFEval, MUSR, TfQA-MC, HaluEval, Avg] — last is Avg
+        r.vals.forEach((v, i) => {
+          const cls = (i === r.vals.length - 1) ? 'avg-cell' : '';
+          html += `<td class="${cls}">${v.toFixed(2)}</td>`;
+        });
+        html += `<td class="delta-cell">+${r.delta.toFixed(2)}</td>`;
+        html += '</tr>';
+      });
+      html += '</tbody>';
+      champTable.innerHTML = html;
+    }
+
+    // --- Method comparison ---
+    const methodTable = document.getElementById('methodTable');
+    if (methodTable && benchData.methodComparison) {
+      let html = `
+        <thead><tr>
+          <th>Method</th><th>ARC</th><th>HellaSwag</th><th>MMLU</th><th>TfQA</th><th>Avg</th><th>Δ</th>
+        </tr></thead><tbody>
+      `;
+      benchData.methodComparison.forEach((r) => {
+        const avgCls = r.kind === 'best' ? 'avg-cell' : '';
+        const deltaCls = r.delta == null ? '' : (r.delta > 0 ? 'delta pos' : 'delta neg');
+        const deltaText = r.delta == null ? '—' : (r.delta > 0 ? '+' : '') + r.delta.toFixed(2);
+        html += `<tr class="kind-${r.kind}">
+          <td>${esc(r.name)}</td>
+          <td>${r.arc.toFixed(2)}</td>
+          <td>${r.hella.toFixed(2)}</td>
+          <td>${r.mmlu.toFixed(2)}</td>
+          <td>${r.tqa.toFixed(2)}</td>
+          <td class="${avgCls}">${r.avg.toFixed(2)}</td>
+          <td class="${deltaCls}">${deltaText}</td>
+        </tr>`;
+      });
+      html += '</tbody>';
+      methodTable.innerHTML = html;
+    }
+
+    // --- Loss ablation ---
+    const lossList = document.getElementById('lossList');
+    if (lossList && benchData.lossAblation) {
+      const maxAvg = Math.max(...benchData.lossAblation.map((r) => r.avg));
+      lossList.innerHTML = benchData.lossAblation.map((r) => {
+        const ratio = (r.avg / maxAvg) * 100;
+        const dtxt = r.delta == null || r.delta === 0 ? '—' : (r.delta > 0 ? '+' : '') + r.delta.toFixed(2);
+        const dcls = r.delta == null ? '' : (r.delta > 0 ? 'pos' : 'neg');
+        return `
+          <div class="loss-row kind-${r.kind}">
+            <div class="lname">${esc(r.name)}</div>
+            <div class="loss-bar"><i data-pct="${ratio.toFixed(2)}"></i></div>
+            <div class="lval">${r.avg.toFixed(2)}</div>
+            <div class="ldelta ${dcls}">${dtxt}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // --- Footprint ---
+    const footprintRows = document.getElementById('footprintRows');
+    if (footprintRows && benchData.footprint) {
+      const maxRuntime = Math.max(...benchData.footprint.map((r) => r.runtime));
+      const maxMem = Math.max(...benchData.footprint.map((r) => r.mem));
+      let html = `
+        <div class="fp-head-row">
+          <span>Method</span>
+          <span>Runtime · h (rel. to BaseFiT)</span>
+          <span>Peak GPU memory · %</span>
+          <span>TruthfulQA</span>
+          <span>Δ TQA</span>
+        </div>
+      `;
+      benchData.footprint.forEach((r) => {
+        const rtRatio = (r.runtime / maxRuntime) * 100;
+        const memRatio = (r.mem / maxMem) * 100;
+        const dcls = r.delta == null || r.delta === 0 ? '' : (r.delta > 0 ? 'pos' : 'neg');
+        const dtxt = r.delta == null || r.delta === 0 ? '—' : (r.delta > 0 ? '+' : '') + r.delta.toFixed(2);
+        html += `
+          <div class="fp-row kind-${r.kind}">
+            <div class="fp-name">${esc(r.name)}</div>
+            <div class="fp-meter">
+              <div class="fp-meter-bar"><i data-pct="${rtRatio.toFixed(2)}"></i></div>
+              <div class="fp-meter-val">${r.runtime.toFixed(2)}h · ${r.rel.toFixed(2)}×</div>
+            </div>
+            <div class="fp-meter">
+              <div class="fp-meter-bar"><i data-pct="${memRatio.toFixed(2)}"></i></div>
+              <div class="fp-meter-val">${r.mem.toFixed(1)}%</div>
+            </div>
+            <div class="fp-tqa">${r.tqa.toFixed(2)}<em> /100</em></div>
+            <div class="fp-delta ${dcls}">${dtxt}</div>
+          </div>
+        `;
+      });
+      footprintRows.innerHTML = html;
+    }
+
+    // Animate all bench bars
+    const benchBars = document.querySelectorAll('#bench .loss-bar > i, #bench .fp-meter-bar > i');
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            const pct = parseFloat(e.target.dataset.pct);
+            if (isFinite(pct)) e.target.style.width = pct + '%';
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.15 });
+      benchBars.forEach((b) => io.observe(b));
+    } else {
+      benchBars.forEach((b) => { b.style.width = (parseFloat(b.dataset.pct) || 0) + '%'; });
+    }
   }
 })();
