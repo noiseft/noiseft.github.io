@@ -1,480 +1,286 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NoiseFiT Supplementary Material</title>
-    <link rel="stylesheet" href="css/styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NoiseFiT — Supplementary Material</title>
+<meta name="description" content="Supplementary material for the NoiseFiT paper — Noise Augmented Fine-Tuning for Mitigating Hallucinations in Large Language Models.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
 </head>
-
-    
 <body>
-    <!-- Navigation Menu for Model Families -->
-    <header>
-        <nav class="menu">
-            <ul>
-                <li><a href="#home">Home</a></li>
-                <li><a href="#gemma">Gemma</a></li>
-                <li><a href="#llama-1b">Llama 1B</a></li>
-                <li><a href="#llama-3b">Llama 3B</a></li>
-                <li><a href="#mistral">Mistral</a></li>
-                <li><a href="#qwen">Qwen</a></li>
-            </ul>
-        </nav>
-    </header>
 
-    
-    <div class="content-container" id="home">
-        <h1>NoiseFiT</h1>
-        <h2>Supplementary Material</h2>
-        <p>Hi and welcome! Thank you for visiting our website. You're in the right place! 
-            (THE LINKS ARE PRIVATIZED to REMAIN ANONYMOUS under the conference guidelines)</p>
-        <p>This page is the supplementary material of <a href="https://arxiv.org/" target="_blank">our paper</a> <strong>"Noise Augmented Fine Tuning for Mitigating Hallucinations in Large Language Models"</strong>. You can explore detailed hallucination analysis results here, conducted using Grok 3.0. For each model, five independent responses were generated using test data and subsequently evaluated.</p>
-        <p>We hope you find this website insightful and engaging! 😃</p>
-        <p class="rotate-message">📱 For the best experience, please rotate or tilt your phone to landscape mode.</p>
-        <h3 class="related-links-title">More Resources:</h3>
-        <ul class="related-links">
-            <li><a href="https://github.com/" 
-                    target="_blank">💻 GitHub</a></li>
-            <li><a href="https://wandb.ai/" 
-                    target="_blank">🏋🏻‍♂️ Weights & Biases</a></li>
-            <li><a href="https://huggingface.co" 
-                    target="_blank">🤗 Hugging Face</a></li>
-        </ul>
+<!-- Theme init (before paint, prevents flash) -->
+<script>
+(function () {
+  try {
+    var saved = localStorage.getItem('noisefit-theme');
+    if (saved === 'dark' || saved === 'light') {
+      document.documentElement.setAttribute('data-theme', saved);
+    }
+  } catch (e) {}
+})();
+</script>
 
-    </div>
+<div class="bg-grid" aria-hidden="true"></div>
 
-    <!-- Gemma Model Family -->
-    <div class="content-container" id="gemma">
-        <h3>Gemma Model Family</h3>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/gemma-3-1b-it-error-bar.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/gemma-3-1b-it_SNR.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/gemma-3-1b-it-Attention Entropy.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/gemma-3-1b-it-Layers Entropy Distribution for Each Model.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/gemma-3-1b-it-Layers-Mean L2‑norm of hidden states per layer.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/gemma-3-1b-it-Layers-Hidden states variance per layer.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/gemma-3-1b-it-Layers-Hidden states sparsity per layer.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/gemma-3-1b-it-Layers-Effective rank of hidden states per layer.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Gemma-3-1B-it-0.001-L.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Gemma-3-1B-it-0.01-H.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Gemma-3-1B-it-0.01-L.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Gemma-3-1B-it-0.1-H.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Gemma-3-1B-it-Base.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Gemma-3-1B-it-BaseFiT.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
+<!-- =========================================================
+     TOP BAR
+     ========================================================= -->
+<header class="topbar">
+  <a class="brand" href="#home">
+    <span class="brand-dot"></span>
+    <span>NoiseFiT &nbsp;/&nbsp; Supplementary</span>
+  </a>
+
+  <nav class="nav" aria-label="Model families">
+    <a href="#home" data-target="home">Home</a>
+    <a href="#gemma" data-target="gemma">Gemma</a>
+    <a href="#llama-1b" data-target="llama-1b">Llama 1B</a>
+    <a href="#llama-3b" data-target="llama-3b">Llama 3B</a>
+    <a href="#mistral" data-target="mistral">Mistral</a>
+    <a href="#qwen" data-target="qwen">Qwen</a>
+  </nav>
+
+  <button class="toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" id="themeIcon">
+      <circle cx="12" cy="12" r="4"></circle>
+      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+    </svg>
+    <span class="label" id="themeLabel">Light</span>
+  </button>
+</header>
+
+<!-- =========================================================
+     HERO
+     ========================================================= -->
+<section class="hero" id="home">
+  <span class="eyebrow"><span class="sq"></span> Anonymous Submission · Supplementary Material</span>
+
+  <h1 class="title">Noise<em>Fi</em>T</h1>
+
+  <div class="title-meta">
+    <p class="subtitle">Noise-Augmented Fine-Tuning for hallucination mitigation in LLMs.</p>
+    <span class="tag">v1.0 · 2026</span>
+  </div>
+
+  <div class="hero-grid">
+    <div class="hero-copy">
+      <p class="lede">
+        A study of how injecting calibrated noise into hidden states during fine-tuning reshapes attention, entropy, and the truthfulness of large language models.
+      </p>
+      <p>
+        This page collects the per-model analyses behind <a class="inline" href="https://arxiv.org/" target="_blank" rel="noopener">our paper</a> — <em>“Noise Augmented Fine-Tuning for Mitigating Hallucinations in Large Language Models.”</em>
+      </p>
+      <p>
+        For each of five model families, we evaluate five independent generations on held-out test data using Grok&nbsp;3.0, then probe the internal state geometry (entropy, sparsity, effective rank, hidden-state norms) across layers under a range of noise configurations.
+      </p>
+      <div class="anon-note">
+        Links are privatised to remain anonymous under the conference guidelines.
+      </div>
+
+      <div class="resources">
+        <a class="res-pill" href="https://github.com/" target="_blank" rel="noopener">
+          <span class="ico">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.93c.57.1.78-.25.78-.55v-1.93c-3.2.7-3.88-1.55-3.88-1.55-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.76 2.68 1.25 3.34.96.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.47.11-3.06 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.77.11 3.06.74.8 1.19 1.83 1.19 3.09 0 4.44-2.7 5.41-5.27 5.69.41.35.78 1.05.78 2.12v3.14c0 .3.21.66.79.55A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/></svg>
+          </span>
+          GitHub <span class="arrow">↗</span>
+        </a>
+        <a class="res-pill" href="https://wandb.ai/" target="_blank" rel="noopener">
+          <span class="ico">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 21V8m6 13V3m6 18V11m6 10V6"/></svg>
+          </span>
+          Weights &amp; Biases <span class="arrow">↗</span>
+        </a>
+        <a class="res-pill" href="https://huggingface.co" target="_blank" rel="noopener">
+          <span class="ico">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 14c1 1.3 2.3 2 4 2s3-.7 4-2"/><circle cx="9" cy="10" r="0.8" fill="currentColor"/><circle cx="15" cy="10" r="0.8" fill="currentColor"/></svg>
+          </span>
+          Hugging Face <span class="arrow">↗</span>
+        </a>
+        <a class="res-pill" href="https://arxiv.org/" target="_blank" rel="noopener">
+          <span class="ico">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h6v6"/><path d="M10 14L20 4"/><path d="M20 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5"/></svg>
+          </span>
+          Paper · arXiv <span class="arrow">↗</span>
+        </a>
+      </div>
     </div>
 
-    <!-- Llama Model Family -->
-    <div class="content-container" id="llama">
-        <h3>Llama Model Family</h3>
+    <!-- Noise / signal animation -->
+    <div class="noise-panel" id="noisePanel">
+      <canvas id="noiseCanvas" aria-hidden="true"></canvas>
+      <div class="crosshair" aria-hidden="true"></div>
+      <span class="corner tl">SIGNAL <b>·</b> NOISE</span>
+      <span class="corner tr">σ = 0.01</span>
+      <span class="corner bl">∇ hidden state</span>
+      <span class="corner br" id="freqReadout">f = 1.00 Hz</span>
     </div>
-    <div class="content-container" id="llama-1b">
-        <h4>Llama 3.2 1B</h4>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Llama-3.2-1B-error-bar.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Llama-3.2-1B_SNR.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Llama3.2.1B-Attention Entropy.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Llama3.2.1B-Layers Entropy Distribution for Each Model.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Llama3.2.1B-Layers-Mean L2‑norm of hidden states per layer.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Llama3.2.1B-Layers-Hidden states variance per layer.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Llama3.2.1B-Layers-Hidden states sparsity per layer.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Llama3.2.1B-Layers-Effective rank of hidden states per layer.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Llama-3.2-1B-0.01-H.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Llama-3.2-1B-0.01-L.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Llama-3.2-1B-0.1-H.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Llama-3.2-1B-0.1-L.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Llama-3.2-1B-Base.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Llama-3.2-1B-BaseFiT.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
+  </div>
 
-    <div class="content-container" id="llama-3b">
-        <h4>Llama 3.2 3B</h4>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Llama-3.2-3B-error-bar.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Llama-3.2-3B_SNR.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Llama3.2.3B-Attention Entropy.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Llama3.2.3B-Layers Entropy Distribution for Each Model.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Llama3.2.3B-Layers-Mean L2‑norm of hidden states per layer.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Llama3.2.3B-Layers-Hidden states variance per layer.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Llama3.2.3B-Layers-Hidden states sparsity per layer.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Llama3.2.3B-Layers-Effective rank of hidden states per layer.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Llama-3.2-3B-0.01-H.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Llama-3.2-3B-0.01-L.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Llama-3.2-3B-0.1-H.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Llama-3.2-3B-0.1-L.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Llama-3.2-3B-Base.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Llama-3.2-3B-BaseFiT.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
+  <!-- Stats row -->
+  <div class="stats">
+    <div class="stat"><div class="num"><em>5</em></div><div class="lbl">Model Families</div></div>
+    <div class="stat"><div class="num">81</div><div class="lbl">Analysis Reports</div></div>
+    <div class="stat"><div class="num">8</div><div class="lbl">Internal Metrics</div></div>
+    <div class="stat"><div class="num">5</div><div class="lbl">Generations / Sample</div></div>
+  </div>
+</section>
 
-    <!-- Mistral Model Family -->
-    <div class="content-container" id="mistral">
-        <h3>Mistral Model Family</h3>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Mistral-7B-V0.1-error-bar.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Mistral-7B-v0.1_SNR.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Mistral-7B-v0.1-Attention Entropy.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Mistral-7B-v0.1-Layers Entropy Distribution for Each Model.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Mistral-7B-v0.1-Layers-Mean L2‑norm of hidden states per layer.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Mistral-7B-v0.1-Layers-Hidden states variance per layer.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Mistral-7B-v0.1-Layers-Hidden states sparsity per layer.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Mistral-7B-v0.1-Layers-Effective rank of hidden states per layer.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Mistral-7B-v0.1-0.01-H.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Mistral-7B-v0.1-0.01-L.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Mistral-7B-v0.1-0.1-H.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Mistral-7B-v0.1-0.1-L.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Mistral-7B-v0.1-12-0.001-H.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Mistral-7B-v0.1-12-0.001-L.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Mistral-7B-v0.1-12-0.01-H.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Mistral-7B-v0.1-12-0.01-L.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Mistral-7B-v0.1-12-0.1-H.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Mistral-7B-v0.1-12-0.1-L.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Mistral-7B-v0.1-Base.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Mistral-7B-v0.1-BaseFiT.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Mistral-7B-v0.1-all-0.001.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Mistral-7B-v0.1-all-0.01.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Mistral-7B-v0.1-all-0.1.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
+<!-- =========================================================
+     MODEL SECTIONS (rendered via JS from data below)
+     ========================================================= -->
+<main id="modelMount"></main>
 
-    <!-- Qwen Model Family -->
-    <div class="content-container" id="qwen">
-        <h3>Qwen Model Family</h3>
+<!-- =========================================================
+     FOOTER
+     ========================================================= -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <div class="ft">Thank you for <em>reading</em>. We hope the analyses prove useful.</div>
+      <small>NoiseFiT · Supplementary Material · 2026</small>
     </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/qwen2.5-0.5B-error-bar.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
+    <div class="footer-right">
+      Five families<br>
+      Eighty-one reports<br>
+      One hypothesis
     </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Qwen2.5-0.5B_SNR.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Qwen2.5-0.5B-Attention Entropy.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Qwen2.5-0.5B-Layers Entropy Distribution for Each Model.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Qwen2.5-0.5B-Layers-Mean L2‑norm of hidden states per layer.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Qwen2.5-0.5B-Layers-Hidden states variance per layer.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Qwen2.5-0.5B-Layers-Hidden states sparsity per layer.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Qwen2.5-0.5B-Layers-Effective rank of hidden states per layer.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Qwen2.5-0.5B-0.01-H.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Qwen2.5-0.5B-0.01-L.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Qwen2.5-0.5B-0.1-H.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Qwen2.5-0.5B-0.1-L.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Qwen2.5-0.5B-Base.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <div class="content-container container-margin">
-        <div class="iframe-container">
-            <iframe src="reports/Qwen2.5-0.5B-BaseFiT.html" frameborder="0" allowfullscreen loading="lazy"></iframe>
-        </div>
-    </div>
-    <script>
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) { // Trigger after scrolling 50px
-            document.body.classList.add('scrolled');
-        } else {
-            document.body.classList.remove('scrolled');
-        }
-    });
-    </script>
+  </div>
+</footer>
+
+<!-- =========================================================
+     DATA: reports per model family
+     Categories: perf | intl | conf
+     ========================================================= -->
+<script id="report-data" type="application/json">
+{
+  "sections": [
+    {
+      "id": "gemma",
+      "name": "Gemma",
+      "italic": "3 · 1B-it",
+      "size": "1B parameters · instruction-tuned",
+      "reports": [
+        {"f": "reports/gemma-3-1b-it-error-bar.html",                                       "t": "Error Bar Analysis",                       "c": "perf"},
+        {"f": "reports/gemma-3-1b-it_SNR.html",                                              "t": "Signal-to-Noise Ratio",                    "c": "perf"},
+        {"f": "reports/gemma-3-1b-it-Attention Entropy.html",                                "t": "Attention Entropy",                        "c": "intl"},
+        {"f": "reports/gemma-3-1b-it-Layers Entropy Distribution for Each Model.html",      "t": "Layer Entropy Distribution",               "c": "intl"},
+        {"f": "reports/gemma-3-1b-it-Layers-Mean L2‑norm of hidden states per layer.html",  "t": "Mean L2-norm per Layer",                   "c": "intl"},
+        {"f": "reports/gemma-3-1b-it-Layers-Hidden states variance per layer.html",         "t": "Hidden-state Variance per Layer",          "c": "intl"},
+        {"f": "reports/gemma-3-1b-it-Layers-Hidden states sparsity per layer.html",         "t": "Hidden-state Sparsity per Layer",          "c": "intl"},
+        {"f": "reports/gemma-3-1b-it-Layers-Effective rank of hidden states per layer.html","t": "Effective Rank per Layer",                 "c": "intl"},
+        {"f": "reports/Gemma-3-1B-it-Base.html",                                             "t": "Base Model",                               "c": "conf", "n": "baseline"},
+        {"f": "reports/Gemma-3-1B-it-BaseFiT.html",                                          "t": "Base FiT",                                 "c": "conf", "n": "baseline"},
+        {"f": "reports/Gemma-3-1B-it-0.001-L.html",                                          "t": "σ = 0.001 · Low layers",                   "c": "conf", "n": "σ = 0.001"},
+        {"f": "reports/Gemma-3-1B-it-0.01-L.html",                                           "t": "σ = 0.01 · Low layers",                    "c": "conf", "n": "σ = 0.01"},
+        {"f": "reports/Gemma-3-1B-it-0.01-H.html",                                           "t": "σ = 0.01 · High layers",                   "c": "conf", "n": "σ = 0.01"},
+        {"f": "reports/Gemma-3-1B-it-0.1-H.html",                                            "t": "σ = 0.1 · High layers",                    "c": "conf", "n": "σ = 0.1"}
+      ]
+    },
+    {
+      "id": "llama-1b",
+      "name": "Llama",
+      "italic": "3.2 · 1B",
+      "size": "1B parameters",
+      "reports": [
+        {"f": "reports/Llama-3.2-1B-error-bar.html",                                                "t": "Error Bar Analysis",                "c": "perf"},
+        {"f": "reports/Llama-3.2-1B_SNR.html",                                                       "t": "Signal-to-Noise Ratio",             "c": "perf"},
+        {"f": "reports/Llama3.2.1B-Attention Entropy.html",                                          "t": "Attention Entropy",                 "c": "intl"},
+        {"f": "reports/Llama3.2.1B-Layers Entropy Distribution for Each Model.html",                 "t": "Layer Entropy Distribution",        "c": "intl"},
+        {"f": "reports/Llama3.2.1B-Layers-Mean L2‑norm of hidden states per layer.html",             "t": "Mean L2-norm per Layer",            "c": "intl"},
+        {"f": "reports/Llama3.2.1B-Layers-Hidden states variance per layer.html",                    "t": "Hidden-state Variance per Layer",   "c": "intl"},
+        {"f": "reports/Llama3.2.1B-Layers-Hidden states sparsity per layer.html",                    "t": "Hidden-state Sparsity per Layer",   "c": "intl"},
+        {"f": "reports/Llama3.2.1B-Layers-Effective rank of hidden states per layer.html",           "t": "Effective Rank per Layer",          "c": "intl"},
+        {"f": "reports/Llama-3.2-1B-Base.html",                                                       "t": "Base Model",                        "c": "conf", "n": "baseline"},
+        {"f": "reports/Llama-3.2-1B-BaseFiT.html",                                                    "t": "Base FiT",                          "c": "conf", "n": "baseline"},
+        {"f": "reports/Llama-3.2-1B-0.01-L.html",                                                     "t": "σ = 0.01 · Low layers",             "c": "conf", "n": "σ = 0.01"},
+        {"f": "reports/Llama-3.2-1B-0.01-H.html",                                                     "t": "σ = 0.01 · High layers",            "c": "conf", "n": "σ = 0.01"},
+        {"f": "reports/Llama-3.2-1B-0.1-L.html",                                                      "t": "σ = 0.1 · Low layers",              "c": "conf", "n": "σ = 0.1"},
+        {"f": "reports/Llama-3.2-1B-0.1-H.html",                                                      "t": "σ = 0.1 · High layers",             "c": "conf", "n": "σ = 0.1"}
+      ]
+    },
+    {
+      "id": "llama-3b",
+      "name": "Llama",
+      "italic": "3.2 · 3B",
+      "size": "3B parameters",
+      "reports": [
+        {"f": "reports/Llama-3.2-3B-error-bar.html",                                                "t": "Error Bar Analysis",                "c": "perf"},
+        {"f": "reports/Llama-3.2-3B_SNR.html",                                                       "t": "Signal-to-Noise Ratio",             "c": "perf"},
+        {"f": "reports/Llama3.2.3B-Attention Entropy.html",                                          "t": "Attention Entropy",                 "c": "intl"},
+        {"f": "reports/Llama3.2.3B-Layers Entropy Distribution for Each Model.html",                 "t": "Layer Entropy Distribution",        "c": "intl"},
+        {"f": "reports/Llama3.2.3B-Layers-Mean L2‑norm of hidden states per layer.html",             "t": "Mean L2-norm per Layer",            "c": "intl"},
+        {"f": "reports/Llama3.2.3B-Layers-Hidden states variance per layer.html",                    "t": "Hidden-state Variance per Layer",   "c": "intl"},
+        {"f": "reports/Llama3.2.3B-Layers-Hidden states sparsity per layer.html",                    "t": "Hidden-state Sparsity per Layer",   "c": "intl"},
+        {"f": "reports/Llama3.2.3B-Layers-Effective rank of hidden states per layer.html",           "t": "Effective Rank per Layer",          "c": "intl"},
+        {"f": "reports/Llama-3.2-3B-Base.html",                                                       "t": "Base Model",                        "c": "conf", "n": "baseline"},
+        {"f": "reports/Llama-3.2-3B-BaseFiT.html",                                                    "t": "Base FiT",                          "c": "conf", "n": "baseline"},
+        {"f": "reports/Llama-3.2-3B-0.01-L.html",                                                     "t": "σ = 0.01 · Low layers",             "c": "conf", "n": "σ = 0.01"},
+        {"f": "reports/Llama-3.2-3B-0.01-H.html",                                                     "t": "σ = 0.01 · High layers",            "c": "conf", "n": "σ = 0.01"},
+        {"f": "reports/Llama-3.2-3B-0.1-L.html",                                                      "t": "σ = 0.1 · Low layers",              "c": "conf", "n": "σ = 0.1"},
+        {"f": "reports/Llama-3.2-3B-0.1-H.html",                                                      "t": "σ = 0.1 · High layers",             "c": "conf", "n": "σ = 0.1"}
+      ]
+    },
+    {
+      "id": "mistral",
+      "name": "Mistral",
+      "italic": "7B · v0.1",
+      "size": "7B parameters",
+      "reports": [
+        {"f": "reports/Mistral-7B-V0.1-error-bar.html",                                              "t": "Error Bar Analysis",                "c": "perf"},
+        {"f": "reports/Mistral-7B-v0.1_SNR.html",                                                     "t": "Signal-to-Noise Ratio",             "c": "perf"},
+        {"f": "reports/Mistral-7B-v0.1-Attention Entropy.html",                                       "t": "Attention Entropy",                 "c": "intl"},
+        {"f": "reports/Mistral-7B-v0.1-Layers Entropy Distribution for Each Model.html",              "t": "Layer Entropy Distribution",        "c": "intl"},
+        {"f": "reports/Mistral-7B-v0.1-Layers-Mean L2‑norm of hidden states per layer.html",          "t": "Mean L2-norm per Layer",            "c": "intl"},
+        {"f": "reports/Mistral-7B-v0.1-Layers-Hidden states variance per layer.html",                 "t": "Hidden-state Variance per Layer",   "c": "intl"},
+        {"f": "reports/Mistral-7B-v0.1-Layers-Hidden states sparsity per layer.html",                 "t": "Hidden-state Sparsity per Layer",   "c": "intl"},
+        {"f": "reports/Mistral-7B-v0.1-Layers-Effective rank of hidden states per layer.html",        "t": "Effective Rank per Layer",          "c": "intl"},
+        {"f": "reports/Mistral-7B-v0.1-Base.html",                                                    "t": "Base Model",                        "c": "conf", "n": "baseline"},
+        {"f": "reports/Mistral-7B-v0.1-BaseFiT.html",                                                 "t": "Base FiT",                          "c": "conf", "n": "baseline"},
+        {"f": "reports/Mistral-7B-v0.1-0.01-L.html",                                                  "t": "σ = 0.01 · Low layers",             "c": "conf", "n": "σ = 0.01"},
+        {"f": "reports/Mistral-7B-v0.1-0.01-H.html",                                                  "t": "σ = 0.01 · High layers",            "c": "conf", "n": "σ = 0.01"},
+        {"f": "reports/Mistral-7B-v0.1-0.1-L.html",                                                   "t": "σ = 0.1 · Low layers",              "c": "conf", "n": "σ = 0.1"},
+        {"f": "reports/Mistral-7B-v0.1-0.1-H.html",                                                   "t": "σ = 0.1 · High layers",             "c": "conf", "n": "σ = 0.1"},
+        {"f": "reports/Mistral-7B-v0.1-12-0.001-L.html",                                              "t": "Layer 12 · σ = 0.001 · Low",        "c": "conf", "n": "layer-12"},
+        {"f": "reports/Mistral-7B-v0.1-12-0.001-H.html",                                              "t": "Layer 12 · σ = 0.001 · High",       "c": "conf", "n": "layer-12"},
+        {"f": "reports/Mistral-7B-v0.1-12-0.01-L.html",                                               "t": "Layer 12 · σ = 0.01 · Low",         "c": "conf", "n": "layer-12"},
+        {"f": "reports/Mistral-7B-v0.1-12-0.01-H.html",                                               "t": "Layer 12 · σ = 0.01 · High",        "c": "conf", "n": "layer-12"},
+        {"f": "reports/Mistral-7B-v0.1-12-0.1-L.html",                                                "t": "Layer 12 · σ = 0.1 · Low",          "c": "conf", "n": "layer-12"},
+        {"f": "reports/Mistral-7B-v0.1-12-0.1-H.html",                                                "t": "Layer 12 · σ = 0.1 · High",         "c": "conf", "n": "layer-12"},
+        {"f": "reports/Mistral-7B-v0.1-all-0.001.html",                                               "t": "All layers · σ = 0.001",            "c": "conf", "n": "all-layers"},
+        {"f": "reports/Mistral-7B-v0.1-all-0.01.html",                                                "t": "All layers · σ = 0.01",             "c": "conf", "n": "all-layers"},
+        {"f": "reports/Mistral-7B-v0.1-all-0.1.html",                                                 "t": "All layers · σ = 0.1",              "c": "conf", "n": "all-layers"}
+      ]
+    },
+    {
+      "id": "qwen",
+      "name": "Qwen",
+      "italic": "2.5 · 0.5B",
+      "size": "0.5B parameters",
+      "reports": [
+        {"f": "reports/qwen2.5-0.5B-error-bar.html",                                                 "t": "Error Bar Analysis",                "c": "perf"},
+        {"f": "reports/Qwen2.5-0.5B_SNR.html",                                                        "t": "Signal-to-Noise Ratio",             "c": "perf"},
+        {"f": "reports/Qwen2.5-0.5B-Attention Entropy.html",                                          "t": "Attention Entropy",                 "c": "intl"},
+        {"f": "reports/Qwen2.5-0.5B-Layers Entropy Distribution for Each Model.html",                 "t": "Layer Entropy Distribution",        "c": "intl"},
+        {"f": "reports/Qwen2.5-0.5B-Layers-Mean L2‑norm of hidden states per layer.html",             "t": "Mean L2-norm per Layer",            "c": "intl"},
+        {"f": "reports/Qwen2.5-0.5B-Layers-Hidden states variance per layer.html",                    "t": "Hidden-state Variance per Layer",   "c": "intl"},
+        {"f": "reports/Qwen2.5-0.5B-Layers-Hidden states sparsity per layer.html",                    "t": "Hidden-state Sparsity per Layer",   "c": "intl"},
+        {"f": "reports/Qwen2.5-0.5B-Layers-Effective rank of hidden states per layer.html",           "t": "Effective Rank per Layer",          "c": "intl"},
+        {"f": "reports/Qwen2.5-0.5B-Base.html",                                                       "t": "Base Model",                        "c": "conf", "n": "baseline"},
+        {"f": "reports/Qwen2.5-0.5B-BaseFiT.html",                                                    "t": "Base FiT",                          "c": "conf", "n": "baseline"},
+        {"f": "reports/Qwen2.5-0.5B-0.01-L.html",                                                     "t": "σ = 0.01 · Low layers",             "c": "conf", "n": "σ = 0.01"},
+        {"f": "reports/Qwen2.5-0.5B-0.01-H.html",                                                     "t": "σ = 0.01 · High layers",            "c": "conf", "n": "σ = 0.01"},
+        {"f": "reports/Qwen2.5-0.5B-0.1-L.html",                                                      "t": "σ = 0.1 · Low layers",              "c": "conf", "n": "σ = 0.1"},
+        {"f": "reports/Qwen2.5-0.5B-0.1-H.html",                                                      "t": "σ = 0.1 · High layers",             "c": "conf", "n": "σ = 0.1"}
+      ]
+    }
+  ]
+}
+</script>
+
+<script src="js/app.js"></script>
 </body>
 </html>
